@@ -1,0 +1,383 @@
+﻿@using MDS.Models
+@{
+    ViewBag.Title = "หน้าหลัก";
+    var data = (MainModel)ViewBag.Getoverview;
+    var temp = (MainDetailModel)data.Main;
+
+}
+<style>
+    .tile-headerBranch {
+        font-size: 18px !important;
+    }
+
+    .bs-badgeMDS {
+        font-size: 16px !important;
+        line-height: 30px !important;
+        min-width: 30px !important;
+        border-radius: 20px !important;
+    }
+
+    .tile-content {
+        font-size: 16px !important;
+    }
+
+    .tile-contentBranch {
+        font-size: 12px !important;
+    }
+
+    .color-content {
+        color: #000000 !important;
+    }
+
+    .color-bg {
+        color: white !important;
+        /*background-color: gray !important;*/
+    }
+
+    .modal-body {
+        overflow-x: auto !important;
+    }
+
+    .tile-content span {
+        font-size: 16px !important;
+    }
+</style>
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+<h3 class="content-box-header bg-blue-alt">
+    <i class="glyph-icon icon-dashboard"></i>
+    Overview
+</h3>
+<div class="panel">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 1,title="ระหว่างเรียน"})" title="ระหว่างเรียน" class="tile-box tile-box-shortcut btn-default">
+                    <span class="bs-badge badge-absolute bs-badgeMDS">@temp.btw</span>
+                    <div class="tile-header tile-headerBranch ">
+                        ระหว่างเรียน
+                    </div>
+                    <div class="tile-content-wrapper">
+                        <i class="glyph-icon fa fa-leanpub"></i>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 2,title="ค้างชำระ"})" title="ค้างชำระ" class="tile-box tile-box-shortcut btn-default">
+                    <span class="bs-badge badge-absolute bs-badgeMDS">@temp.debt</span>
+                    <div class="tile-header tile-headerBranch ">
+                        ค้างชำระ
+                    </div>
+                    <div class="tile-content-wrapper">
+                        <i class="glyph-icon fa fa-credit-card"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-top:10px">
+                <div class="col-md-4">
+                    <a href="@Url.Action("Viewdata2", "Overview", new { ovid = 3,title="รายรับวันนี้"})" title="รายรับวันนี้" class="tile-box btn btn-primary">
+                        <div class="tile-header">
+                            รายรับวันนี้
+                        </div>
+                        <div class="tile-content-wrapper">
+                            <i class="glyph-icon fa fa-money"></i>
+                            <div class="tile-content">
+                                <span> ฿</span>
+                                @temp.total
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="@Url.Action("Viewdata2", "Overview", new { ovid = 4,title="เงินรอฝาก"})" title="เงินรอฝาก" class="tile-box btn btn-danger">
+                        <div class="tile-header">
+                            เงินรอฝาก
+                        </div>
+                        <div class="tile-content-wrapper">
+                            <i class="glyph-icon icon-retweet"></i>
+                            <div class="tile-content">
+                                <span> ฿</span>
+                                @temp.wait
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="@Url.Action("Viewdata2", "Overview", new { ovid = 5,title="เงินนำฝากแล้ว"})" title="เงินนำฝากแล้ว" class="tile-box btn btn-warning">
+                        <div class="tile-header">
+                            เงินนำฝากวันนี้
+                        </div>
+                        <div class="tile-content-wrapper">
+                            <i class="glyph-icon icon-university"></i>
+                            <div class="tile-content">
+                                <span> ฿</span>
+                                @temp.deposit
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-10 col-md-offset-2">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <div class="tile-box tile-box-alt bg-white content-box color-content">
+                        <div class="tile-header color-bg" style="background-color:#35c8b6">
+                            @temp.trancardesc
+
+                        </div>
+                        <div class="tile-content-wrapper" title="@temp.trancardesc จำนวนเงิน : @temp.trancar บาท,จำนวน : (@temp.trancarcount)">
+                            <i class="glyph-icon font-gray fa fa-truck"></i>
+                            <div class="tile-content">
+                                <span> ฿</span>
+                                <span>@temp.trancar </span><br>
+                                <span>@temp.trancarcount ราย</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 6,title=@temp.trancardesc})" class="tile-footer tooltip-button color-content" data-placement="bottom" title="@temp.trancardesc">
+                            ทั้งหมด
+                            <i class="glyph-icon icon-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <div class="tile-box tile-box-alt bg-white content-box color-content">
+                        <div class="tile-header color-bg" style="background-color:#58d68d">
+                            @temp.cardesc
+                        </div>
+                        <div class="tile-content-wrapper" title="@temp.cardesc จำนวนเงิน : @temp.car บาท,จำนวน : (@temp.carcount)">
+                            <i class="glyph-icon font-gray fa fa-car"></i>
+                            <div class="tile-content">
+                                <span> ฿</span>
+                                <span>@temp.car </span><br>
+                                <span>@temp.carcount ราย</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 7,title=@temp.cardesc})" class="tile-footer tooltip-button color-content" data-placement="bottom" title="@temp.cardesc">
+                            ทั้งหมด
+                            <i class="glyph-icon icon-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <div class="tile-box tile-box-alt bg-white content-box color-content">
+                        <div class="tile-header color-bg" style="background-color:#ec7064">
+                            @temp.motocycledesc
+                        </div>
+                        <div class="tile-content-wrapper" title="@temp.motocycledesc จำนวนเงิน : @temp.motocycle บาท,จำนวน : (@temp.motocyclecount)">
+                            <i class="glyph-icon font-gray fa fa-motorcycle"></i>
+                            <div class="tile-content">
+                                <span> ฿</span>
+                                <span> @temp.motocycle</span><br>
+                                <span>@temp.motocyclecount ราย</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 8,title=@temp.motocycledesc})" class="tile-footer tooltip-button color-content" data-placement="bottom" title="@temp.motocycledesc">
+                            ทั้งหมด
+                            <i class="glyph-icon icon-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <div class="tile-box tile-box-alt bg-white content-box color-content">
+                        <div class="tile-header color-bg" style="background-color:#5dade2">
+                            @temp.licensedesc
+                        </div>
+                        <div class="tile-content-wrapper" title="@temp.licensedesc จำนวนเงิน : @temp.license บาท,จำนวน : (@temp.licensecount)">
+                            <i class="glyph-icon font-gray fa fa-address-card-o"></i>
+                            <div class="tile-content">
+                                <span> ฿</span>
+                                <span>@temp.license </span><br>
+                                <span>@temp.licensecount ราย</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 9,title=@temp.licensedesc})" class="tile-footer tooltip-button color-content" data-placement="bottom" title="@temp.licensedesc">
+                            ทั้งหมด
+                            <i class="glyph-icon icon-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <div class="tile-box tile-box-alt bg-white content-box color-content">
+                        <div class="tile-header color-bg" style="background-color:#eb974f">
+                            @temp.otherdesc
+                        </div>
+                        <div class="tile-content-wrapper" title="@temp.otherdesc จำนวนเงิน : @temp.other บาท,จำนวน : (@temp.othercount)">
+                            <i class="glyph-icon font-gray icon-tag"></i>
+                            <div class="tile-content">
+                                <span> ฿</span>
+                                <span> @temp.other</span> <br>
+                                <span>@temp.othercount ราย</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 10,title=@temp.otherdesc})" class="tile-footer tooltip-button color-content" data-placement="bottom" title="@temp.otherdesc">
+                            ทั้งหมด
+                            <i class="glyph-icon icon-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@foreach (var item in (List<MainDetailModel>)data.Branch)
+{
+    <div class="panel">
+        <div class="panel-body">
+            <h3 class="title-hero" style="
+    background-color: #337ab7;
+    padding: 20px;
+    color: white;
+    font-size:20px;
+    ">
+                @item.branch
+            </h3>
+            <div class="row">
+                <div class="col-md-12" style="margin-top:10px">
+                    <div class="col-md-4">
+                        <a href="#" title="รายรับวันนี้" class="tile-box btn btn-primary">
+                            <div class="tile-header">
+                                รายรับวันนี้
+                            </div>
+                            <div class="tile-content-wrapper">
+                                <i class="glyph-icon fa fa-money"></i>
+                                <div class="tile-content">
+                                    <span> ฿</span>
+                                    @item.total
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="#" title="เงินรอฝาก" class="tile-box btn btn-danger">
+                            <div class="tile-header">
+                                เงินรอฝาก
+                            </div>
+                            <div class="tile-content-wrapper">
+                                <i class="glyph-icon icon-retweet"></i>
+                                <div class="tile-content">
+                                    <span> ฿</span>
+                                    @item.wait
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="#" title="เงินนำฝากแล้ว" class="tile-box btn btn-warning">
+                            <div class="tile-header">
+                                เงินนำฝากแล้ว
+                            </div>
+                            <div class="tile-content-wrapper">
+                                <i class="glyph-icon icon-university"></i>
+                                <div class="tile-content">
+                                    <span> ฿</span>
+                                    @item.deposit
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            @*<div class="row" style="margin-top:10px">
+                    <div class="col-md-10 col-md-offset-2">
+                        <div class="col-md-2">
+                            <a href="#" title="@item.trancardesc" class="tile-box tile-box-shortcut btn-primary">
+                                <span class="bs-badge badge-absolute"> @item.trancar</span>
+                                <div class="tile-header tile-contentBranch">
+                                    @item.trancardesc
+                                </div>
+                                <div class="tile-content-wrapper">
+                                    <i class="glyph-icon fa fa-truck"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="#" title="@item.cardesc" class="tile-box tile-box-shortcut btn-black">
+                                <span class="bs-badge badge-absolute"> @item.car</span>
+                                <div class="tile-header tile-contentBranch">
+                                    @item.cardesc
+                                </div>
+                                <div class="tile-content-wrapper">
+                                    <i class="glyph-icon fa fa-car"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="#" title="@item.motocycledesc" class="tile-box tile-box-shortcut btn-danger">
+                                <span class="bs-badge badge-absolute"> @item.motocycle</span>
+                                <div class="tile-header tile-contentBranch">
+                                    @item.motocycledesc
+                                </div>
+                                <div class="tile-content-wrapper">
+                                    <i class="glyph-icon fa fa-motorcycle"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="#" title="@item.licensedesc" class="tile-box tile-box-shortcut btn-success">
+                                <span class="bs-badge badge-absolute"> @item.license</span>
+                                <div class="tile-header tile-contentBranch">
+                                    @item.licensedesc
+                                </div>
+                                <div class="tile-content-wrapper">
+                                    <i class="glyph-icon fa fa-address-card-o"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="#" title="@item.otherdesc" class="tile-box tile-box-shortcut btn-info">
+                                <span class="bs-badge badge-absolute">@item.other</span>
+                                <div class="tile-header tile-contentBranch">
+                                    @item.otherdesc
+                                </div>
+                                <div class="tile-content-wrapper">
+                                    <i class="glyph-icon icon-tag"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>*@
+        </div>
+    </div>
+}
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            //alert
+            $("#success-alert").hide();
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+        });
+    </script>
+}
+

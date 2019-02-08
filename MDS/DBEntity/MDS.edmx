@@ -1,0 +1,629 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MDSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="sp_ForgetPwd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="email" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_GetMenu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="nvarchar" Mode="In" />
+          <Parameter Name="LangCode" Type="nvarchar" Mode="In" />
+          <Parameter Name="MenuId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_GetUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_ResetPwd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="pwdNew" Type="varchar" Mode="In" />
+          <Parameter Name="IP" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SelectAllRole" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_SelectAllUserDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_SetMenu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="nvarchar" Mode="In" />
+          <Parameter Name="LangCode" Type="nvarchar" Mode="In" />
+          <Parameter Name="MenuId" Type="int" Mode="In" />
+          <Parameter Name="MenuLevel" Type="nvarchar" Mode="In" />
+          <Parameter Name="MenuParent" Type="nvarchar" Mode="In" />
+          <Parameter Name="MenuGroup" Type="nvarchar" Mode="In" />
+          <Parameter Name="MenuNo" Type="nvarchar" Mode="In" />
+          <Parameter Name="User" Type="nvarchar" Mode="In" />
+          <Parameter Name="LangId" Type="int" Mode="In" />
+          <Parameter Name="LangName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SetMenuLink" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="nvarchar" Mode="In" />
+          <Parameter Name="MenuId" Type="int" Mode="In" />
+          <Parameter Name="Action" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_UM_AddUserDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="EmpCode" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserGId" Type="int" Mode="In" />
+          <Parameter Name="Username" Type="nvarchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+          <Parameter Name="Prefix" Type="nvarchar" Mode="In" />
+          <Parameter Name="FirstnameTh" Type="nvarchar" Mode="In" />
+          <Parameter Name="LastnameTh" Type="nvarchar" Mode="In" />
+          <Parameter Name="FirstnameEn" Type="nvarchar" Mode="In" />
+          <Parameter Name="LastnameEn" Type="nvarchar" Mode="In" />
+          <Parameter Name="DepartId" Type="int" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="Tel" Type="nvarchar" Mode="In" />
+          <Parameter Name="Mobile" Type="nvarchar" Mode="In" />
+          <Parameter Name="Fax" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserImage" Type="nvarchar" Mode="In" />
+          <Parameter Name="Status" Type="nvarchar" Mode="In" />
+          <Parameter Name="User" Type="nvarchar" Mode="In" />
+          <Parameter Name="PasswordOld" Type="varchar" Mode="In" />
+          <Parameter Name="PasswordNew" Type="varchar" Mode="In" />
+          <Parameter Name="Ipaddress" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_UM_AddUserDetail_bk" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+          <Parameter Name="PrefixTH" Type="varchar" Mode="In" />
+          <Parameter Name="FnameTH" Type="varchar" Mode="In" />
+          <Parameter Name="LnameTH" Type="varchar" Mode="In" />
+          <Parameter Name="PrefixEN" Type="varchar" Mode="In" />
+          <Parameter Name="FnameEN" Type="varchar" Mode="In" />
+          <Parameter Name="LnameEN" Type="varchar" Mode="In" />
+          <Parameter Name="IdCard" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="CreateBy" Type="varchar" Mode="In" />
+          <Parameter Name="IP" Type="varchar" Mode="In" />
+          <Parameter Name="Tel" Type="varchar" Mode="In" />
+          <Parameter Name="Status" Type="varchar" Mode="In" />
+          <Parameter Name="DeptID" Type="int" Mode="In" />
+          <Parameter Name="RoleID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_UM_GetUserGroup" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserGId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_UM_GrantMenu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="AuthorId" Type="int" Mode="In" />
+          <Parameter Name="strMenu" Type="varchar(max)" Mode="In" />
+          <Parameter Name="IP" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_UM_GrantMenuFirstTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="RoleID" Type="int" Mode="In" />
+          <Parameter Name="IP" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_UM_SelectAllMenu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_UM_SelectMenuByUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_UM_SelectMenuFromUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_UM_SetGrantMenu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserGId" Type="int" Mode="In" />
+          <Parameter Name="UserGNameTh" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserGNameEn" Type="nvarchar" Mode="In" />
+          <Parameter Name="User" Type="nvarchar" Mode="In" />
+          <Parameter Name="Status" Type="nvarchar" Mode="In" />
+          <Parameter Name="MenuId" Type="int" Mode="In" />
+          <Parameter Name="GrantId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_UpdateRole" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+          <Parameter Name="RoleID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_UserLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+          <Parameter Name="IP" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="MDSModelStoreContainer" />
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MDSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MDSEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="sp_ForgetPwd" ReturnType="Collection(MDSModel.sp_ForgetPwd_Result)">
+            <Parameter Name="email" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetMenu" ReturnType="Collection(MDSModel.sp_GetMenu_Result)">
+            <Parameter Name="flag" Mode="In" Type="String" />
+            <Parameter Name="LangCode" Mode="In" Type="String" />
+            <Parameter Name="MenuId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetUser" ReturnType="Collection(MDSModel.sp_GetUser_Result)">
+            <Parameter Name="flag" Mode="In" Type="String" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ResetPwd" ReturnType="Collection(String)">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="pwdNew" Mode="In" Type="String" />
+            <Parameter Name="IP" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SelectAllRole" ReturnType="Collection(MDSModel.sp_SelectAllRole_Result)" />
+          <FunctionImport Name="sp_SelectAllUserDetail" ReturnType="Collection(MDSModel.sp_SelectAllUserDetail_Result)" />
+          <FunctionImport Name="sp_SetMenu" ReturnType="Collection(MDSModel.sp_SetMenu_Result)">
+            <Parameter Name="flag" Mode="In" Type="String" />
+            <Parameter Name="LangCode" Mode="In" Type="String" />
+            <Parameter Name="MenuId" Mode="In" Type="Int32" />
+            <Parameter Name="MenuLevel" Mode="In" Type="String" />
+            <Parameter Name="MenuParent" Mode="In" Type="String" />
+            <Parameter Name="MenuGroup" Mode="In" Type="String" />
+            <Parameter Name="MenuNo" Mode="In" Type="String" />
+            <Parameter Name="User" Mode="In" Type="String" />
+            <Parameter Name="LangId" Mode="In" Type="Int32" />
+            <Parameter Name="LangName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SetMenuLink" ReturnType="Collection(MDSModel.sp_SetMenuLink_Result)">
+            <Parameter Name="flag" Mode="In" Type="String" />
+            <Parameter Name="MenuId" Mode="In" Type="Int32" />
+            <Parameter Name="Action" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UM_AddUserDetail" ReturnType="Collection(MDSModel.sp_UM_AddUserDetail_Result)">
+            <Parameter Name="flag" Mode="In" Type="String" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="UserGId" Mode="In" Type="Int32" />
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="Prefix" Mode="In" Type="String" />
+            <Parameter Name="FirstnameTh" Mode="In" Type="String" />
+            <Parameter Name="LastnameTh" Mode="In" Type="String" />
+            <Parameter Name="FirstnameEn" Mode="In" Type="String" />
+            <Parameter Name="LastnameEn" Mode="In" Type="String" />
+            <Parameter Name="DepartId" Mode="In" Type="Int32" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Tel" Mode="In" Type="String" />
+            <Parameter Name="Mobile" Mode="In" Type="String" />
+            <Parameter Name="Fax" Mode="In" Type="String" />
+            <Parameter Name="UserImage" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="User" Mode="In" Type="String" />
+            <Parameter Name="PasswordOld" Mode="In" Type="String" />
+            <Parameter Name="PasswordNew" Mode="In" Type="String" />
+            <Parameter Name="Ipaddress" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UM_AddUserDetail_bk" ReturnType="Collection(MDSModel.sp_UM_AddUserDetail_bk_Result)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="PrefixTH" Mode="In" Type="String" />
+            <Parameter Name="FnameTH" Mode="In" Type="String" />
+            <Parameter Name="LnameTH" Mode="In" Type="String" />
+            <Parameter Name="PrefixEN" Mode="In" Type="String" />
+            <Parameter Name="FnameEN" Mode="In" Type="String" />
+            <Parameter Name="LnameEN" Mode="In" Type="String" />
+            <Parameter Name="IdCard" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="CreateBy" Mode="In" Type="String" />
+            <Parameter Name="IP" Mode="In" Type="String" />
+            <Parameter Name="Tel" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="DeptID" Mode="In" Type="Int32" />
+            <Parameter Name="RoleID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UM_GetUserGroup" ReturnType="Collection(MDSModel.sp_UM_GetUserGroup_Result)">
+            <Parameter Name="flag" Mode="In" Type="String" />
+            <Parameter Name="UserGId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UM_GrantMenu">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="AuthorId" Mode="In" Type="Int32" />
+            <Parameter Name="strMenu" Mode="In" Type="String" />
+            <Parameter Name="IP" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UM_GrantMenuFirstTime">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="RoleID" Mode="In" Type="Int32" />
+            <Parameter Name="IP" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UM_SelectAllMenu" ReturnType="Collection(MDSModel.sp_UM_SelectAllMenu_Result)" />
+          <FunctionImport Name="sp_UM_SelectMenuByUserID" ReturnType="Collection(MDSModel.sp_UM_SelectMenuByUserID_Result)">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UM_SelectMenuFromUserID" ReturnType="Collection(MDSModel.sp_UM_SelectMenuFromUserID_Result)">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UM_SetGrantMenu" ReturnType="Collection(MDSModel.sp_UM_SetGrantMenu_Result)">
+            <Parameter Name="flag" Mode="In" Type="String" />
+            <Parameter Name="UserGId" Mode="In" Type="Int32" />
+            <Parameter Name="UserGNameTh" Mode="In" Type="String" />
+            <Parameter Name="UserGNameEn" Mode="In" Type="String" />
+            <Parameter Name="User" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="MenuId" Mode="In" Type="Int32" />
+            <Parameter Name="GrantId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UpdateRole" ReturnType="Collection(MDSModel.sp_UpdateRole_Result)">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="RoleID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UserLogin" ReturnType="Collection(MDSModel.sp_UserLogin_Result)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="IP" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="sp_ForgetPwd_Result">
+          <Property Type="String" Name="ErrorMessage" Nullable="false" MaxLength="21" />
+          <Property Type="Int32" Name="UserId" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetMenu_Result">
+          <Property Type="Int32" Name="MenuId" Nullable="false" />
+          <Property Type="String" Name="MenuName" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="MenuLevel" Nullable="true" />
+          <Property Type="String" Name="LavelName" Nullable="false" MaxLength="15" />
+          <Property Type="Int32" Name="ParentId" Nullable="true" />
+          <Property Type="String" Name="ParentName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="MenuNo" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="MenuGroup" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="MenuType" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="sp_GetUser_Result">
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="String" Name="Username" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FullNameTh" Nullable="false" MaxLength="301" />
+          <Property Type="String" Name="FullNameEn" Nullable="false" MaxLength="301" />
+          <Property Type="Int32" Name="UserGId" Nullable="false" />
+          <Property Type="String" Name="UserGNameTh" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Tel" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="sp_SelectAllRole_Result">
+          <Property Type="Int32" Name="RoleID" Nullable="false" />
+          <Property Type="String" Name="RoleName" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_SetMenu_Result">
+          <Property Type="Int32" Name="LangId" Nullable="true" />
+          <Property Type="String" Name="result" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="AddMessage" Nullable="false" MaxLength="15" />
+        </ComplexType>
+        <ComplexType Name="sp_SetMenuLink_Result">
+          <Property Type="String" Name="result" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="AddMessage" Nullable="false" MaxLength="15" />
+        </ComplexType>
+        <ComplexType Name="sp_UM_AddUserDetail_Result">
+          <Property Type="Int32" Name="UserId" Nullable="true" />
+          <Property Type="String" Name="result" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="AddMessage" Nullable="false" MaxLength="15" />
+        </ComplexType>
+        <ComplexType Name="sp_UM_GetUserGroup_Result">
+          <Property Type="Int32" Name="UserGId" Nullable="false" />
+          <Property Type="String" Name="UserGNameTh" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="UserGNameEn" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="1" />
+          <Property Type="DateTime" Name="CreateDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CreateBy" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_UM_SelectAllMenu_Result">
+          <Property Type="Int32" Name="MenuID" Nullable="false" />
+          <Property Type="String" Name="MenuName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="MenuControl" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="MenuAction" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="MenuLevel" Nullable="true" />
+          <Property Type="Int32" Name="MenuParent" Nullable="true" />
+          <Property Type="String" Name="menuno" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="MenuGroup" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="sp_UM_SelectMenuByUserID_Result">
+          <Property Type="Int32" Name="GrantID" Nullable="false" />
+          <Property Type="Int32" Name="UserID" Nullable="true" />
+          <Property Type="String" Name="Mstatus" Nullable="false" MaxLength="1" />
+          <Property Type="Int32" Name="MenuID" Nullable="false" />
+          <Property Type="String" Name="MenuName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="status" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="MenuAction" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="MenuControl" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="MenuLevel" Nullable="true" />
+          <Property Type="Int32" Name="MenuParent" Nullable="true" />
+          <Property Type="String" Name="menuno" Nullable="true" MaxLength="60" />
+          <Property Type="String" Name="MenuShow" Nullable="true" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="sp_UM_SelectMenuFromUserID_Result">
+          <Property Type="Int32" Name="MenuID" Nullable="false" />
+          <Property Type="String" Name="MenuName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Mstatus" Nullable="false" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="sp_UM_SetGrantMenu_Result">
+          <Property Type="Int32" Name="UserId" Nullable="true" />
+          <Property Type="String" Name="result" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="AddMessage" Nullable="false" MaxLength="15" />
+        </ComplexType>
+        <ComplexType Name="sp_SelectAllUserDetail_Result">
+          <Property Type="Int32" Name="UserDetailID" Nullable="false" />
+          <Property Type="String" Name="PrefixNameTH" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="FirstNameTH" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastNameTH" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PrefixNameEN" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="FirstNameEN" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastNameEN" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="IdCard" Nullable="true" MaxLength="13" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CreateBy" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CreateDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="IP" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Tel" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="DepartmentID" Nullable="true" />
+          <Property Type="Int32" Name="RoleID" Nullable="false" />
+          <Property Type="String" Name="RoleName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_UM_AddUserDetail_bk_Result">
+          <Property Type="String" Name="result" Nullable="false" MaxLength="1" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="pwd" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_UM_ModifyUserDetail_Result">
+          <Property Type="String" Name="result" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="MessageReturn" Nullable="false" MaxLength="12" />
+          <Property Type="String" Name="PrefixNameTH" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="FirstNameTH" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastNameTH" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PrefixNameEN" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="FirstNameEN" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastNameEN" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="IdCard" Nullable="true" MaxLength="13" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Tel" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="DepartmentID" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="sp_UpdateRole_Result">
+          <Property Type="String" Name="result" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="alertMessage" Nullable="false" MaxLength="12" />
+        </ComplexType>
+        <ComplexType Name="sp_UserLogin_Result">
+          <Property Type="Int32" Name="UserID" Nullable="true" />
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PasswordCorrect" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ForceChangePassword" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="FirstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="UserEmail" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="HaveUser" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="UserLock" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="Tel" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="UserIMG" Nullable="true" MaxLength="100" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MDSModelStoreContainer" CdmEntityContainer="MDSEntities" >
+          <FunctionImportMapping FunctionImportName="sp_ForgetPwd" FunctionName="MDSModel.Store.sp_ForgetPwd">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_ForgetPwd_Result">
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetMenu" FunctionName="MDSModel.Store.sp_GetMenu">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_GetMenu_Result">
+                <ScalarProperty Name="MenuId" ColumnName="MenuId" />
+                <ScalarProperty Name="MenuName" ColumnName="MenuName" />
+                <ScalarProperty Name="MenuLevel" ColumnName="MenuLevel" />
+                <ScalarProperty Name="LavelName" ColumnName="LavelName" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="MenuNo" ColumnName="MenuNo" />
+                <ScalarProperty Name="MenuGroup" ColumnName="MenuGroup" />
+                <ScalarProperty Name="MenuType" ColumnName="MenuType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetUser" FunctionName="MDSModel.Store.sp_GetUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_GetUser_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="FullNameTh" ColumnName="FullNameTh" />
+                <ScalarProperty Name="FullNameEn" ColumnName="FullNameEn" />
+                <ScalarProperty Name="UserGId" ColumnName="UserGId" />
+                <ScalarProperty Name="UserGNameTh" ColumnName="UserGNameTh" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_ResetPwd" FunctionName="MDSModel.Store.sp_ResetPwd" />
+          <FunctionImportMapping FunctionImportName="sp_SelectAllRole" FunctionName="MDSModel.Store.sp_SelectAllRole">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_SelectAllRole_Result">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SelectAllUserDetail" FunctionName="MDSModel.Store.sp_SelectAllUserDetail" >
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_SelectAllUserDetail_Result">
+                <ScalarProperty Name="UserDetailID" ColumnName="UserDetailID" />
+                <ScalarProperty Name="PrefixNameTH" ColumnName="PrefixNameTH" />
+                <ScalarProperty Name="FirstNameTH" ColumnName="FirstNameTH" />
+                <ScalarProperty Name="LastNameTH" ColumnName="LastNameTH" />
+                <ScalarProperty Name="PrefixNameEN" ColumnName="PrefixNameEN" />
+                <ScalarProperty Name="FirstNameEN" ColumnName="FirstNameEN" />
+                <ScalarProperty Name="LastNameEN" ColumnName="LastNameEN" />
+                <ScalarProperty Name="IdCard" ColumnName="IdCard" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="IP" ColumnName="IP" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SetMenu" FunctionName="MDSModel.Store.sp_SetMenu">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_SetMenu_Result">
+                <ScalarProperty Name="LangId" ColumnName="LangId" />
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="AddMessage" ColumnName="AddMessage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SetMenuLink" FunctionName="MDSModel.Store.sp_SetMenuLink">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_SetMenuLink_Result">
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="AddMessage" ColumnName="AddMessage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UM_AddUserDetail" FunctionName="MDSModel.Store.sp_UM_AddUserDetail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UM_AddUserDetail_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="AddMessage" ColumnName="AddMessage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UM_AddUserDetail_bk" FunctionName="MDSModel.Store.sp_UM_AddUserDetail_bk" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UM_AddUserDetail_bk_Result">
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="pwd" ColumnName="pwd" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UM_GetUserGroup" FunctionName="MDSModel.Store.sp_UM_GetUserGroup">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UM_GetUserGroup_Result">
+                <ScalarProperty Name="UserGId" ColumnName="UserGId" />
+                <ScalarProperty Name="UserGNameTh" ColumnName="UserGNameTh" />
+                <ScalarProperty Name="UserGNameEn" ColumnName="UserGNameEn" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UM_GrantMenu" FunctionName="MDSModel.Store.sp_UM_GrantMenu" />
+          <FunctionImportMapping FunctionImportName="sp_UM_GrantMenuFirstTime" FunctionName="MDSModel.Store.sp_UM_GrantMenuFirstTime" />
+          <FunctionImportMapping FunctionImportName="sp_UM_SelectAllMenu" FunctionName="MDSModel.Store.sp_UM_SelectAllMenu">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UM_SelectAllMenu_Result">
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+                <ScalarProperty Name="MenuName" ColumnName="MenuName" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="MenuControl" ColumnName="MenuControl" />
+                <ScalarProperty Name="MenuAction" ColumnName="MenuAction" />
+                <ScalarProperty Name="MenuLevel" ColumnName="MenuLevel" />
+                <ScalarProperty Name="MenuParent" ColumnName="MenuParent" />
+                <ScalarProperty Name="menuno" ColumnName="menuno" />
+                <ScalarProperty Name="MenuGroup" ColumnName="MenuGroup" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UM_SelectMenuByUserID" FunctionName="MDSModel.Store.sp_UM_SelectMenuByUserID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UM_SelectMenuByUserID_Result">
+                <ScalarProperty Name="GrantID" ColumnName="GrantID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Mstatus" ColumnName="Mstatus" />
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+                <ScalarProperty Name="MenuName" ColumnName="MenuName" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="MenuAction" ColumnName="MenuAction" />
+                <ScalarProperty Name="MenuControl" ColumnName="MenuControl" />
+                <ScalarProperty Name="MenuLevel" ColumnName="MenuLevel" />
+                <ScalarProperty Name="MenuParent" ColumnName="MenuParent" />
+                <ScalarProperty Name="menuno" ColumnName="menuno" />
+                <ScalarProperty Name="MenuShow" ColumnName="MenuShow" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UM_SelectMenuFromUserID" FunctionName="MDSModel.Store.sp_UM_SelectMenuFromUserID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UM_SelectMenuFromUserID_Result">
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+                <ScalarProperty Name="MenuName" ColumnName="MenuName" />
+                <ScalarProperty Name="Mstatus" ColumnName="Mstatus" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UM_SetGrantMenu" FunctionName="MDSModel.Store.sp_UM_SetGrantMenu">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UM_SetGrantMenu_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="AddMessage" ColumnName="AddMessage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UpdateRole" FunctionName="MDSModel.Store.sp_UpdateRole" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UpdateRole_Result">
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="alertMessage" ColumnName="alertMessage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_UserLogin" FunctionName="MDSModel.Store.sp_UserLogin" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_UserLogin_Result">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="PasswordCorrect" ColumnName="PasswordCorrect" />
+                <ScalarProperty Name="ForceChangePassword" ColumnName="ForceChangePassword" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="HaveUser" ColumnName="HaveUser" />
+                <ScalarProperty Name="UserLock" ColumnName="UserLock" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="UserIMG" ColumnName="UserIMG" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

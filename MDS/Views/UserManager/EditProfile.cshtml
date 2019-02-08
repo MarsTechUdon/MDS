@@ -1,0 +1,267 @@
+﻿@{
+    ViewBag.Title = "EditProfile";
+}
+@model MDS.Models.UserDataModel
+
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+<style>
+    .kv-avatar .krajee-default.file-preview-frame, .kv-avatar .krajee-default.file-preview-frame:hover {
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        text-align: center;
+    }
+
+    .kv-avatar {
+        display: inline-block;
+    }
+
+        .kv-avatar .file-input {
+            display: table-cell;
+            width: 213px;
+        }
+    .krajee-default.file-preview-frame .kv-file-content {
+        width: 200px !important;
+    }
+    .kv-reqd {
+        color: red;
+        font-family: monospace;
+        font-weight: normal;
+    }
+</style>
+<!-- Parsley -->
+<script type="text/javascript" src="~/assets/widgets/parsley/parsley.js"></script>
+<link href="~/assets/fileInput/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+<div id="page-title">
+    <h2>แก้ไขข้อมูลส่วนตัว</h2>
+</div>
+@{Html.BeginForm("EditProfile", "UserManager", FormMethod.Post, new { id = "addNewsForm", data_parsley_validate = "", enctype = "multipart/form-data" });}
+<input type="hidden" name="UserID" value="@Model.UserData.UserID" />
+<input type="hidden" name="Username" value="@Model.UserData.Username" />
+<input type="hidden" name="UserImage" value="@Model.UserData.UserImage" />
+<div class="content-box">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="glyph-icon icon-cog"></i>
+        ข้อมูลผู้ใช้งาน
+    </h3>
+    <div class="content-box-wrapper">
+        <div class="row">
+            <div class="col-md-2">
+                <div align="center">
+                    @if (@Model.UserData.UserImage != "")
+                    {
+                        <img src="~/MDSMiddleFile/UserIMG/@Model.UserData.UserImage" alt="รูปผู้ใช้งาน" style="max-height:200px;max-width:180px" />
+                    }
+                    else
+                    {
+                        <img src="~/MDSMiddleFile/UserIMG/noImg.png" alt="รูปผู้ใช้งาน" style="max-height:200px" />
+                    }
+                    <br />
+                    <br />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div align="center">
+                    <div class="text-center kv-avatar">
+                        <input id="newsImg" name="UserImageFile" type="file" accept=".jpg, .png, .gif">
+                    </div>
+                </div>
+                <br />
+                <br />
+            </div>
+            <div class="col-md-8">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>ชื่อผู้ใช้งาน</label>
+                        <input type="text" class="form-control" value="@Model.UserData.Username" readonly>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>รหัสผ่าน</label>
+                        <input type="password" class="form-control" value="xxxxxxxx" readonly>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>รหัสพนักงาน</label>
+                        <input type="text" class="form-control" value="@Model.UserData.EmpCode" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content-box">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="glyph-icon icon-cog"></i>
+        ข้อมูลรายละเอียด
+    </h3>
+    <div class="content-box-wrapper">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>คำนำหน้าชื่อ</label>
+                    <select class="form-control" name="PrefixId" required>
+                        <option value="" disabled selected>กรุณาเลือกคำนำหน้าชื่อ</option>
+                        @foreach (var prefixData in Model.PrefixDataList)
+                        {
+                            if (prefixData.PrefixCode == Model.UserData.PrefixId)
+                            {
+                                <option value="@prefixData.PrefixCode" selected>@prefixData.PrefixName</option>
+                            }
+                            else
+                            {
+                                <option value="@prefixData.PrefixCode">@prefixData.PrefixName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>กลุ่มผู้ใช้งาน</label>
+                    <input type="text" class="form-control" value="@Model.UserData.UserGNameTh" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>ชื่อ</label>
+                    <input type="text" class="form-control" value="@Model.UserData.FirstNameTH" name="FirstNameTH">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>นามสกุล</label>
+                    <input type="text" class="form-control" value="@Model.UserData.LastNameTH" name="LastNameTH">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>ชื่อ(ภาษาอังกฤษ)</label>
+                    <input type="text" class="form-control" value="@Model.UserData.FirstNameEN" name="FirstNameEN">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>นามสกุล(ภาษาอังกฤษ)</label>
+                    <input type="text" class="form-control" value="@Model.UserData.LastNameEN" name="LastNameEN">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>อีเมลล์</label>
+                    <input type="email" class="form-control" value="@Model.UserData.Email" name="Email">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>เบอร์ติดต่อ</label>
+                    <input type="text" class="form-control" value="@Model.UserData.Tel" name="Tel">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>เบอร์มือถือ</label>
+                    <input type="text" class="form-control" value="@Model.UserData.Mobile" name="Mobile">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>เบอร์แฟก</label>
+                    <input type="text" class="form-control" value="@Model.UserData.Fax" name="Fax">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>หน่วยงาน</label>
+                    <input type="text" class="form-control" value="@Model.UserData.DepartName" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>สถานะ</label>
+                    <input type="text" class="form-control" value="@Model.UserData.Status" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-3">
+                        <a href="@Url.Action("ManageBoard", "Board")" class="btn btn-block btn-danger btnCancel">กลับ</a>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-block btn-success" id="SubmitButton">บันทึก</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{Html.EndForm();}
+
+@section scripts{
+    <script src="~/assets/fileInput/fileinput.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datepicker/datepicker.js"></script>
+    <script src="~/assets/ckeditor/ckeditor.js"></script>
+    <script src="~/assets/ckfinder/ckfinder.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#newsImg").fileinput({
+                overwriteInitial: true,
+                maxFileSize: 10240,
+                showClose: false,
+                showCaption: false,
+                showBrowse: false,
+                browseOnZoneClick: true,
+                removeLabel: 'ยกเลิกภาพที่เลือก',
+                removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+                removeTitle: '',
+                elErrorContainer: '#kv-avatar-errors-2',
+                msgErrorClass: 'alert alert-block alert-danger',
+                defaultPreviewContent: '<img src="@Url.Content("~/MDSMiddleFile/UserIMG/cloud-computing.png")" alt=""><h6 class="text-muted">คลิกเพื่อเลือกรูปผู้ใช้</h6>',
+                layoutTemplates: { main2: '{preview} {remove}' },
+                allowedFileExtensions: ["jpg", "png", "gif"]
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#success-alert").hide();
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+        });
+    </script>
+}
+

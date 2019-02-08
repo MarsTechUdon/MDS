@@ -1,0 +1,740 @@
+﻿@using MDS.Models;
+@{
+    ViewBag.Title = "ตั้งค่าข้อมูลโรงเรียน";
+    var data = (CompanyModel)ViewBag.GetCompany;
+    var dataConfig = ViewBag.GetListConfig as List<ConfigModel>;
+
+}
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+<style>
+
+    .ui-tabs-nav > li, .ui-tabs-nav > li > a {
+        float: left !important;
+    }
+
+    .content-box-header > .ui-tabs-nav {
+        left: 0 !important;
+    }
+
+    .card {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        border-radius: 3px;
+        color: rgba(0,0,0, 0.87);
+        background: #fff;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    }
+
+        .card .card-image {
+            height: 60%;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card .card-image img {
+                width: 100%;
+                height: 100%;
+                border-top-left-radius: 2px;
+                border-top-right-radius: 2px;
+                pointer-events: none;
+            }
+
+            .card .card-image .card-image-headline {
+                position: absolute;
+                bottom: 16px;
+                left: 18px;
+                color: #fff;
+                font-size: 2em;
+            }
+
+        .card .content {
+            padding: 15px;
+        }
+
+    .custom-file-upload {
+        position: absolute;
+        display: inline-block;
+        cursor: pointer;
+        font-size: 26px;
+        left: 40%;
+        top: 35%;
+    }
+
+    .pic-btn {
+        font-size: 20px;
+        position: absolute;
+        top: 50%;
+        color: #000;
+        background-color: #fff;
+        padding: 10px 10px;
+        border-radius: 50%;
+    }
+
+    .pic-hov i {
+        transition-duration: .5s;
+        transform: scale(0);
+        transition: transform 300ms 0ms cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    }
+
+    .pic-hov:hover i {
+        transform: scale(0.8);
+        transition: transform 300ms 100ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: rgba(0, 0, 0, 0) 0px 14px 26px -12px, rgba(0, 0, 0, 0.30) 0px 4px 23px 0px;
+    }
+
+    .pic-hov:hover img {
+        opacity: .5;
+        background-color: #fff;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    .inputslider:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    .inputslider:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    .inputslider:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+
+<input type="hidden" id="tabActive" value="@ViewBag.tabActive">
+<input type="hidden" id="ResultCF" value="@ViewBag.ResultCF">
+<input type="hidden" id="MessageCF" value="@ViewBag.MessageCF">
+<input type="hidden" id="CFtype" value="@ViewBag.CFtype">
+<input type="hidden" id="paraid" value="@ViewBag.paraid">
+
+<div class="content-box-wrapper">
+    <div class="content-box tabs">
+        <div class="content-box-header bg-blue-alt" style="background-color: #3598db;">
+            <span style="float:right;">
+                ตั้งค่าข้อมูลโรงเรียน
+            </span>
+            <ul>
+                <li>
+                    <a data-toggle="tab" href="#tabs-1" id="tebclick_1" value="1">
+                        ข้อมูลโรงเรียน
+                        <i class="glyph-icon fa fa-car icon-size23"></i>
+                    </a>
+                </li>
+                <li class="active">
+                    <a data-toggle="tab" href="#tabs-2" id="tebclick_2" value="2">
+                        ตั้งค่า
+                        <i class="glyph-icon fa fa-gears icon-size23"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="tabs-1">
+            <div class="content-box-wrapper">
+                @using (Html.BeginForm("EditCompany", "School", FormMethod.Post))
+                {
+                    <input type="hidden" name="ind" id="ind" value="@data.ind" />
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h3 class="title-hero">
+                                ข้อมูลบริษัท (ภาษาไทย)
+                            </h3>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <div class="pic-hov">
+                                        @if (data.CompanyLogo != null)
+                                        {
+                                            <img id="photo1" src="data:image/jpeg;base64,@data.CompanyLogo" class="img-responsive" />
+                                            <input type="hidden" name="CompanyLogo" id="photo_temp1" value="@data.CompanyLogo" />
+                                        }
+                                        else
+                                        {
+                                            <img id="photo1" src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" class="img-responsive" />
+                                            <input type="hidden" name="CompanyLogo" id="photo_temp1" />
+                                        }
+                                        @*<img id="photo" src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" class="img-responsive" />
+                                            <input type="hidden" name="photo_temp" id="photo_temp" />*@
+                                        <label for="file1" class="custom-file-upload">
+                                            <i class="glyph-icon icon-camera pic-btn"></i>
+                                        </label>
+                                        <input id="file1" type="file" onchange="showimagepreview1(this)" name="file" style="display:none !important;" accept="image/x-png,image/jpg,image/jpeg" />
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-12">
+                                    <div class="form-group">
+                                        <label>ชื่อบริษัท</label>
+                                        <input type="text" name="CompanyName" id="CompanyName" placeholder="กรุณากรอก ชื่อบริษัท" class="form-control" autocomplete="off" value="@data.CompanyName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ที่อยู่ 1</label>
+                                        <input type="text" name="CompanyAddr1" id="CompanyAddr1" placeholder="กรุณากรอก ที่อยู่ 1" class="form-control" autocomplete="off" value="@data.CompanyAddr1" />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ที่อยู่ 2</label>
+                                        <input type="text" name="CompanyAddr2" id="CompanyAddr2" placeholder="กรุณากรอก ที่อยู่ 2" class="form-control" autocomplete="off" value="@data.CompanyAddr2" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ที่อยู่ 3</label>
+                                        <input type="text" name="CompanyAddr3" id="CompanyAddr3" placeholder="กรุณากรอก ที่อยู่ 3" class="form-control" autocomplete="off" value="@data.CompanyAddr3" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h3 class="title-hero">
+                                ข้อมูลบริษัท (ภาษาอังกฤษ)
+                            </h3>
+                            <div class="row">
+                                <div class="col-lg-offset-4 col-lg-8 col-md-8 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Company Name</label>
+                                        <input type="text" name="CompanyNameE" id="CompanyNameE" placeholder="Please enter CompanyName" class="form-control" autocomplete="off" value="@data.CompanyNameE" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address 1</label>
+                                        <input type="text" name="CompanyAddrE1" id="CompanyAddrE1" placeholder="Please enter Address 1" class="form-control" autocomplete="off" value="@data.CompanyAddrE1" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address 2</label>
+                                        <input type="text" name="CompanyAddrE2" id="CompanyAddrE2" placeholder="Please enter Address 2" class="form-control" autocomplete="off" value="@data.CompanyAddrE2" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address 3</label>
+                                        <input type="text" name="CompanyAddrE3" id="CompanyAddrE3" placeholder="Please enter Address 3" class="form-control" autocomplete="off" value="@data.CompanyAddrE3" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h3 class="title-hero">
+                                ข้อมูลโรงเรียน(ภาษาไทย)
+                            </h3>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <div class="pic-hov">
+                                        @if (@data.SchoolLogo != null)
+                                        {
+                                            <img id="photo2" src="data:image/jpeg;base64,@data.SchoolLogo" class="img-responsive" />
+                                            <input type="hidden" name="SchoolLogo" id="photo_temp2" value="@data.SchoolLogo" />
+                                        }
+                                        else
+                                        {
+                                            <img id="photo2" src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" class="img-responsive" />
+                                            <input type="hidden" name="SchoolLogo" id="photo_temp2" />
+                                        }
+                                        <label for="file2" class="custom-file-upload">
+                                            <i class="glyph-icon icon-camera pic-btn"></i>
+                                        </label>
+                                        <input id="file2" type="file" onchange="showimagepreview2(this)" name="file" style="display:none !important;" accept="image/x-png,image/jpg,image/jpeg" />
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-12">
+                                    <div class="form-group">
+                                        <label>ชื่อโรงเรียน</label>
+                                        <input type="text" name="SchoolName" id="SchoolName" placeholder="กรุณากรอก ชื่อบริษัท" class="form-control" autocomplete="off" value="@data.SchoolName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ที่อยู่ 1</label>
+                                        <input type="text" name="schoolAddr1" id="schoolAddr1" placeholder="Please enter Address 1" class="form-control" autocomplete="off" value="@data.schoolAddr1" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ที่อยู่ 2</label>
+                                        <input type="text" name="schoolAddr2" id="schoolAddr2" placeholder="กรุณากรอก ที่อยู่ 2" class="form-control" autocomplete="off" value="@data.schoolAddr2" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ที่อยู่ 3</label>
+                                        <input type="text" name="schoolAddr3" id="schoolAddr3" placeholder="กรุณากรอก ที่อยู่ 3" class="form-control" autocomplete="off" value="@data.schoolAddr3" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h3 class="title-hero">
+                                ข้อมูลโรงเรียน (ภาษาอังกฤษ)
+                            </h3>
+                            <div class="row">
+                                <div class="col-lg-offset-4 col-lg-8 col-md-8 col-sm-12">
+                                    <div class="form-group">
+                                        <label>School Name</label>
+                                        <input type="text" name="SchoolNameE" id="SchoolNameE" placeholder="Please enter SchoolName" class="form-control" autocomplete="off" value="@data.SchoolNameE" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address 1</label>
+                                        <input type="text" name="schoolAddrE1" id="schoolAddrE1" placeholder="Please enter Address 1" class="form-control" autocomplete="off" value="@data.schoolAddrE1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address 2</label>
+                                        <input type="text" name="schoolAddrE2" id="schoolAddrE2" placeholder="Please enter Address 2" class="form-control" autocomplete="off" value="@data.schoolAddrE2" />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address 3</label>
+                                        <input type="text" name="schoolAddrE3" id="schoolAddrE3" placeholder="Please enter Address 3" class="form-control" autocomplete="off" value="@data.schoolAddrE3" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-3">
+                                    <a href="@Url.Action("Main", "Overview")" class="btn btn-block btn-danger btnCancel">กลับ</a>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-block btn-success" id="btnSaveType">บันทึก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div id="tabs-2">
+            <div class="content-box-wrapper">
+                <table id="datatable-responsive" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center">ลำดับ</th>
+                            <th>รายการตั้งค่า</th>
+                            <th>การตั้งค่า</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in dataConfig)
+                        {
+                            <tr>
+                                <td>@item.paraid</td>
+                                <td id="tId_@item.paraid">@item.paraDesc</td>
+                                <td>
+                                    @if (item.fieldType == "S")
+                                    {
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                @*<input type="checkbox" class="input-switch-alt paraSetCheck" id="paraSetCheck_@item.paraid" @(item.paraValue == "1" ? "checked" : "") onclick="myFunction()">*@
+                                                @*<input type="checkbox" data-on-color="success" data-size="normal" name="" class="input-switch paraSetCheck" checked onchange="myFunction(this)">*@
+
+                                                <label class="switch">
+                                                    <input type="checkbox" class="inputslider" id="paraSetCheck_@item.paraid" @(item.paraValue == "1" ? "checked" : "")>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <button style="" class="btn btn-sm btn-success tooltip-button btnsaveconfigCheck" id="btnsaveconfigCheck_@item.paraid" value="@item.paraid" data-placement="top" title=""  @(ViewBag.CFtype == "N"&&ViewBag.paraid == item.paraid ? "" : "disabled")  >
+                                                    <i class="glyph-icon icon-floppy-o"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+
+                                    }
+                                    else if (item.fieldType == "T")
+                                    {
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <input type="text" class="form-control txtConfig" id="txtConfig_@item.paraid" min="1" value="@item.paraValue" maxlength="4">
+                                                @if (item.paraName == "ParaMPretestPass")
+                                                {
+                                                    <label> &nbsp;ครั้ง</label>
+                                                }
+                                                else if (item.paraName == "ParaMClearBooking")
+                                                {
+                                                    <label> &nbsp;นาที</label>
+                                                }
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <button class="btn btn-sm btn-success tooltip-button btnsaveconfig" id="btnsaveconfig_@item.paraid" value="@item.paraid" data-placement="top" title="" disabled>
+                                                    <i class="glyph-icon icon-floppy-o"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- SetConfigModal -->
+<div class="modal fade" id="SetConfigModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="lineModalLabel">แจ้งเตือน</h3>
+            </div>
+            <div class="modal-body">
+                <span id="txtTag"></span>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="submit" class="btn btn-danger" data-dismiss="modal" role="button">ตกลง</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="container-generic-form" style="display:none;">
+    @using (Html.BeginForm("", "", FormMethod.Post, new { id = "form" }))
+    {
+    }
+</div>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/validate.js"></script>
+<script type="text/javascript" src="~/assets/widgets/tabs-ui/tabs.js"></script>
+<script type="text/javascript">
+    /* jQuery UI Tabs */
+
+    $(function () {
+        "use strict";
+        $(".tabs").tabs();
+    });
+
+    $(function () {
+        "use strict";
+        $(".tabs-hover").tabs({
+            event: "mouseover"
+        });
+    });
+</script>
+<!-- Boostrap Tabs -->
+<script type="text/javascript" src="~/assets/widgets/tabs/tabs.js"></script>
+<!-- Tabdrop Responsive -->
+
+<script type="text/javascript" src="~/assets/widgets/tabs/tabs-responsive.js"></script>
+<script type="text/javascript">
+    /* Responsive tabs */
+    $(function () {
+        "use strict";
+        $('.nav-responsive').tabdrop();
+    });
+</script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+
+<!-- Input switch -->
+<!--<link rel="stylesheet" type="text/css" href="../../assets/widgets/input-switch/inputswitch.css">-->
+<script type="text/javascript" src="~/assets/widgets/input-switch/inputswitch.js"></script>
+<script type="text/javascript">
+    /* Input switch */
+
+    $(function () {
+        "use strict";
+        $('.input-switch').bootstrapSwitch();
+    });
+</script>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#datatable-responsive').DataTable({
+                responsive: true,
+                "paging": false,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": false,
+                "info": false,
+            });
+
+            $('input[type=text].txtConfig').on('click', function (event) {
+
+                var idelement = event.target.id;
+               // alert(idelement);
+                var strid = idelement.split('_');
+                var paravalueOld = $(this).attr('value');
+                $("#" + idelement).keyup(function () {
+                    if (this.value != paravalueOld) {
+                        $('#btnsaveconfig_' + strid[1]).removeAttr("disabled");
+                    }
+                    else {
+                        $('#btnsaveconfig_' + strid[1]).attr("disabled", "disabled");
+                    }
+                    //alert(this.value + ' ' + paravalueOld + ' ' + idelement);
+                });
+
+            });
+            $(document).on('click', '.btnsaveconfig', function () {
+                var paraid = $(this).val();
+                var paravalue = $("#txtConfig_" + paraid).val()
+                if (paravalue == "") {
+                    paravalue = "0";
+                }
+                var paranameName = $('#tId_' + paraid).text();
+                var url = '@Url.Action("SetConfig", "School")';
+                var form = $('#container-generic-form').find('#form').prop('action', url);
+                $('<input>').attr({ type: 'hidden', name: 'paraid' }).val(paraid).appendTo('#form');
+                $('<input>').attr({ type: 'hidden', name: 'paravalue' }).val(paravalue).appendTo('#form');
+                $('<input>').attr({ type: 'hidden', name: 'paranameName' }).val(paranameName).appendTo('#form');
+                $('<input>').attr({ type: 'hidden', name: 'type' }).val("T").appendTo('#form');
+                form.submit();
+                //SetConfig(paraid, paravalue,"T");
+            });
+
+            $(document).on('click', '.inputslider', function (event) {
+               var idelement = event.target.id;
+                var strid = idelement.split('_');
+                $('#btnsaveconfigCheck_' + strid[1]).removeAttr("disabled");
+            });
+
+            $(document).on('click', '.btnsaveconfigCheck', function () {
+                var paraid = $(this).val();
+                var paravalue = "";
+                if ($("#paraSetCheck_" + paraid).is(":checked")) {
+                    //SetConfig(paraid, "1", "S");
+                    paravalue = "1";
+                }
+                else {
+                    paravalue = "0";
+                    //SetConfig(paraid, "0", "S");
+                }
+                var paranameName = $('#tId_' + paraid).text();
+                var url = '@Url.Action("SetConfig", "School")';
+                var form = $('#container-generic-form').find('#form').prop('action', url);
+                $('<input>').attr({ type: 'hidden', name: 'paraid' }).val(paraid).appendTo('#form');
+                $('<input>').attr({ type: 'hidden', name: 'paravalue' }).val(paravalue).appendTo('#form');
+                $('<input>').attr({ type: 'hidden', name: 'paranameName' }).val(paranameName).appendTo('#form');
+                $('<input>').attr({ type: 'hidden', name: 'type' }).val("S").appendTo('#form');
+                form.submit();
+            });
+            @*function SetConfig(paraid, paravalue, type) {
+                var paranameName = $('#tId_' + paraid).text();
+                $.ajax({
+                    data: { paraid: paraid, paravalue: paravalue, paranameName: paranameName, type: type  },
+                        url: '@Url.Action("SetConfig", "School")',
+                        dataType: "json",
+                        type: "POST",
+                    success: function () {
+                        //alert(item.msg);
+                        //if (item.result == "Y") {
+
+                        //    $('#txtTag').text('แก้ไข ' + $('#tId_' + paraid).text() + ' สำเร็จ');
+                        //    document.getElementById("txtTag").style.color = "green";
+                        //    $('#SetConfigModal').modal({ backdrop: 'static', keyboard: false });
+                        //    $('#SetConfigModal').appendTo('body');
+                        //    if (type == "T") {
+                        //        $('#btnsaveconfig_' + paraid).attr("disabled", "disabled");
+                        //    }
+                        //    else {
+                        //        $('#btnsaveconfigCheck_' + paraid).attr("disabled", "disabled");
+                        //    }
+                        //}
+                        //else {
+                        //    $('#txtTag').text($('แก้ไข ' + '#tId_' + paraid).text() + ' สำเร็จ');
+                        //    document.getElementById("txtTag").style.color = "red";
+                        //    $('#SetConfigModal').modal({ backdrop: 'static', keyboard: false });
+                        //    $('#SetConfigModal').appendTo('body');
+                        //}
+                        },
+                        error: function (a, b, c) {
+                            //$('#txtTag').text("error" + a);
+                            alert("error" + a);
+                        }
+                        });
+            };*@
+            $(".txtConfig").keydown(function (e) {
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+                    (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                    return;
+                }
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "Search...");
+            if ($('#tabActive').val() == '1') {
+                $('#tebclick_1').trigger('click');
+            }
+            else if ($('#tabActive').val() == '2') {
+                $('#tebclick_2').trigger('click');
+            }
+            if ($('#ResultCF').val() == 'Y') {
+                //if ($('#CFtype').val() == "T") {
+                //    $('#btnsaveconfig_' + $('#paraid').val()).attr("disabled", "disabled");
+                //}
+                //else {
+                //    $('#btnsaveconfigCheck_' + $('#paraid').val()).attr("disabled", "disabled");
+                //}
+                
+                $('#txtTag').text($('#MessageCF').val());
+                document.getElementById("txtTag").style.color = "green";
+                $('#SetConfigModal').modal({ backdrop: 'static', keyboard: false });
+                $('#SetConfigModal').appendTo('body');
+
+            }
+            else if ($('#ResultCF').val() == 'N') {
+                $('#txtTag').text($('#MessageCF').val());
+                document.getElementById("txtTag").style.color = "red";
+                $('#SetConfigModal').modal({ backdrop: 'static', keyboard: false });
+                $('#SetConfigModal').appendTo('body');
+            }
+        });
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
+        });
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
+        });
+
+        function showimagepreview1(input) {
+            var typ = document.getElementById("file1").value
+            var jpgS = typ.match(".jpg");
+            var jpgB = typ.match(".JPG");
+            var jpegS = typ.match(".jpeg");
+            var jpegB = typ.match(".JPEG");
+            var pngS = typ.match(".png");
+            var pngB = typ.match(".PNG");
+            if (input.files[0].size <= 2097152) {
+                if (jpgS || jpgB || jpegS || jpegB || pngS || pngB) {
+                    //  alert("sucess");
+                    //console.log(input.files[0].size);
+                    if (input.files && input.files[0]) {
+
+                        var filerdr = new FileReader();
+                        filerdr.onload = function (e) {
+                            $('#photo1').attr('src', e.target.result);
+                            var temppic = e.target.result.split(',');
+                            document.getElementById('photo_temp1').value = temppic[1];
+                        }
+                        filerdr.readAsDataURL(input.files[0]);
+
+                    }
+                } else {
+                    //
+                    alert("กรุณาใช้ไฟล์ภาพนามสกุล .jpg .jpeg .png เท่านั้น");
+                    // document.getElementById("file").value;
+                    return false;
+                }
+            } else {
+                alert('รูปภาพมีขนาดใหญ่เกิน 100 kb');
+            }
+        }
+        function showimagepreview2(input) {
+            var typ = document.getElementById("file2").value
+            var jpgS = typ.match(".jpg");
+            var jpgB = typ.match(".JPG");
+            var jpegS = typ.match(".jpeg");
+            var jpegB = typ.match(".JPEG");
+            var pngS = typ.match(".png");
+            var pngB = typ.match(".PNG");
+            if (input.files[0].size <= 2097152) {
+                if (jpgS || jpgB || jpegS || jpegB || pngS || pngB) {
+                    //  alert("sucess");
+                    //console.log(input.files[0].size);
+                    if (input.files && input.files[0]) {
+
+                        var filerdr = new FileReader();
+                        filerdr.onload = function (e) {
+                            $('#photo2').attr('src', e.target.result);
+                            var temppic = e.target.result.split(',');
+                            document.getElementById('photo_temp2').value = temppic[1];
+                        }
+                        filerdr.readAsDataURL(input.files[0]);
+
+                    }
+                } else {
+                    //
+                    alert("กรุณาใช้ไฟล์ภาพนามสกุล .jpg .jpeg .png เท่านั้น");
+                    // document.getElementById("file").value;
+                    return false;
+                }
+            } else {
+                alert('รูปภาพมีขนาดใหญ่เกิน 100 kb');
+            }
+        }
+    </script>
+}

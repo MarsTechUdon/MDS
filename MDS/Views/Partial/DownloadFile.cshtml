@@ -1,0 +1,17 @@
+﻿@using MDS.Models
+@{
+    Layout = null;
+}
+@foreach (var item in ViewBag.Filedownload as List<MediaFileModel>)
+{
+    <li>
+        <span class="bg-danger icon-notification glyph-icon icon-file-pdf-o"></span>
+        <span class="notification-text">  
+        <a href="~/@item.FLink" download="@item.FDesc">@item.FDesc</a>
+        
+        </span>
+
+    </li>
+}
+
+

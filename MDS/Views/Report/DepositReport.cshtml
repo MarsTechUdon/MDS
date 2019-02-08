@@ -1,0 +1,35 @@
+﻿@using ReportViewerForMvc;
+@{
+    ViewBag.Title = "พิมพ์ใบนำฝาก";
+}
+<div class="panel">
+    <div class="panel-body">
+        <div class="row">
+            <div class="float-left">
+                @using (Html.BeginForm("ListBatch", "Deposit", FormMethod.Post))
+                {
+                    <button class="btn btn-md btn-danger tooltip-button" data-original-title="กลับ" name="studentind">
+                        <i class="glyph-icon icon-arrow-circle-left font-size-20"></i>
+                        <span>กลับ</span>
+                    </button>
+                    <input type="hidden" name="voucherid" value="@ViewBag.Voucherid" id="pvoucherid" />
+                    <input type="hidden" name="tabActive" value="3" id="tabActive" />
+                }
+            </div>
+            <h2 style="text-align:center;">พิมพ์ใบนำฝาก</h2>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            @Html.ReportViewer(ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer, new { @style = "width:100%; height:100%;" })
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+
+    </script>
+}

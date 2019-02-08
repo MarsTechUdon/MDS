@@ -1,0 +1,147 @@
+﻿@using MDS.Models;
+@{
+    ViewBag.Title = ViewBag.titledata;
+    var data = ViewBag.list as List<OverviewDetailModel>;
+}
+
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+<style>
+    .content-box-header {
+        font-size: 20px !important;
+    }
+</style>
+@*<div id="page-title">
+        <h2>  @ViewBag.titledata</h2>
+    </div>*@
+<div class="content-box">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="glyph-icon icon-cog"></i>
+        @ViewBag.titledata
+    </h3>
+    <div class="content-box-wrapper">
+        <div class="table-responsive">
+            <table id="datatable-responsive" class="table table-striped" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;" width="5%">ลำดับ</th>
+                        <th style="text-align:left;" width="30%">รายละเอียด</th>
+                        <th style="text-align:left;" width="20%">หลักสูตร</th>
+                        <th style="text-align:left;" width="5%"></th>
+                        <th style="text-align:left;" width="15%">วันที่สมัคร</th>
+                        <th style="text-align:left;" width="25%">การชำระเงิน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in data)
+                    {
+                        <tr>
+
+                            <td>@item.rno</td>
+                            <td>
+                                <p>
+                                    <b>รหัสนักเรียน :</b> @item.ind &nbsp;
+                                    @*<a href="@Url.Action("StudentDetail", "Student",new { tabActive="1",studenttype=item.studenttype,voucherid=item.voucherid,studentind=item.ind})" class="btn btn-xs btn-primary tooltip-button" data-original-title="แสดงข้อมูลนักเรียน" target="_blank">
+                                            <i class="glyph-icon fa fa-search-plus font-size-14"></i>
+                                        </a>*@
+                                    @using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                    {
+                                        <b>รหัสนักเรียน :</b> @item.ind
+                                        <button class="btn btn-xs btn-primary tooltip-button" data-original-title="แสดงข้อมูลนักเรียน" name="studentind" value="@item.ind" style="white-space: nowrap;">
+                                            <i class="glyph-icon fa fa-search-plus font-size-14"></i>
+                                        </button>
+                                        <input type="hidden" name="tabActive" value="1" />
+                                        <input type="hidden" name="studenttype" value="@item.studenttype" />
+                                        <input type="hidden" name="voucherid" value="@item.voucherid" />
+                                    }
+                                </p>
+                                <p><b>ชื่อ-นามสกุล :</b> @item.studentname</p>
+                                <p><b>หมายเลขบัตร :</b> @item.idcard</p>
+                                <p><b>เบอร์โทร :</b> @item.mobileno</p>
+                            </td>
+                            <td>
+                                <p class="tooltip-button" data-original-title="@item.coursename">  @item.coursenickname</p>
+
+                            </td>
+                            <td>
+                                <a class="btn btn-info tooltip-button" style="@item.courseiconcolor" data-original-title="@item.coursegroupname">
+                                    <i class="glyph-icon @item.courseicon font-size-20"></i>
+                                </a>
+                            </td>
+                            <td>@item.regisdate</td>
+                            <td>
+                                @{
+                                    var result = Convert.ToDecimal(@item.remain);
+                                    var valueminus = string.Format("{0:n}", result * (-1));
+                                    var value = string.Format("{0:n}", result);
+                                }
+                                <p><b>ราคาหลักสูตร :</b> @item.courseprice บาท</p>
+                                <p><b>จ่ายแล้ว :</b> @item.payamount บาท</p>
+                                <p>
+                                    <b>ค้างชำระ :</b> @if (result < 0)
+                                    {
+                                        <span style="color:red">(@valueminus)</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@value</span>
+                                    }
+                                    บาท
+                                </p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <a href="@Url.Action("Main", "Overview")" class="btn btn-block btn-danger btnCancel">กลับ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#datatable-responsive').DataTable({
+                responsive: true,
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "order": [],
+                "language": {
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+        });
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
+        });
+    </script>
+
+

@@ -1,0 +1,394 @@
+﻿@using MDS.Models;
+@{
+    var userData = Session["UserProfile"] as UserSessionModel;
+    ViewBag.Title = "ตารางสอน";
+    var i = 0;
+}
+
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+<style type="text/css">
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none;
+        line-height: 30px;
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+    .content-box-header {
+        font-size: 20px !important;
+    }
+</style>
+@*<link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker-ui/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/daterangepicker/daterangepicker.css">*@
+
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+<input type="hidden" id="Classroomdate" value="@ViewBag.Classroomdate" />
+<div class="content-box">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="fa fa-calendar-o"></i>
+        ตารางสอน
+    </h3>
+    <div class="content-box-wrapper">
+        <br>
+        @using (Html.BeginForm("SeachingTimeTeach", "Learning",
+                  FormMethod.Post, new { @class = "form-horizontal bordered-row", @id = "SeachingTime" }))
+        {
+        <div class="row">
+            <div class="text-center">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label text-right">วันที่</label>
+                    <div class="col-md-3">
+                        <div class="input-prepend input-group">
+                            <span class="add-on input-group-addon">
+                                <i class="glyph-icon icon-calendar"></i>
+                            </span>
+                            <input type="text" class="form-control bootstrap-datepicker" name="Classroomdate" id="Classdate" autocomplete="off" value="@(ViewBag.Classroomdate!=""?ViewBag.Classroomdate:"")" readonly/>
+                            @* <input type="text" name="Classroomdate" id="Classroomdate" class="datepicker form-control" autocomplete="off" value="@(ViewBag.Classroomdate!=""?ViewBag.Classroomdate:"")" />*@
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-default tooltip-button text-left" data-placement="top" title="ค้นหา">
+                            ค้นหา
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        }
+        <div class="table-responsive">
+            <table id="datatable-responsive" class="table table-striped " cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;" width="5%">ลำดับ</th>
+                        <th style="text-align:center;" width="15%">เวลา</th>
+                        <th style="text-align:center;" width="10%">ภาค</th>
+                        <th style="text-align:center;" width="20%">หลักสูตร</th>
+                        <th style="text-align:center;" width="25%">วิชา/ครู</th>
+                        <th style="text-align:center;" width="20%">นักเรียน</th>
+                        <th style="text-align:center;" width="5%">แสดง</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.liststudybydate as List<ListstudyModel>)
+                    {
+                        i++;
+                        <tr>
+                            <td style="text-align:center">@i</td>
+                            <td style="text-align:center" id="stutime_@i">
+                                @item.studystime-@item.studyetime
+                            </td>
+                            <td style="text-align:center">
+                                @item.subjecttype
+                            </td>
+                            <td>
+                                @item.coursenickname
+                            </td>
+                            <td>
+                                <p>วิชา: @item.subjectnickname</p>
+                                <p>ครู: @item.teachername</p>
+                            </td>
+                            <td>
+                                @{
+                                    var j = 0;
+                                    var std = item.studentname.Split(',');
+                                }
+                                @foreach (var itemstd in std)
+                                {
+                                    j++;
+                                    <p>@j .@itemstd</p>
+                                }
+                            </td>
+                            <td style="text-align:center">
+                                <button type="button" class="btn btn-success btnPreview tooltip-button" data-placement="top" title="แสดงข้อมูล" value="@item.subjectid-@i">
+                                    <i class="glyph-icon icon-search-plus"></i>
+                                </button>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <a href="@Url.Action("Main", "Overview")" class="btn btn-block btn-danger btnCancel">กลับ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="ShowdataModal" class="modal fade" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="closeModal" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle">ข้อมูล</span></h4>
+            </div>
+            <div class="modal-body">
+                @*<h4 class="text-center">รายชื่อนักเรียน</h4>*@
+                <p id="pDetails"></p>
+                <br>
+                <table class="table table-striped" id="tableshow">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;" width="10%">ลำดับ</th>
+                            <th style="text-align:center;" width="50%">นักเรียน</th>
+                            <th style="text-align:center;" width="40%">เลขประจำตัว</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btnSaveAdd" onclick="printContent('dvmismatch')"><i class="glyph-icon tooltip-button icon-print"></i> &nbsp;พิมพ์</button>
+                @*<a href="#"  onclick="printContent('dvmismatch')" title="Print"></a>*@
+                <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dvmismatch" style="display :none;">
+    <div class="container">
+        <div class="panel">
+            <div class="panel-body">
+                <div class="text-center">
+                    <img src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" width="100" height="50">
+                </div>
+                <h4 class="text-center">รายชื่อนักเรียน</h4>
+                <p id="printDetails" style="font-size:13px !important"></p>
+                <br>
+                <table class="table" id="tablePrint" border="1" style="font-size:13px !important">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;" width="10%">ลำดับ</th>
+                            <th style="text-align:center;" width="40%">นักเรียน</th>
+                            <th style="text-align:center;" width="30%">เลขประจำตัว</th>
+                            <th style="text-align:center;" width="20%">หมายเหตุ</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <br>
+                <div class="row">
+                    <div class="col-md-6" style="float:left !important;font-size:14px !important">
+                        <h4 class="text-left" id="printNow"></h4>
+                    </div>
+                    <div class="col-md-6" style="float:right !important;font-size:14px !important">
+                        <h4 class="text-right">พิมพโดย : @userData.UserFirstNameEN @userData.UserLastNameEN</h4>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts{
+
+    <!-- Bootstrap Datepicker -->
+    @*<link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker/bootstrap-datepicker.css">
+        <script type="text/javascript" src="~/assets/widgets/datepicker/bootstrap-datepicker-custom.js"></script>
+        <script type="text/javascript" src="~/assets/widgets/datepicker/locales/bootstrap-datepicker.th.min.js"></script>*@
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+    <script src="~/Content/Jquery/jquery-ui.js"></script>
+    <script type="text/javascript" src="~/Scripts/formprint.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //var d = new Date();
+            //var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+            $("#Classdate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                //defaultDate: toDay,
+                autoclose: true,
+                dateFormat: 'dd/mm/yy',
+                isBuddhist: true,
+                orientation: "bottom left",
+                yearRange: "-100:+0",
+                dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+                dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+            }).keydown(function (e) {
+                return false;
+            });
+        //$('.datepicker').datepicker({
+        //    autoclose: true,
+        //    format: 'dd/mm/yyyy',
+        //    todayBtn: true,
+        //    language: 'th',
+        //    thaiyear: false,              //Set เป็นปี พ.ศ.
+        //    orientation: "bottom left",
+        //    forceParse: false,
+        //    todayHighlight: true,
+        //    setDate: new Date(),
+        //}).keydown(function (e) {
+        //    return false;
+        //});
+        $('#datatable-responsive').DataTable({
+            "responsive": true,
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "order": [],
+            "language": {
+                "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                "emptyTable": "ไม่มีข้อมูล",
+                "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                "infoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+                "infoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+                "lengthMenu": "แสดง  _MENU_  รายการ",
+                "paginate": {
+                    "first": "หน้าแรก",
+                    "previous": "ก่อนหน้า",
+                    "next": "ถัดไป",
+                    "last": "หน้าสุดท้าย"
+                }
+            }
+        });
+                $(document).on('click', '.btnPreview', function () {
+            var today = new Date();
+            var dd = today.getDate();
+
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+            var hour = today.getHours() + "";
+            var minutes = today.getMinutes();
+            var seconds = today.getSeconds();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+
+            today = dd + '/' + mm + '/' + yyyy + ' ' + hour + ':' + minutes + ':'+seconds;
+            $('#printNow').text("วันเวลาที่พิมพ์ : " + today)
+            $("#tablePrint tbody").empty();
+            $("#tableshow tbody").empty();
+            var subjectid = this.value;
+            var strsubjectid = subjectid.split('-');
+            var studytime = $('#stutime_' + strsubjectid[1]).text();
+            var strstudytime = studytime.split('-');
+            var Classroomdate = $('#Classroomdate').val();
+             $.ajax({
+                 data: { currentdate: Classroomdate, subjectid: strsubjectid[0], studystime: strstudytime[0].trim(), studyetime: strstudytime[1].trim()},
+                    url: '@Url.Action("GetstudybydatePreview", "Learning")',
+                    dataType: "json",
+                     type: "POST",
+                        success: function (result) {
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>วันที่ : </b>' + result.studydate));
+                            $description.append($('<p/>').html('<b>เวลา : </b>' + result.studystime + '-' + result.studyetime));
+                            $description.append($('<p/>').html('<b>หลักสูตร : </b>' + result.coursenickname));
+                            $description.append($('<p/>').html('<b>วิชา : </b>' + result.subjectnickname));
+                            $description.append($('<p/>').html('<b>ครู : </b>' + result.teachername));
+                            $('#ShowdataModal #pDetails').empty().html($description);
+                            var $description1 = $('<div/>');
+                            $description1.append($('<p/>').html('<b>วันที่ : </b>' + result.studydate));
+                            $description1.append($('<p/>').html('<b>เวลา : </b>' + result.studystime + '-' + result.studyetime));
+                            $description1.append($('<p/>').html('<b>หลักสูตร : </b>' + result.coursenickname));
+                            $description1.append($('<p/>').html('<b>วิชา : </b>' + result.subjectnickname));
+                            $description1.append($('<p/>').html('<b>ครู : </b>' + result.teachername));
+                            $('#dvmismatch #printDetails').empty().html($description1);
+                            var student = result.studentname;
+                            var studentSTR = student.split(',');
+                            var docno = result.docno;
+                            var docnoSTR = docno.split(',');
+                            var num=0;
+                            $.each(studentSTR, function (i, data) {
+                                num = i + 1;
+                                var rows = '<tr>'
+                                    + '<td style="text-align:center;"> ' + num + '</td >'
+                                    + '<td style="text-align:left;">' + data + '</td>'
+                                    + '<td style="text-align:left;">' + docnoSTR[i] + '</td>'
+                                    + '<td style="text-align:left;"></td>'
+                                    + '</tr>';
+                                $('#tablePrint tbody').append(rows);
+                                $('#tableshow tbody').append(rows);
+                            });
+                            $('#ShowdataModal').modal({ backdrop: 'static', keyboard: false });
+                        },
+                        error: function (a, b, c) {
+                            alert("error" + a);
+                        }
+                });
+
+        });
+
+    });
+
+    $(document).ready(function () {
+        $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+    });
+
+    $("#success-alert").hide();
+    $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+        $("#success-alert").slideUp(500);
+    });
+    </script>
+
+
+}

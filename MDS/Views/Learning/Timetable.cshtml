@@ -1,0 +1,2390 @@
+﻿@using MDS.Models;
+
+@*@model MDS.Models.TeacherModel*@
+@{
+    ViewBag.Title = "ตารางเรียน";
+    var subject = TempData["subject"] as List<lsubjectModel>;
+    var dataSubject = ViewBag.BookingGroupBySubject as List<BookingDetailModel>;
+    var subjectByBookingid = ViewBag.subjectByBookingid as List<lsubjectModel>;
+    var Subject = ViewBag.subject as List<lsubjectModel>;
+    var listteach = ViewBag.teach as List<lteacherModel>;
+    var teachbycourseid = ViewBag.teachbycourseid as List<lteacherModel>;
+    var BookingData = ViewBag.Booking1row as List<BookingDetailModel>;
+    var coursename = BookingData.FirstOrDefault(x => x.bookingid.Equals(ViewBag.bookingid)).coursenickname;
+    var bookingname = BookingData.FirstOrDefault(x => x.bookingid.Equals(ViewBag.bookingid)).bookingname;
+    var remark = BookingData.FirstOrDefault(x => x.bookingid.Equals(ViewBag.bookingid)).remark;
+    var gear = BookingData.FirstOrDefault(x => x.bookingid.Equals(ViewBag.bookingid)).gear;
+    var studentname = BookingData.FirstOrDefault(x => x.bookingid.Equals(ViewBag.bookingid)).studentname;
+}
+@*<link rel="stylesheet" type="text/css" href="~/Content/Other/fullcalendar-2.7.0/fullcalendar.css">*@
+
+<link rel="stylesheet" type="text/css" href="~/Content/Other/fullcalendar-3.9.0/fullcalendar.css">
+
+@*<link rel="stylesheet" type="text/css" href="~/assets/widgets/calendar/calendar.css">*@
+@*<link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker-ui/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/daterangepicker/daterangepicker.css">*@
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.customByKarin.css" rel="stylesheet" />
+<style type="text/css">
+    .fc-event {
+        font-size: 10px !important;
+    }
+    .ui-datepicker {
+    z-index:1051 !important;
+    }
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none ;
+        line-height: 30px;
+       
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+</style>
+<style>
+
+    .ui-tabs-nav > li, .ui-tabs-nav > li > a {
+        float: left !important;
+    }
+
+    .content-box-header > .ui-tabs-nav {
+        left: 0 !important;
+    }
+
+    .rowred {
+        background-color: #f6a6a6;
+        color: #000000;
+    }
+
+    .rowgreen {
+        background-color: #9dd77b;
+        color: #000000;
+    }
+
+    .rowgreenEx {
+        background-color: #1cb674;
+        color: #000000;
+    }
+</style>
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+<input type="hidden" id="tabActive" value="1">
+<input type="hidden" id="arrteacher" value="@ViewBag.arrteacher">
+<input type="hidden" id="courseid" value="@ViewBag.courseid">
+<input type="hidden" id="bookingind" value="@ViewBag.bookingid">
+<input type="hidden" id="BookingConfirm" value="@ViewBag.BookingConfirm">
+<div class="panel">
+    <div class="panel-body">
+        <h3 class="title-hero">
+            รายละเอียดนักเรียน
+        </h3>
+        <div class="content-box-wrapper">
+            @if (!studentname.Equals(""))
+            {
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="font-size-18" style="color:darkorange;">
+                            ชื่อ
+                        </label>
+                    </div>
+                    <div class="col-md-10" style="margin-bottom:0px !important;">
+                        <label class="font-size-18" style="color:darkorange;">
+                            @studentname
+                        </label>
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="font-size-18" style="color:black;">
+                        หลักสูตร
+                    </label>
+                </div>
+                <div class="col-md-10" style="margin-bottom:0px !important;">
+                    <label class="font-size-18" style="color:black;">@coursename</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="font-size-18" style="color:black;">
+                        ชื่อการจอง
+                    </label>
+                </div>
+                <div class="col-md-10" style="margin-bottom:0px !important;">
+                    <label class="font-size-18" style="color:black;">@bookingname</label>
+                    <button class="btn btn-sm btn-warning EditBookingBtn tooltip-button" value="@ViewBag.bookingid" data-placement="top" title="แก้ไข Booking" data-toggle="modal" data-target="#EditBookingModal">
+                        <i class="glyph-icon icon-pencil-square-o"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="font-size-18" style="color:black;">
+                        รายละเอียดเพิ่มเติม
+                    </label>
+                </div>
+                <div class="col-md-10" style="margin-bottom:0px !important;">
+                    <label class="font-size-18" style="color:black;">@(remark != "" ? remark : "-")</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="font-size-18" style="color:black;">
+                        เกียร์
+                    </label>
+                </div>
+                <div class="col-md-10" style="margin-bottom:0px !important;">
+                    <label class="font-size-18" style="color:black;">@(gear == "A" ? "ออโต้" : "กระปุก")</label>
+                </div>
+            </div>
+            <div class="row">
+                @using (Html.BeginForm("selectTeachInTimetable", "Learning", FormMethod.Post))
+                {
+                    <div class="col-md-2">
+                        <label class="font-size-18" style="color:black;">
+                            ครูผู้สอน
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="hidden" name="courseid" value="@ViewBag.courseid">
+                            <input type="hidden" name="bookingind" value="@ViewBag.bookingid">
+                            <div class="row">
+                                <span class="col-sm-6 text-center">ไม่เลือก</span>
+                                <span class="col-sm-6 text-center">เลือก</span>
+                            </div>
+                            <div class="row">
+                                <select multiple id="teacher" name="arrteacher[]" data-placeholder="คลิกเลือกครูผู้สอน.." class="multi-select">
+                                    @*<select multiple id="teacher" name="arrteacher[]" data-placeholder="คลิกเลือกครูผู้สอน.." class="chosen-select">*@
+                                    @if (teachbycourseid.Count() == listteach.Count())
+                                    {
+                                        foreach (var item in teachbycourseid)
+                                        {
+
+                                    <option value="@item.ind">@item.nickname - @item.studytime ชม. </option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in teachbycourseid)
+                                        {
+
+                                            var Count = listteach.FirstOrDefault(i => i.ind == item.ind);
+                                            if (Count == null)
+                                            {
+                                    <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
+                                            }
+                                            else
+                                            {
+                                    <option value="@item.ind" selected>@item.nickname - @item.studytime ชม.</option>
+                                            }
+                                        }
+                                    }
+
+
+                                </select>
+                            </div>
+                            <div class="row">
+                                <span class="text-left" style="color:red">*กรณีไม่เลือกครูจะ Default เป็น ทั้งหมด</span>
+                            </div>
+                            <div class="row">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-default tooltip-button" data-placement="top" title="เลือกครูผู้สอน">
+                                        เลือก
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content-box">
+    <div class="content-box-wrapper">
+        <div class="form-group">
+            <div class="text-center">
+                <a href="@Url.Action("Booking", "Learning")" class="btn btn-danger text-left" value="" title="กลับ" style="padding-left:20px;padding-right:20px">
+                    <i class="fa fa-arrow-circle-o-left"></i>&nbsp;กลับ
+                </a>
+                <button type="submit" id="btnBookingConfirm" class="btn @(ViewBag.coursetime == ViewBag.sumstudytime ? "btn-primary" : "btn-default") text-center" value="" title="ยืนยัน" @(ViewBag.coursetime == ViewBag.sumstudytime ? "" : "disabled") style="padding-left:20px;padding-right:20px">
+                    <i class="glyph-icon icon-circle-o"></i>&nbsp;ยืนยัน
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-wrapper">
+
+        <div class="col-md-12 center-margin">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-4" style="float:right !important;font-size:14px !important">
+                            <svg height="25" width="50">
+                                <circle cx="25" cy="15" r="10" stroke="black" stroke-width="1" fill="rgb(246, 166, 166)" />
+                            </svg>
+                            เวลาเรียนไม่ครบ
+                        </div>
+                        <div class="col-md-4" style="float:right !important;font-size:14px !important">
+                            <svg height="25" width="50">
+                                <circle cx="25" cy="15" r="10" stroke="black" stroke-width="1" fill="rgb(157, 215, 123)" />
+                            </svg>
+                            เวลาเรียนครบ
+                        </div>
+                    </div>
+                    <br>
+                    <div class="content-box">
+                        <h3 class="content-box-header bg-default">
+                            <span class="icon-separator">
+                                <i class="glyph-icon fa fa-list"></i>
+                            </span>
+                            รายละเอียดการจอง
+                        </h3>
+                        <div class="content-box-wrapper">
+                            <div class="table-responsive">
+                                <table id="bookingdata" class="table" cellpadding="0" cellspacing="0" style="font-size:10px !important">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:left;" width=""></th>
+                                            <th style="text-align:left;" width="15%">วันที่</th>
+                                            <th style="text-align:left;" width="20%">เวลา</th>
+                                            <th style="text-align:left;" width="10%">ภาค</th>
+                                            <th style="text-align:left;" width="30%">วิชา</th>
+                                            <th style="text-align:left;" width="10%">ครู</th>
+                                            <th style="text-align:left;" width="10%">คงเหลือ ชม.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.BookingDetail as List<BookingDetailModel>)
+                                        {
+                                            if (item.ind != "0")
+                                            {
+                                                var subjectmin = Subject.FirstOrDefault(x => x.subjectid.Equals(item.subjectid)).subjectmin;//หลักสูตร
+                                                var remaining = Convert.ToInt32(subjectmin) - Convert.ToInt32(item.sumsubjecttime);
+                                                <tr class="@(item.sumsubjecttime == subjectmin ? "rowgreen" : "rowred")">
+                                                    <td>
+                                                        <button class="btnEditbkdt btn btn-default btn-sm pull-left tooltip-button" data-placement="top" title="แสดงข้อมูล" value="@item.ind">
+                                                            <span class="glyphicon glyphicon-search"></span>
+                                                        </button>
+                                                    </td>
+                                                    <td>@item.studydate</td>
+                                                    <td>@item.studystime - @item.studyetime</td>
+                                                    <td>@item.subjecttypedesc</td>
+                                                    <td>@item.subjectnickname</td>
+                                                    <td>@item.nickname</td>
+                                                    <td>
+                                                        @{
+                                                            var remainingShow = Convert.ToDouble(remaining) / 60;
+                                                        }
+                                                        @remainingShow
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr class="rowgreenEx">
+                                                    <td>
+                                                        <button class="btnEditbkdt btn btn-default btn-sm pull-left tooltip-button" data-placement="top" title="แสดงข้อมูล" value="@item.ind">
+                                                            <span class="glyphicon glyphicon-search"></span>
+                                                        </button>
+                                                    </td>
+                                                    <td>@item.studydate</td>
+                                                    <td>@item.studystime - @item.studyetime</td>
+                                                    <td>@item.subjecttypedesc</td>
+                                                    <td>@item.subjectnickname</td>
+                                                    <td>-</td>
+                                                    <td>
+                                                        -
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="content-box tabs">
+                        <div class="content-box-header bg-blue-alt" style="background-color: #3598db;">
+                            <span style="float:right;">
+                                BookingNumber :  @ViewBag.bookingid
+                            </span>
+                            <ul>
+                                <li>
+                                    <a data-toggle="tab" href="#tabs-1" id="tebclick_1" value="1">
+                                        ปฏิบัติ
+                                        <i class="glyph-icon fa fa-car icon-size23"></i>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a data-toggle="tab" href="#tabs-2" id="tebclick_2" value="2">
+                                        ทฤษฎี
+                                        <i class="glyph-icon fa fa-leanpub icon-size23"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="tabs-1">
+                            <div class="content-box-wrapper">
+                                <div class="content-box" id="external-events">
+                                    <h3 class="content-box-header bg-default">
+                                        <span class="icon-separator">
+                                            <i class="glyph-icon fa fa-leanpub"></i>
+                                        </span>
+                                        วิชาเรียน
+                                    </h3>
+                                    <div class="content-box-wrapper">
+                                        @foreach (var item in ViewBag.subject as List<lsubjectModel>)
+                                        {
+                                            if (item.subjecttype == "P")
+                                            {
+
+                                                //var reult = dataSubject.Where(s => s.subjectid.Contains(item.subjectid)).ToList();
+                                                var reult = dataSubject.FirstOrDefault(i => i.subjectid == item.subjectid);
+                                                if (reult == null)
+                                                {
+                                                    <div class="btn display-block mrg5B bg-orange external-event text-left tooltip-button" data-class="bg-orange" data-placement="top" title="@item.subjectname">
+                                                        <div class="button-content">@item.subjectid-@item.subjectnickname</div>
+                                                        <input type="hidden" id="dropVal_@item.subjectid" value="@item.subjecttype">
+                                                    </div>
+                                                }
+
+                                                foreach (var item2 in dataSubject as List<BookingDetailModel>)
+                                                {
+                                                    if (item.subjectid == item2.subjectid)
+                                                    {
+                                                        if (item.subjectmin != item2.sumsubjecttime)
+                                                        {
+                                                            <div class="btn display-block mrg5B bg-orange external-event text-left tooltip-button" data-class="bg-orange" data-placement="top" title="@item.subjectname">
+                                                                <div class="button-content">@item.subjectid-@item.subjectnickname</div>
+                                                                <input type="hidden" id="dropVal_@item.subjectid" value="@item.subjecttype">
+                                                            </div>
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="tabs-2">
+                            <div class="content-box-wrapper">
+                                <div class="content-box" id="external-events">
+                                    <h3 class="content-box-header bg-default">
+                                        <span class="icon-separator">
+                                            <i class="glyph-icon fa fa-leanpub"></i>
+                                        </span>
+                                        วิชาเรียน
+                                    </h3>
+                                    <div class="content-box-wrapper">
+                                        @foreach (var item in ViewBag.subject as List<lsubjectModel>)
+                                        {
+                                            if (item.subjecttype == "T")
+                                            {
+                                                //var reult = dataSubject.Where(s => s.subjectid.Contains(item.subjectid)).ToList();
+                                                var reult = dataSubject.FirstOrDefault(i => i.subjectid == item.subjectid);
+                                                if (reult == null)
+                                                {
+                                                    <div class="btn display-block mrg5B bg-orange external-event text-left tooltip-button" data-class="bg-orange" data-placement="top" title="@item.subjectname">
+                                                        <div class="button-content">@item.subjectid-@item.subjectnickname</div>
+                                                        <input type="hidden" id="dropVal_@item.subjectid" value="@item.subjecttype">
+                                                    </div>
+                                                }
+
+                                                foreach (var item2 in dataSubject as List<BookingDetailModel>)
+                                                {
+                                                    if (item.subjectid == item2.subjectid)
+                                                    {
+                                                        if (item.subjectmin != item2.sumsubjecttime)
+                                                        {
+                                                            <div class="btn display-block mrg5B bg-orange external-event text-left tooltip-button" data-class="bg-orange" data-placement="top" title="@item.subjectname">
+                                                                <div class="button-content">@item.subjectid-@item.subjectnickname</div>
+                                                                <input type="hidden" id="dropVal_@item.subjectid" value="@item.subjecttype">
+                                                            </div>
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 center-margin">
+            <div class="row">
+                <div class="col-md-2" style="float:right !important;font-size:14px !important">
+                    <svg height="25" width="50">
+                        <circle cx="25" cy="15" r="10" stroke="black" stroke-width="1" fill="rgb(102, 255, 102)" />
+                    </svg>
+                    กำลังจอง
+                </div>
+                <div class="col-md-2" style="float:right !important;font-size:14px !important">
+                    <svg height="25" width="50">
+                        <circle cx="25" cy="15" r="10" stroke="black" stroke-width="1" fill="rgb(254, 252, 173)" />
+                    </svg>
+                    จองแล้ว
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="table-responsive">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="ShowEventModal" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ShowEventind">
+                <input type="hidden" id="Showsubjectid">
+                <input type="hidden" id="Showbookingid">
+                <input type="hidden" id="Showteacherind">
+                <input type="hidden" id="Showstudytime">
+                <input type="hidden" id="Showstudydate">
+                <input type="hidden" id="Showstudystime">
+                <input type="hidden" id="Showstudyetime">
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnDelete" class="btn btn-danger pull-left">
+                    <span class="glyphicon glyphicon-remove"></span> ลบ
+                </button>
+                <button id="btnEdit" class="btn btn-success pull-left" style="margin-right:5px;">
+                    <span class="glyphicon glyphicon-pencil"></span> แก้ไข
+                </button>
+                <button type="button" class="btn btn-default btnShowclose" data-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="AddEventDropModal" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle">เพิ่มวิชา</span></h4>
+            </div>
+            @using (Html.BeginForm("InsertBookingDetail", "Learning", FormMethod.Post, new { @id = "AddEventDropfrm" }))
+            {
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>วิชา</label>
+                        <div class="input-group">
+                            <input class="form-control" name="subjectid" id="subjectDrop" type="text" readonly>
+                            <input name="bookingid" type="hidden" id="bookingidDrop" value="@ViewBag.bookingid">
+                            <input name="courseid" type="hidden" id="courseidDrop" value="@ViewBag.courseid">
+                            <input name="arrteacher" type="hidden" id="arrteacherDrop" value="@ViewBag.arrteacher">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>ครูผู้สอน</label>
+                                <div class="input-prepend input-group">
+                                    <select class="form-control teacher" id="teacherDrop" name="teacherind" required>
+                                        <option value="" disabled selected>--เลือกครูผู้สอน--</option>
+                                        @foreach (var item in @ViewBag.teach as List<lteacherModel>)
+                                        {
+                                        <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>วันที่</label>
+                                <div class="input-prepend input-group" id="txtStartDropChang">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" name="studydate" id="txtStartDrop" class="datepicker form-control" autocomplete="off" readonly />
+                                </div>
+                                <span name="remainingTempDroptxt" id="remainingTempDroptxt" style="float:left"></span>
+                                <input type="hidden" name="" id="txtStartDroptext" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>เวลาเริ่มต้น</label>
+                                    <select class="form-control" id="divStarttimeDrop" name="studystime">
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>เวลาสิ้นสุด</label>
+                                    <select class="form-control" id="divEndtimeDrop" name="studyetime">
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                    </select>
+                                    <input type="text" name="" id="divEndtimeDroptxt" class="form-control" readonly />
+                                    <span name="remainingTimeDroptxt" id="remainingTimeDroptxt" style="float:right"></span>
+                                    <input type="hidden" name="remainingTimeDrop" id="remainingTimeDrop">
+                                    <input type="hidden" name="subTimeDrop" id="subTimeDrop">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="RepeatCheckGroup">
+                            <div class="row">
+                                <span style="float:left;color:red;margin-left:20px">แจ้งเตือน : มีรายการซ้ำ</span>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped RepeatCheck" cellpadding="0" cellspacing="0" style="font-size:12px !important">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:left;" width="">ครูผู้สอน</th>
+                                            <th style="text-align:left;" width="">วิชา</th>
+                                            <th style="text-align:left;" width="">เวลา</th>
+                                            <th style="text-align:left;" width="">ข้อความ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btnSaveDrop">บันทึก</button>
+                    <button type="button" class="btn btn-danger cancel" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<div id="AddEventModal" class="modal fade" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="closeModal" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle">เพิ่มวิชา</span></h4>
+            </div>
+            <div class="modal-body">
+
+                @using (Html.BeginForm("InsertBookingDetail", "Learning", FormMethod.Post, new { @id = "AddEventAddfrm" }))
+                {
+                    <div class="form-group">
+                        <label>วิชา</label>
+                        <div class="input-prepend input-group">
+                            <select class="form-control" id="subjectAdd" name="subjectid" style="width:100%;" required>
+                                <option value="" disabled selected>กรุณาเลือกวิชา</option>
+                                @foreach (var item in subjectByBookingid as List<lsubjectModel>)
+                                {
+                                    <option value="@item.subjectid-@item.subjectmin-@item.subjecttype">@item.subjectid-@item.subjectnickname  [@item.subjectdesc]</option>
+                                }
+                            </select>
+                            <input name="bookingid" type="hidden" id="bookingidAdd" value="@ViewBag.bookingid">
+                            <input name="courseid" type="hidden" id="courseidAdd" value="@ViewBag.courseid">
+                            <input name="arrteacher" type="hidden" id="arrteacherAdd" value="@ViewBag.arrteacher">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>ครูผู้สอน</label>
+                                <div class="input-prepend input-group">
+                                    <select class="form-control teacher" id="teacherAdd" name="teacherind" required>
+                                        <option value="" disabled selected>--เลือกครูผู้สอน--</option>
+                                        @foreach (var item in @ViewBag.teach as List<lteacherModel>)
+                                        {
+                                        <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>วันที่</label>
+                                <div class="input-prepend input-group" id="txtStartAddChang">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" name="studydate" id="txtStartAdd" class="datepicker form-control" autocomplete="off" readonly />
+                                </div>
+                                <span name="remainingTempAddtxt" id="remainingTempAddtxt" style="float:left"></span><br>
+                                <span name="remainingCurrentAddtxt" id="remainingCurrentAddtxt" style="float:left"></span>
+                                <input type="hidden" name="" id="txtStartAddtext" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>เวลาเริ่มต้น</label>
+                                    <select class="form-control" id="divStarttimeAdd" name="studystime">
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>เวลาสิ้นสุด</label>
+                                    <select class="form-control" id="divEndtimeAdd" name="studyetime">
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                    </select>
+                                    <input type="text" name="" id="divEndtimeAddtxt" class="form-control" readonly />
+                                    <span name="remainingTimeAddtxt" id="remainingTimeAddtxt" style="float:right"></span>
+                                    <input type="hidden" name="remainingTimeAdd" id="remainingTimeAdd">
+                                    <input type="hidden" name="subTimeAdd" id="subTimeAdd">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+                <div class="row">
+                    <div class="RepeatCheckGroup">
+                        <div class="row">
+                            <span style="float:left;color:red;margin-left:20px">แจ้งเตือน : มีรายการซ้ำ</span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped RepeatCheck" cellpadding="0" cellspacing="0" style="font-size:12px !important">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left;" width="">ครูผู้สอน</th>
+                                        <th style="text-align:left;" width="">วิชา</th>
+                                        <th style="text-align:left;" width="">เวลา</th>
+                                        <th style="text-align:left;" width="">ข้อความ</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btnSaveAdd">บันทึก</button>
+                <button type="button" class="btn btn-danger cancel" data-dismiss="modal">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="EditEventModal" class="modal fade" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close closeEdit" id="closeModal" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventEdititle">แก้ไขวิชา</span></h4>
+            </div>
+            @using (Html.BeginForm("UpdateBookingDetail", "Learning", FormMethod.Post, new { @id = "EditEventfrm" }))
+            {
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>วิชา</label>
+                        <div class="input-prepend input-group">
+                            @*<input class="form-control" name="subjectid" id="subjectEdit" type="text" readonly>*@
+                            <select class="form-control" id="subjectEdit" name="subjectid" style="width:100%;" required></select>
+                            <input name="bookingid" type="hidden" id="bookingidEdit" value="@ViewBag.bookingid">
+                            <input name="courseid" type="hidden" id="courseidEdit" value="@ViewBag.courseid">
+                            <input name="arrteacher" type="hidden" id="arrteacherEdit" value="@ViewBag.arrteacher">
+                            <input name="bookingdetailind" type="hidden" id="bookingdetailind">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>ครูผู้สอน</label>
+                                <div class="input-prepend input-group">
+                                    <select class="form-control teacher" id="teacherEdit" name="teacherind" required>
+                                        <option value="" disabled selected>--เลือกครูผู้สอน--</option>
+                                        @foreach (var item in @ViewBag.teach as List<lteacherModel>)
+                                        {
+                                        <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>วันที่</label>
+                                <div class="input-prepend input-group" id="txtStartEditChang">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" name="studydate" id="txtStartEdit" class="datepicker form-control" autocomplete="off" readonly />
+                                </div>
+                                <span name="remainingTempEdittxt" id="remainingTempEdittxt" style="float:left"></span><br>
+                                <span name="remainingCurrentEdittxt" id="remainingCurrentEdittxt" style="float:left"></span>
+                                <input type="hidden" name="" id="txtStartEdittext" />
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>เวลาเริ่มต้น</label>
+                                    <select class="form-control" id="divStarttimeEdit" name="studystime">
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>เวลาสิ้นสุด</label>
+                                    <select class="form-control" id="divEndtimeEdit" name="studyetime">
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                    </select>
+                                    <input type="text" name="" id="divEndtimeEdittxt" class="form-control" readonly />
+                                    <span name="remainingTimeEdittxt" id="remainingTimeEdittxt" style="float:right"></span>
+                                    <input type="hidden" name="remainingTimeEdit" id="remainingTimeEdit">
+                                    <input type="hidden" name="subTimeEdit" id="subTimeEdit">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="RepeatCheckGroup">
+                            <div class="row">
+                                <span style="float:left;color:red;margin-left:20px">แจ้งเตือน : มีรายการซ้ำ</span>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped RepeatCheck" cellpadding="0" cellspacing="0" style="font-size:12px !important">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:left;" width="">ครูผู้สอน</th>
+                                            <th style="text-align:left;" width="">วิชา</th>
+                                            <th style="text-align:left;" width="">เวลา</th>
+                                            <th style="text-align:left;" width="">ข้อความ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btnSaveEdit">บันทึก</button>
+                    <button type="button" class="btn btn-danger closeEdit cancel" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div id="EditBookingModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog  modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+                <h4 class="modal-title">แก้ไข Booking</h4>
+            </div>
+            @using (Html.BeginForm("EditBooking", "Learning",
+                 FormMethod.Post, new { @class = "form-horizontal bordered-row", @id = "SearchCourse" }))
+            {
+            <div class="modal-body">
+                <div>
+                    <label>ชื่อนักเรียน/ชื่อจอง</label>
+                    <div class="input-prepend input-group">
+                        <input type="text" id="bookingname" name="bookingname" class="form-control" autocomplete="off" value="@bookingname" />
+                        <input type="hidden" name="arrteacher" value="@ViewBag.arrteacher">
+                        <input type="hidden" name="courseid" value="@ViewBag.courseid">
+                        <input type="hidden" name="bookingind" value="@ViewBag.bookingid">
+                    </div>
+                </div>
+                <div>
+                    <label>รายละเอียดเพิ่มเติม</label>
+                    <div class="input-prepend input-group">
+                        <input type="text" id="remark" name="remark" class="form-control" autocomplete="off" value="@remark" />
+                    </div>
+                </div>
+                <div>
+                    <label>ระบุเกียร์</label>
+                    <div class="input-prepend input-group">
+                        <select class="form-control" id="gear" name="gear" required>
+                            <option value="" disabled>--เลือกเกียร์--</option>
+                            <option value="A" @(gear == "A" ? "selected" : "")>ออโต้</option>
+                            <option value="M" @(gear == "M" ? "selected" : "")>กระปุก</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+<div class="modal fade" id="deleteModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel">ยืนยันการลบข้อมูล</h3>
+            </div>
+            @using (Html.BeginForm("DeteteBookingDetail", "Learning", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <!-- content goes here -->
+                    <span>คุณต้องการลบข้อมูล </span><span id="delTag" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                    <input type="hidden" name="eventID" id="eventID" />
+                    <input type="hidden" name="arrteacher" value="@ViewBag.arrteacher">
+                    <input type="hidden" name="courseid" value="@ViewBag.courseid">
+                    <input type="hidden" name="bookingind" value="@ViewBag.bookingid">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success" data-action="save" role="button">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+<!-- BookingConfirmModal -->
+<div class="modal fade" id="BookingConfirmModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>*@
+                <h3 class="modal-title" id="lineModalLabel">ยืนยันการจองตารางเรียน</h3>
+            </div>
+            @using (Html.BeginForm("AddBookingConfirm", "Learning", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <!-- content goes here -->
+                    <span>คุณต้องการจองตารางเรียน </span><span id="delTag" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+
+                    <input type="hidden" name="arrteacher" value="@ViewBag.arrteacher">
+                    <input type="hidden" name="courseid" value="@ViewBag.courseid">
+                    <input type="hidden" name="bookingind" value="@ViewBag.bookingid">
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ไม่</button>
+                    <button type="submit" class="btn btn-success" role="button"><i class="glyph-icon icon-circle-o"></i>&nbsp;ตกลง</button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<!-- BookingConfirmModal -->
+<!-- StudentypewModal -->
+<div class="modal fade" id="StudentypeModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>*@
+                <h3 class="modal-title" id="lineModalLabel">ยืนยันการสร้างนักเรียน</h3>
+            </div>
+            @using (Html.BeginForm("SentToCreateStudent", "Learning", FormMethod.Post, new { @id = "SentToCreateStudentfrm" }))
+            {
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>ระบุวันที่สอบ</label>
+                                <div class="input-prepend input-group" id="bookingexamdateChang">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" name="bookingexamdate" id="bookingexamdate" class="datepicker form-control" autocomplete="off" readonly />
+
+                                </div>
+                                <label name="bookingexamdatetxt" id="bookingexamdatetxt" style="float:left"></label>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label>เลือกบัตร</label>
+                                <select class="form-control" id="Studenttype" name="Studenttype" required>
+                                    <option value="">--เลือกบัตร--</option>
+                                    <option value="1">บัตรประชาชน</option>
+                                    <option value="2">พาร์สปอร์ต</option>
+                                    <option value="3">บัตรประจำตัวซึ่งคนไม่มีสัญชาติไทย/ไม่มีสถานะทางทะเบียน</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" name="bookingind" value="@ViewBag.bookingid">
+                </div>
+                <div class="modal-footer text-center">
+                    <a href="@Url.Action("Booking", "Learning")" class="btn btn-danger" value="" title="ไม่">
+                        <i class="fa fa-arrow-circle-o-left"></i>&nbsp;ไม่
+                    </a>
+                    <button type="button" id="btnsts" class="btn btn-success" data-action="save" role="button"><i class="glyph-icon icon-circle-o"></i>&nbsp;ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @*/* datepicker_buddhist_year */*@
+    <script src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+    <script src="~/Content/Jquery/jquery-ui.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/validate.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/tabs-ui/tabs.js"></script>
+    <script type="text/javascript">
+        /* jQuery UI Tabs */
+
+        $(function () {
+            "use strict";
+            $(".tabs").tabs();
+        });
+
+        $(function () {
+            "use strict";
+            $(".tabs-hover").tabs({
+                event: "mouseover"
+            });
+        });
+    </script>
+
+    <!-- Boostrap Tabs -->
+
+    <script type="text/javascript" src="~/assets/widgets/tabs/tabs.js"></script>
+
+    <!-- Tabdrop Responsive -->
+
+    <script type="text/javascript" src="~/assets/widgets/tabs/tabs-responsive.js"></script>
+    <script type="text/javascript">
+        /* Responsive tabs */
+        $(function () {
+            "use strict";
+            $('.nav-responsive').tabdrop();
+        });
+    </script>
+    <!-- Multi select -->
+    <!--<link rel="stylesheet" type="text/css" href="../../assets/widgets/multi-select/multiselect.css">-->
+    <script type="text/javascript" src="~/assets/widgets/multi-select/multiselect.js"></script>
+    <script type="text/javascript">
+        /* Multiselect inputs */
+
+        $(function () {
+            "use strict";
+            $(".multi-select").multiSelect();
+            $(".ms-container").append('<i class="glyph-icon icon-exchange"></i>');
+        });
+    </script>
+
+    <!-- Uniform -->
+    <!--<link rel="stylesheet" type="text/css" href="~/assets/widgets/uniform/uniform.css">-->
+    <script type="text/javascript" src="~/assets/widgets/uniform/uniform.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/uniform/uniform-demo.js"></script>
+
+    <!-- Chosen -->
+    <!--<link rel="stylesheet" type="text/css" href="~/assets/widgets/chosen/chosen.css">-->
+    <script type="text/javascript" src="~/assets/widgets/chosen/chosen.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/chosen/chosen-demo.js"></script>
+
+    <!-- Bootstrap Datepicker -->
+    @*<link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker/bootstrap-datepicker.css">
+        <script type="text/javascript" src="~/assets/widgets/datepicker/bootstrap-datepicker-custom.js"></script>
+        <script type="text/javascript" src="~/assets/widgets/datepicker/locales/bootstrap-datepicker.th.min.js"></script>*@
+
+    <!-- Calendar -->
+    <script type="text/javascript" src="~/assets/widgets/interactions-ui/resizable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/interactions-ui/draggable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/interactions-ui/droppable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/interactions-ui/sortable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/interactions-ui/selectable.js"></script>
+
+    @*<script type="text/javascript" src="~/Content/Other/fullcalendar-2.7.0/lib/moment.min.js"></script>
+        <script type="text/javascript" src="~/Content/Other/fullcalendar-2.7.0/fullcalendar.js"></script>
+        <script type="text/javascript" src="~/Content/Other/fullcalendar-2.7.0/lang/th.js"></script>*@
+    <script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/lib/moment.min.js"></script>
+    <script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/fullcalendar.js"></script>
+    <script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/locale/th.js"></script>
+
+    @*<script type="text/javascript" src="~/assets/widgets/daterangepicker/moment.js"></script>
+        <script type="text/javascript" src="~/assets/widgets/calendar/calendar.js"></script>
+        <script type="text/javascript" src="~/assets/widgets/calendar/lang/th.js"></script>*@
+    <script type="text/javascript" src="~/Content/Other/jquery.ui.touch-punch.min.js"></script>
+    @*<script type="text/javascript" src="~/Content/Other/jquery.ui.touch.js"></script>*@
+    <script type="text/javascript" src="~/assets/widgets/timepicker/timepicker.js"></script>
+
+
+    <script>
+
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(5000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
+        });
+        //$('#widget').draggable();
+        //$('#dtp1,#dtp2').bsdatepicker();
+        //แสดงข้อมูลวิชา ทฤษฎี และ ปฏิบัติ
+        $(document).ready(function () {
+            $(".datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                //defaultDate: toDay,
+                autoclose: true,
+                dateFormat: 'dd/mm/yy',
+                isBuddhist: true,
+                orientation: "bottom left",
+                yearRange: "-100:+0",
+                dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+                dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+            }).keydown(function (e) {
+                return false;
+            });
+            //$('#btnStudentype').click(function () {
+            //    $('#BookingConfirmModal').modal('hide');
+            //    $('#StudentypeModal').modal({ backdrop: 'static', keyboard: false });
+            //    $('#StudentypeModal').appendTo('body');
+            //});
+
+            ///*เชค booking Confirm*/
+
+            if ($('#BookingConfirm').val() == 'Y') {
+               $('#BookingConfirmModal').modal('hide');
+                $('#StudentypeModal').modal({ backdrop: 'static', keyboard: false });
+                $('#StudentypeModal').appendTo('body');
+            }
+            $('#btnBookingConfirm').click(function () {
+
+                $('#BookingConfirmModal').modal({ backdrop: 'static', keyboard: false });
+                $('#BookingConfirmModal').appendTo('body');
+            });
+
+            $(document).on("click", "#btnsts", function () {
+                var bookingid = $('#bookingind').val();
+                var bookingexamdate = $('#bookingexamdate').val();
+                
+                  $.ajax({
+                      data: { bookingexamdate: bookingexamdate, bookingid: bookingid  },
+                        url: '@Url.Action("SetBookingExamDate", "Learning")',
+                        dataType: "json",
+                        type: "POST",
+                        success: function (item) {
+                            if (item.result == "Y") {
+                                $('#SentToCreateStudentfrm').submit();
+                            }
+                            else {
+                                $('#bookingexamdatetxt').text(item.msg);
+                                document.getElementById("bookingexamdatetxt").style.color = "red";
+                            }
+
+                        },
+                        error: function (a, b, c) {
+                            alert("error" + a);
+                        }
+                        });
+            });
+            /*เชค ซ้ำ*/
+            if ($('#check').val() == 'N') {
+                $('#checklistModal').modal({ backdrop: 'static', keyboard: false });
+                $('#checklistModal').appendTo('body');
+            }
+            /**/
+            if ($('#tabActive').val() == '1') {
+                $('#tebclick_1').trigger('click');
+                $('#subjectT').hide();
+                $('#subjectP').show();
+                $('#divEndtimeDrop').show();
+                $('#divEndtimeDroptxt').hide();
+                //$('#divEndtimeAdd').removeAttr("disabled");
+            }
+            else if ($('#tabActive').val() == '2') {
+                $('#tebclick_2').trigger('click');
+                $('#subjectT').show();
+                $('#subjectP').hide();
+                $('#divEndtimeDrop').hide();
+                $('#divEndtimeDroptxt').show();
+                //$('#divEndtimeAdd').attr("disabled", "disabled");
+            }
+            $(document).on("click", "#tebclick_1", function () {
+                $('#subjectT').hide();
+                $('#subjectP').show();
+                $('#divEndtimeDrop').show();
+                $('#divEndtimeDroptxt').hide();
+                //$('#divEndtimeAdd').removeAttr("disabled");
+            });
+            $(document).on("click", "#tebclick_2", function () {
+                $('#subjectT').show();
+                $('#subjectP').hide();
+                $('#divEndtimeDrop').hide();
+                $('#divEndtimeDroptxt').show();
+                //$('#divEndtimeAdd').attr("disabled", "disabled");
+            });
+
+        //datepicker
+        $('.timepicker').timepicker({
+            showhour: true,
+            showminute: true,
+            showMeridian: false,
+        });
+        //    $('.datepicker').datepicker({
+        //    autoclose: true,
+        //    format: 'dd/mm/yyyy',
+        //    todayBtn: true,
+        //    language: 'th',
+        //    thaiyear: false,              //Set เป็นปี พ.ศ.
+        //    orientation: "bottom left",
+        //    forceParse: false,
+        //    todayHighlight: true
+        //}).keydown(function (e) {
+        //    return false;
+        //        });
+
+        //Enddatepicker
+        ///draggable
+        $('#external-events div.external-event').each(function () {
+            var str = $(this).text().split('-');
+            var minns = $('#dropVal_' + str[0].trim()).val();//subjecttype
+            var eventObject = {
+                title: $.trim($(this).text()),
+                description: minns,
+                stick: true,
+            };
+            $(this).data('eventObject', eventObject);
+            $(this).draggable({
+                zIndex: 9999,
+                revert: true, // will cause the event to go back to its
+                revertDuration: 0 //  original position after the drag
+            });
+            });
+          ///Enddraggable
+        var events = [];
+        var selectedEvent = null;
+        FetchEventAndRenderCalendar();
+        function FetchEventAndRenderCalendar() {
+            var teacher = $('#arrteacher').val();
+            var courseid = $('#courseid').val();
+            var bkind = $('#bookingind').val();
+            events = [];
+            $.ajax({
+                data: { cid: courseid, teacher: teacher, bookingid: bkind },
+                url: '@Url.Action("GetCalendar", "Learning")',
+                dataType: "json",
+                type: "POST",
+                success: function (item) {
+                    calendar(item);
+                },
+                error: function (a, b, c) {
+                    alert("error" + a);
+                }
+            });
+        };
+            $('#btnEdit').click(function () {
+                $('#ShowEventModal').modal('hide');
+                editEvent();
+            });
+
+
+            $('#btnDelete').click(function () {
+                $('#eventID').val($('#ShowEventind').val());
+                $('#deleteModal').modal({ backdrop: 'static', keyboard: false });
+                $('#deleteModal').appendTo('body');
+                //if (selectedEvent != null) {
+                //    $('#eventID').val(selectedEvent.eventID);
+                //    $('#delTag').text(selectedEvent.title);
+                //}
+            });
+            function OpenEvent(calEvent) {
+                $('#ShowEventind').val(calEvent.eventID);
+                var bookingindCheck = $('#bookingind').val();
+                    $.ajax({
+                        data: { ind: calEvent.eventID, bookingid: calEvent.description },
+                    url: '@Url.Action("GetByBookinginddetail", "Learning")',
+                    dataType: "json",
+                     type: "POST",
+                        success: function (result) {
+                            var studentname = '';
+                            if (result.studentname == null) {
+                                studentname = '';
+                            }
+                            else {
+                                studentname = result.studentname;
+                            }
+                            var studyhr = parseFloat(result.studytime)/60 ;
+                            $('#ShowEventModal #eventTitle').text("วิชา " + result.subjectnickname);
+                            $('#ShowEventind').val(result.ind);
+                            $('#Showsubjectid').val(result.subjectid);
+                            $('#Showbookingid').val(result.bookingid);
+                            $('#Showteacherind').val(result.teacherind);
+                            $('#Showstudytime').val(result.studytime);
+                            $('#Showstudydate').val(result.studydate);
+                            $('#Showstudystime').val(result.studystime);
+                            $('#Showstudyetime').val(result.studyetime);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>หลักสูตร : </b><span style="color:blue">' + result.coursenickname + '</span>'));
+                            $description.append($('<p/>').html('<b>วิชา : </b><span style="color:blue">' + result.subjectname +'</span>'));                            
+                            $description.append($('<p/>').html('<b>ภาค : </b>' + result.subjecttypedesc));
+                            $description.append($('<p/>').html('<b>ครูผู้สอน : </b><span style="color:blue">' + result.nickname + '</span>'));
+                            $description.append($('<p/>').html('<b>นักเรียน : </b><span style="color:blue">' + studentname + '</span>'));
+                            $description.append($('<p/>').html('<b>วันที่ : </b>' + result.studydate));
+                            $description.append($('<p/>').html('<b>เวลา : </b>' + result.studystime + " น." + " - " + result.studyetime + " น."));                            
+                            $description.append($('<p/>').html('<b>จำนวน : </b>' + studyhr + " ชม."));
+
+                            if (result.bookingid != bookingindCheck) {
+
+                                $('#btnDelete').hide();
+                                $('#btnEdit').hide();
+                            }
+                            else {
+                                if (result.subjecttype != "E") {
+                                    $('#btnDelete').show();
+                                    $('#btnEdit').show();
+                                }
+                                else {
+                                    $('#btnDelete').hide();
+                                    $('#btnEdit').hide();
+                                }
+
+                            }
+                            $('#ShowEventModal #pDetails').empty().html($description);
+                            $('#ShowEventModal').modal({ backdrop: 'static', keyboard: false });
+                        },
+                        error: function (a, b, c) {
+                            alert("error" + a);
+                        }
+                });
+
+            }
+            $(".btnShowclose").click(function () {
+                $('#ShowEventModal #eventTitle').empty();
+                $('#ShowEventModal #pDetails').empty();
+                $('#btnDelete').hide();
+                $('#btnEdit').hide();
+            });
+            function addEvent() {
+                $(".RepeatCheckGroup").hide();
+               var bookingidAdd = $('#bookingidAdd').val();
+                var courseidAdd = $('#courseidAdd').val();
+              var arrteacherAdd = $('#arrteacherAdd').val();
+              var subject = "";
+              $('#txtStartAddChang').hide();
+                $('#divStarttimeAdd').hide();
+                $('#divEndtimeAdd').hide();
+              $('#divEndtimeAddtxt').hide();
+
+                if (selectedEvent != null) {
+                    $('#txtStartAdd').val(selectedEvent.start.format('DD/MM/YYYY'));
+                    $('#divStarttimeAdd').val(selectedEvent.start.format('HH:mm'));
+                    $('#divEndtimeAdd').val(selectedEvent.end.format('HH:mm'));
+                    /*เชคตอน เลือกวิชา*/
+                    $('#subjectAdd').on('change', function () {
+                        subject = this.value.split('-');
+                        if (subject[2] == "P") {
+                            $('#divEndtimeAdd').show();
+                            $('#divEndtimeAddtxt').hide();
+                            $('#divStarttimeAdd').show();
+                            $('#txtStartAddChang').show();
+                        }
+                        else if (subject[2] == "T") {
+                            $('#divEndtimeAdd').hide();
+                            $('#divEndtimeAddtxt').show();
+                            $('#divStarttimeAdd').show();
+                            $('#txtStartAddChang').show();
+                        }
+                        remainingTime(bookingidAdd, courseidAdd, subject[0], $('#divStarttimeAdd').val(), $('#divEndtimeAdd').val(), $('#txtStartAdd').val(), subject[2], "A");
+                    });
+                    /*เชคตอนเลือกวัน*/
+                    $('#txtStartAddChang').on('change', function () {
+                        /*เชคตอน เลือกวันที่*/
+                        remainingTime(bookingidAdd, courseidAdd, subject[0], $('#divStarttimeAdd').val(), $('#divEndtimeAdd').val(), $('#txtStartAdd').val(), subject[2], "A");
+                    });
+
+                    $('#divStarttimeAdd').on('change', function () {
+                        /*เชคตอน เลือกเวลาเริ่มตัน*/
+                        remainingTime(bookingidAdd, courseidAdd, subject[0], this.value, $('#divEndtimeAdd').val(), $('#txtStartAdd').val(), subject[2], "A");
+
+                    });
+                    $('#divEndtimeAdd').on('change', function () {
+                        //alert(subject[0]);
+                        /*เชคตอน เลือกเวลาสิ้นสุด*/
+                        remainingTime(bookingidAdd, courseidAdd, subject[0], $('#divStarttimeAdd').val(), this.value, $('#txtStartAdd').val(), subject[2], "A");
+
+                    });
+
+                }
+
+                $('#AddEventModal').modal({ backdrop: 'static', keyboard: false });
+                $('#AddEventModal').appendTo('body');
+            }
+          function addEventDrop() {
+              $(".RepeatCheckGroup").hide();
+                var bookingidDrop = $('#bookingidDrop').val();
+                var courseidDrop = $('#courseidDrop').val();
+                var arrteacherDrop = $('#arrteacherDrop').val();
+                if (selectedEvent != null) {
+                    var subjectid = selectedEvent.title.split('-');
+                $('#subjectDrop').val(selectedEvent.title);
+                $('#txtStartDrop').val(selectedEvent.start.format('DD/MM/YYYY'));
+                $('#divStarttimeDrop').val(selectedEvent.start.format('HH:mm'));
+                //var hours = selectedEvent.description / 60;
+                //var SetEnd = selectedEvent.start;
+                //var DateEnd = SetEnd.clone().add(hours, 'h');
+                //$('#divEndtimeDrop').val(DateEnd.format('HH:mm'));
+                //$('#divEndtimeDroptxt').val(DateEnd.format('HH:mm'));
+                    /*เชคตอน drop*/
+                    remainingTime(bookingidDrop, courseidDrop, subjectid[0], $('#divStarttimeDrop').val(), "", $('#txtStartDrop').val(), selectedEvent.description, "D");
+
+                    $('#txtStartDropChang').on('change', function () {
+                        /*เชคตอน เลือกวันที่*/
+                        remainingTime(bookingidDrop, courseidDrop, subjectid[0], $('#divStarttimeDrop').val(), $('#divEndtimeDrop').val(), $('#txtStartDrop').val(), selectedEvent.description, "D");
+
+                    });
+
+                $('#divStarttimeDrop').on('change', function () {
+                    //var timeend = moment.utc(this.value, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                    //$('#divEndtimeDrop').val(timeend);
+                    //$('#divEndtimeDroptxt').val(timeend);
+                    /*เชคตอน เลือกเวลาเริ่มตัน*/
+                    remainingTime(bookingidDrop, courseidDrop, subjectid[0], this.value, $('#divEndtimeDrop').val(), $('#txtStartDrop').val(), selectedEvent.description, "D");
+
+                });
+                    $('#divEndtimeDrop').on('change', function () {
+                     /*เชคตอน เลือกเวลาสิ้นสุด*/
+                        remainingTime(bookingidDrop, courseidDrop, subjectid[0], $('#divStarttimeDrop').val(), this.value, $('#txtStartDrop').val(), selectedEvent.description, "D");
+
+                });
+                }
+                //show Modal
+                $('#AddEventDropModal').modal({ backdrop: 'static', keyboard: false });
+                $('#AddEventDropModal').appendTo('body');
+
+            };
+
+            function editEvent() {
+                $(".RepeatCheckGroup").hide();
+                var grantAppend = '';
+                var subject = "";
+                var studytimeTemp = "";
+                var bookingidEdit = $('#bookingidEdit').val();
+                var courseidEdit = $('#courseidEdit').val();
+                var arrteacherEdit = $('#arrteacherEdit').val();
+                var ShowEventind = $('#ShowEventind').val();
+                var Showsubjectid = $('#Showsubjectid').val();
+                var studytimeTemp = $('#Showstudytime').val();
+                $('#teacherEdit').val($('#Showteacherind').val());
+                $('#bookingdetailind').val(ShowEventind);
+                $('#txtStartEditChang').hide();
+                $('#divStarttimeEdit').hide();
+                $('#divEndtimeEdit').hide();
+                $('#divEndtimeEdittxt').hide();
+                $("#subjectEdit").empty();
+                $("#subjectEdit").append('<option value="" disabled selected>กรุณาเลือกวิชา</option>');
+                 $.ajax({
+                     data: { subjectid: Showsubjectid, bookingid: bookingidEdit },
+                    url: '@Url.Action("GetEditBookingDetail", "Learning")',
+                    dataType: "json",
+                     type: "POST",
+                     success: successFunction,
+                     error: errorFunction
+                });
+                function successFunction(result) {
+                   // alert(JSON.stringify(item));
+                    $.each(result, function (i, item) {
+                        if (item.subjectid == Showsubjectid) {
+                            var strsubject = item.subjectid + '-' + item.subjectmin + '-' + item.subjecttype;
+                            subjectTemp = item.subjectid;
+
+                            subject = strsubject.split('-');
+                            $("#subjectEdit").val(strsubject);
+                            $('#txtStartEdit').val($('#Showstudydate').val());
+                            $('#divStarttimeEdit').val($('#Showstudystime').val());
+                            $('#divEndtimeEdit').val($('#Showstudyetime').val());
+                            $('#divEndtimeEdittxt').val($('#Showstudyetime').val());
+
+                            if (item.subjecttype == "P") {
+                                $('#divEndtimeEdit').show();
+                                $('#divEndtimeEdittxt').hide();
+                                $('#txtStartEditChang').show();
+                                $('#divStarttimeEdit').show();
+                            }
+                            else if (item.subjecttype == "T") {
+                                $('#divEndtimeEdit').hide();
+                                $('#divEndtimeEdittxt').show();
+                                $('#txtStartEditChang').show();
+                                $('#divStarttimeEdit').show();
+
+                            }
+                            remainingTimeEdit(bookingidEdit, courseidEdit, item.subjectid, $('#divStarttimeEdit').val(), $('#divEndtimeEdit').val(), $('#txtStartEdit').val(), item.subjecttype, studytimeTemp);
+                        }
+                        grantAppend += '<option value="' + item.subjectid + '-' + item.subjectmin + '-' + item.subjecttype + '">' + item.subjectid + '-' + item.subjectnickname + ' [' + item.subjectdesc+'] '+'</option>';
+
+                    });
+                    $("#subjectEdit").append(grantAppend);
+                }
+                function errorFunction(result) {
+
+                }
+
+
+                /*เชคตอน เลือกวิชา*/
+                $('#subjectEdit').on('change', function () {
+                    subject = this.value.split('-');
+                    if (subject[2] == "P") {
+                        $('#divEndtimeEdit').show();
+                        $('#divEndtimeEdittxt').hide();
+                    }
+                    else if (subject[2] == "T") {
+                        $('#divEndtimeEdit').hide();
+                        $('#divEndtimeEdittxt').show();
+                    }
+
+                    if (subjectTemp == subject[0]) {
+                        remainingTimeEdit(bookingidEdit, courseidEdit, subject[0], $('#divStarttimeEdit').val(), $('#divEndtimeEdit').val(), $('#txtStartEdit').val(), subject[2], studytimeTemp);
+                        //remainingTimeEdit(bookingid, courseid, subjectid, start, end, stdate, subjecttype, studytime)
+                        $('#remainingCurrentEdittxt').show();
+                    }
+                    else {
+                        remainingTime(bookingidEdit, courseidEdit, subject[0], $('#divStarttimeEdit').val(), $('#divEndtimeEdit').val(), $('#txtStartEdit').val(), subject[2], "E");
+                        $('#remainingCurrentEdittxt').hide();
+                    }
+
+                });
+
+                $('#txtStartEditChang').on('change', function () {
+                    /*เชคตอน เลือกวันที่*/
+                    if (subjectTemp == subject[0]) {
+                        $('#remainingCurrentEdittxt').show();
+                        remainingTimeEdit(bookingidEdit, courseidEdit, subject[0], $('#divStarttimeEdit').val(), $('#divEndtimeEdit').val(), $('#txtStartEdit').val(), subject[2], studytimeTemp);
+                    }
+                    else {
+                        $('#remainingCurrentEdittxt').hide();
+                        remainingTime(bookingidEdit, courseidEdit, subject[0], $('#divStarttimeEdit').val(), $('#divEndtimeEdit').val(), $('#txtStartEdit').val(), subject[2], "E");
+                    }
+                });
+                $('#divStarttimeEdit').on('change', function () {
+                    /*เชคตอน เลือกเวลาเริ่มตัน*/
+                    if (subjectTemp == subject[0]) {
+                        $('#remainingCurrentEdittxt').show();
+                        remainingTimeEdit(bookingidEdit, courseidEdit, subject[0], this.value, $('#divEndtimeEdit').val(), $('#txtStartEdit').val(), subject[2], studytimeTemp);
+                    }
+                    else {
+                        $('#remainingCurrentEdittxt').hide();
+                        remainingTime(bookingidEdit, courseidEdit, subject[0], this.value, $('#divEndtimeEdit').val(), $('#txtStartEdit').val(), subject[2], "E");
+                    }
+                });
+                $('#divEndtimeEdit').on('change', function () {
+                    /*เชคตอน เลือกเวลาสิ้นสุด*/
+                    if (subjectTemp == subject[0]) {
+                        $('#remainingCurrentEdittxt').show();
+                        remainingTimeEdit(bookingidEdit, courseidEdit, subject[0], $('#divStarttimeEdit').val(), this.value, $('#txtStartEdit').val(), subject[2], studytimeTemp);
+                    }
+                    else {
+                        $('#remainingCurrentEdittxt').hide();
+                        remainingTime(bookingidEdit, courseidEdit, subject[0], $('#divStarttimeEdit').val(), this.value, $('#txtStartEdit').val(), subject[2], "E");
+                    }
+                });
+
+
+                //show Modal
+                $('#EditEventModal').modal({ backdrop: 'static', keyboard: false });
+                $('#EditEventModal').appendTo('body');
+
+            };
+
+            function remainingTime(bookingid, courseid, subjectid, start, end, stdate, subjecttype,type) {
+                $.ajax({
+                    data: { bookingid: bookingid, courseid: courseid, subjectid: subjectid, start: start, end: end, stdate: stdate, subjecttype: subjecttype},
+                url: '@Url.Action("GetremainingTime", "Learning")',
+                dataType: "json",
+                type: "POST",
+                    success: function (result) {
+
+                        if (type=="D") {
+                            //addDrop
+                            if (result.remainingDate >= 0) {
+                                $('#remainingTempDroptxt').text("ช่วงเวลาเรียนที่เหลือ " + result.remainingTemp + " นาที");
+                                document.getElementById("remainingTempDroptxt").style.color = "green";
+                                if (result.TotalMinutes < 0) {
+                                    $('#remainingTimeDroptxt').text("กรุณาระบุช่วงเวลาให้ถูกต้อง");
+                                    document.getElementById("remainingTimeDroptxt").style.color = "red";
+                                    $('#remainingTimeDrop').val(result.remaining);
+                                    $('#subTimeDrop').val(result.TotalMinutes);
+                                    $('#txtStartDroptext').val(result.remainingDate);
+                                }
+                                else {
+                                    if (result.remaining < 0) {
+                                        $('#remainingTimeDroptxt').text("เวลาเกิน");
+                                        document.getElementById("remainingTimeDroptxt").style.color = "red";
+                                        $('#remainingTimeDrop').val(result.remaining);
+                                        $('#subTimeDrop').val(result.TotalMinutes);
+                                        $('#txtStartDroptext').val(result.remainingDate);
+                                    }
+                                    else {
+                                        $('#remainingTimeDroptxt').text("เหลือ " + result.remaining + " นาที (บันทึกได้)");
+                                        document.getElementById("remainingTimeDroptxt").style.color = "green";
+                                        $('#remainingTimeDrop').val(result.remaining);
+                                        $('#subTimeDrop').val(result.TotalMinutes);
+                                        $('#txtStartDroptext').val(result.remainingDate);
+                                    }
+                                }
+                            }
+                            else {
+                                $('#remainingTempDroptxt').text("กรุณากำหนดวันที่ถูกต้อง");
+                                document.getElementById("remainingTempDroptxt").style.color = "red";
+                                $('#txtStartDroptext').val(result.remainingDate);
+                                document.getElementById("txtStartDrop").focus();
+                            }
+                            if (subjecttype == "P") {
+                                if (end == "") {
+                                    var hours = result.remainingTemp / 60;
+                                    var timeend = moment.utc(start, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                                    $('#divEndtimeDrop').val(timeend);
+                                }
+                            }
+                            else if (subjecttype == "T") {
+                                var hours = result.remainingTemp / 60;
+                                var timeend = moment.utc(start, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                                $('#divEndtimeDroptxt').val(timeend);
+                                $('#divEndtimeDrop').val(timeend);
+                            }
+
+
+                         //addDrop
+                        }
+                        else if (type == "A") {
+                            //addAdd
+                            if (result.remainingDate >= 0) {
+                                $('#remainingTempAddtxt').text("ช่วงเวลาเรียนที่เหลือ " + result.remainingTemp + " นาที");
+                                document.getElementById("remainingTempAddtxt").style.color = "green";
+
+
+                                if (result.TotalMinutes < 0) {
+                                    $('#remainingTimeAddtxt').text("กรุณาระบุช่วงเวลาให้ถูกต้อง");
+                                    document.getElementById("remainingTimeAddtxt").style.color = "red";
+                                    $('#remainingTimeAdd').val(result.remaining);
+                                    $('#subTimeAdd').val(result.TotalMinutes);
+                                    $('#txtStartAddtext').val(result.remainingDate);
+                                }
+                                else {
+                                    if (result.remaining < 0) {
+                                        $('#remainingTimeAddtxt').text("เวลาเกิน");
+                                        document.getElementById("remainingTimeAddtxt").style.color = "red";
+                                        $('#remainingTimeAdd').val(result.remaining);
+                                        $('#subTimeAdd').val(result.TotalMinutes);
+                                        $('#txtStartAddtext').val(result.remainingDate);
+                                    }
+                                    else {
+                                        $('#remainingTimeAddtxt').text("เหลือ " + result.remaining + " นาที (บันทึกได้)");
+                                        document.getElementById("remainingTimeAddtxt").style.color = "green";
+                                        $('#remainingTimeAdd').val(result.remaining);
+                                        $('#subTimeAdd').val(result.TotalMinutes);
+                                        $('#txtStartAddtext').val(result.remainingDate);
+                                    }
+                                }
+                            }
+                            else {
+                                $('#remainingTempAddtxt').text("กรุณากำหนดวันที่ถูกต้อง");
+                                document.getElementById("remainingTempAddtxt").style.color = "red";
+                                $('#txtStartAddtext').val(result.remainingDate);
+
+                            }
+
+                            if (subjecttype == "P") {
+                                if (end == "") {
+                                    var hours = result.remainingTemp / 60;
+                                    var timeend = moment.utc(start, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                                    $('#divEndtimeAdd').val(timeend);
+                                    $('#divEndtimeAdd').show();
+                                    $('#divEndtimeAddtxt').hide();
+
+                                }
+                            }
+                            else if (subjecttype == "T") {
+                                var hours = result.remainingTemp / 60;
+                                var timeend = moment.utc(start, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                                $('#divEndtimeAddtxt').val(timeend);
+                                $('#divEndtimeAdd').val(timeend);
+                                $('#divEndtimeAdd').hide();
+                                $('#divEndtimeAddtxt').show();
+                            }
+
+
+                         //addAdd
+                        }
+                        else if (type == "E") {
+                            //addEdit
+                            if (result.remainingDate >= 0) {
+                                $('#remainingTempEdittxt').text("ช่วงเวลาเรียนที่เหลือ " + result.remainingTemp + " นาที");
+                                document.getElementById("remainingTempEdittxt").style.color = "green";
+                                $('#remainingCurrentEdittxt').text("ช่วงเวลาที่แก้ไขได้ " + result.remainingCurrent + " นาที");
+                                document.getElementById("remainingCurrentEdittxt").style.color = "green";
+                                if (result.TotalMinutes < 0) {
+                                    $('#remainingTimeEdittxt').text("กรุณาระบุช่วงเวลาให้ถูกต้อง");
+                                    document.getElementById("remainingTimeEdittxt").style.color = "red";
+                                    $('#remainingTimeEdit').val(result.remaining);
+                                    $('#subTimeEdit').val(result.TotalMinutes);
+                                    $('#txtStartEdittext').val(result.remainingDate);
+                                }
+                                else {
+                                    if (result.remaining < 0) {
+                                        $('#remainingTimeEdittxt').text("เวลาเกิน");
+                                        document.getElementById("remainingTimeEdittxt").style.color = "red";
+                                        $('#remainingTimeEdit').val(result.remaining);
+                                        $('#subTimeEdit').val(result.TotalMinutes);
+                                        $('#txtStartEdittext').val(result.remainingDate);
+                                    }
+                                    else {
+                                        $('#remainingTimeEdittxt').text("เหลือ " + result.remaining + " นาที (บันทึกได้)");
+                                        document.getElementById("remainingTimeEdittxt").style.color = "green";
+                                        $('#remainingTimeEdit').val(result.remaining);
+                                        $('#subTimeEdit').val(result.TotalMinutes);
+                                        $('#txtStartEdittext').val(result.remainingDate);
+                                    }
+                                }
+                            }
+                            else {
+                                $('#remainingTempEdittxt').text("กรุณากำหนดวันที่ถูกต้อง");
+                                document.getElementById("remainingTempEdittxt").style.color = "red";
+                                $('#txtStartEdittext').val(result.remainingDate);
+                                document.getElementById("txtStartEdit").focus();
+                            }
+
+                            if (subjecttype == "P") {
+                                if (end == "") {
+                                    var hours = result.remainingCurrent / 60;
+                                    var timeend = moment.utc(start, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                                    $('#divEndtimeEdit').val(timeend);
+                                }
+                            }
+                            else if (subjecttype == "T") {
+                                var hours = result.remainingCurrent / 60;
+                                var timeend = moment.utc(start, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                                $('#divEndtimeEdittxt').val(timeend);
+                                $('#divEndtimeEdit').val(timeend);
+                            }
+
+                         //addEdit
+                        }
+
+                },
+                error: function (a, b, c) {
+                    alert("error" + a);
+                }
+            });
+            };
+            function remainingTimeEdit(bookingid, courseid, subjectid, start, end, stdate, subjecttype, studytime) {
+                $.ajax({
+                    data: {bookingid: bookingid, courseid: courseid, subjectid: subjectid, start: start, end: end, stdate: stdate, subjecttype: subjecttype, studytime: studytime},
+                url: '@Url.Action("GetremainingTimeEdit", "Learning")',
+                dataType: "json",
+                type: "POST",
+                    success: function (result) {
+
+                        //addEdit
+                        if (result.remainingDate >= 0) {
+                            $('#remainingTempEdittxt').text("ช่วงเวลาเรียนที่เหลือ " + result.remainingTemp + " นาที");
+                            document.getElementById("remainingTempEdittxt").style.color = "green";
+                            $('#remainingCurrentEdittxt').text("ช่วงเวลาที่แก้ไขได้ " + result.remainingCurrent + " นาที");
+                            document.getElementById("remainingCurrentEdittxt").style.color = "green";
+                            if (result.TotalMinutes < 0) {
+                                $('#remainingTimeEdittxt').text("กรุณาระบุช่วงเวลาให้ถูกต้อง");
+                                document.getElementById("remainingTimeEdittxt").style.color = "red";
+                                $('#remainingTimeEdit').val(result.remaining);
+                                $('#subTimeEdit').val(result.TotalMinutes);
+                                $('#txtStartEdittext').val(result.remainingDate);
+                            }
+                            else {
+                                if (result.remaining < 0) {
+                                    $('#remainingTimeEdittxt').text("เวลาเกิน");
+                                    document.getElementById("remainingTimeEdittxt").style.color = "red";
+                                    $('#remainingTimeEdit').val(result.remaining);
+                                    $('#subTimeEdit').val(result.TotalMinutes);
+                                    $('#txtStartEdittext').val(result.remainingDate);
+                                }
+                                else {
+                                    $('#remainingTimeEdittxt').text("เหลือ " + result.remaining + " นาที (บันทึกได้)");
+                                    document.getElementById("remainingTimeEdittxt").style.color = "green";
+                                    $('#remainingTimeEdit').val(result.remaining);
+                                    $('#subTimeEdit').val(result.TotalMinutes);
+                                    $('#txtStartEdittext').val(result.remainingDate);
+                                }
+                            }
+                        }
+                        else {
+                            $('#remainingTempEdittxt').text("กรุณากำหนดวันที่ถูกต้อง");
+                            document.getElementById("remainingTempEdittxt").style.color = "red";
+                            $('#txtStartEdittext').val(result.remainingDate);
+                            document.getElementById("txtStartEdit").focus();
+                        }
+
+                        if (subjecttype == "P") {
+                            if (end == "") {
+                                var hours = result.remainingCurrent / 60;
+                                var timeend = moment.utc(start, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                                $('#divEndtimeEdit').val(timeend);
+                            }
+                        }
+                        else if (subjecttype == "T"){
+                            var hours = result.remainingCurrent / 60;
+                            var timeend = moment.utc(start, 'HH:mm').add(hours, 'hour').format('HH:mm');
+                            $('#divEndtimeEdittxt').val(timeend);
+                            $('#divEndtimeEdit').val(timeend);
+                        }
+
+                         //addEdit
+
+
+
+                },
+                error: function (a, b, c) {
+                    alert("error" + a);
+                }
+            });
+            };
+            $(document).on('click', '.btnSaveDrop', function () {
+               
+                $('#AddEventDropfrm').submit();
+
+            });
+            $("#AddEventDropfrm").validate({
+                rules: {
+                    teacherDrop: {
+                        valueNotEquals: ""
+                    }
+                },
+                messages: {
+                    teacherDrop: {
+                        valueNotEquals: 'กรุณาเลือกครูผู้สอน'
+                    }
+
+                },
+                submitHandler: function (form) {
+                     $(".RepeatCheckGroup").hide();
+                $(".RepeatCheck tbody").empty();
+                var bookingid = $('#bookingidDrop').val();
+                var courseid = $('#courseidDrop').val();
+                var arrteacher = $('#arrteacherDrop').val();
+                var subjectid = $('#subjectDrop').val();
+                var teacherind = $('#teacherDrop').val();
+                var studydate = $('#txtStartDrop').val();
+                var studystime = $('#divStarttimeDrop').val();
+                var studyetime = $('#divEndtimeDrop').val();
+                if (subjectid == null || teacherind == null) {
+                    $('#AddEventDropfrm').submit();
+                } else {
+                    $.ajax({
+                        data: { bookingid: bookingid, courseid: courseid, arrteacher: arrteacher, subjectid: subjectid, teacherind: teacherind, studydate: studydate, studystime: studystime, studyetime: studyetime },
+                        url: '@Url.Action("CheckRepeat", "Learning")',
+                        dataType: "json",
+                        type: "POST",
+                        success: function (item) {
+                            var data = '';
+                            if (item.result == "Y") {
+                                if ($('#txtStartDroptext').val() >= 0) {
+                                    if ($('#subTimeDrop').val() > 0) {
+                                        if ($('#remainingTimeDrop').val() >= 0) {
+                                            form.submit();
+                                            $(".RepeatCheck tbody").empty();
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                //alert(JSON.stringify(item));
+                                $(".RepeatCheckGroup").show();
+                                $.each(item.resultlist, function (i, data) {
+                                    //alert(data.nickname);
+                                    var rows = '<tr>'
+                                        + '<td style="text-align:left;"> ' + data.nickname + '</td >'
+                                        + '<td style="text-align:left;">' + data.subjectnickname + '</td>'
+                                        + '<td style="text-align:left;">' + data.studydate +' ' + data.studystime + '-' + data.studyetime + '</td>'
+                                        + '<td style="text-align:left;color:red">' + data.msg + '</td>'
+                                        + '</tr>';
+                                    $('.RepeatCheck tbody').append(rows);
+                                });
+                            }
+
+                        },
+                        error: function (a, b, c) {
+                            alert("เกิดข้อผิดพลาด : กรุณาตรวจสอบข้อมูล");
+                        }
+                        });
+                }
+                    
+
+
+                }
+            });
+            $(document).on('click', '.btnSaveAdd', function () {
+                $('#AddEventAddfrm').submit();
+            });
+                 $("#AddEventAddfrm").validate({
+                    rules: {
+                        subjectAdd: {
+                            valueNotEquals: ""
+                        },
+                        teacherAdd: {
+                            valueNotEquals: ""
+                        }
+
+                    },
+                    messages: {
+                        subjectAdd: {
+                            valueNotEquals: 'กรุณาเลือกวิชา'
+                        },
+                        teacherAdd: {
+                            valueNotEquals: 'กรุณาเลือกครูผู้สอน'
+                        }
+
+                    },
+                   submitHandler: function (form) {
+                  $(".RepeatCheckGroup").hide();
+                            $(".RepeatCheck tbody").empty();
+                            var bookingid = $('#bookingidAdd').val();
+                            var courseid = $('#courseidAdd').val();
+                            var arrteacher = $('#arrteacherAdd').val();
+                            var subjectid = $('#subjectAdd').val();
+                            var teacherind = $('#teacherAdd').val();     
+                            var studydate = $('#txtStartAdd').val();
+                            var studystime = $('#divStarttimeAdd').val();
+                            var studyetime = $('#divEndtimeAdd').val();
+                            //if (subjectid == null || teacherind == null) {
+                            //    $('#AddEventAddfrm').submit();
+                            //} else {
+                               
+                            //}
+                        $.ajax({
+                                    data: { bookingid: bookingid, courseid: courseid, arrteacher: arrteacher, subjectid: subjectid, teacherind: teacherind, studydate: studydate, studystime: studystime, studyetime: studyetime },
+                                    url: '@Url.Action("CheckRepeat", "Learning")',
+                                    dataType: "json",
+                                    type: "POST",
+                                    success: function (item) {
+                                        var data = '';
+                                        if (item.result == "Y") {
+                                            if ($('#txtStartAddtext').val() >= 0) {
+                                                if ($('#subTimeAdd').val() > 0) {
+                                                    if ($('#remainingTimeAdd').val() >= 0) {
+                                                        //$('#AddEventAddfrm').submit();
+                                                        form.submit();
+                                                        $(".RepeatCheck tbody").empty();
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                        else {
+                                            //alert(JSON.stringify(item));
+                                            $(".RepeatCheckGroup").show();
+                                            $.each(item.resultlist, function (i, data) {
+                                                //alert(data.nickname);
+                                                var rows = '<tr>'
+                                                    + '<td style="text-align:left;"> ' + data.nickname + '</td >'
+                                                    + '<td style="text-align:left;">' + data.subjectnickname + '</td>'
+                                                    + '<td style="text-align:left;">' + data.studydate +' ' + data.studystime + '-' + data.studyetime + '</td>'
+                                                    + '<td style="text-align:left;color:red">' + data.msg + '</td>'
+                                                    + '</tr>';
+                                                $('.RepeatCheck tbody').append(rows);
+                                            });
+                                        }
+
+                                    },
+                                    error: function (a, b, c) {
+                                        alert("เกิดข้อผิดพลาด : กรุณาตรวจสอบข้อมูล");
+                                    }
+                                    });
+                    }
+                });
+
+            $(document).on('click', '.btnSaveEdit', function () {
+                $('#EditEventfrm').submit();
+            });
+            $("#EditEventfrm").validate({
+                rules: {
+                    subjectEdit: {
+                        valueNotEquals: ""
+                    },
+                    teacherEdit: {
+                        valueNotEquals: ""
+
+                    }
+                },
+                messages: {
+                    subjectEdit: {
+                        required: 'กรุณาเลือกวิชา'
+                    },
+                    teacherEdit: {
+                        required: 'กรุณาเลือกครูผู้สอน'
+                    }
+
+                }
+                ,
+                  submitHandler: function (form) {
+                         $(".RepeatCheckGroup").hide();
+                $(".RepeatCheck tbody").empty();
+                var bookingid = $('#bookingidEdit').val();
+                var courseid = $('#courseidEdit').val();
+                var arrteacher = $('#arrteacherEdit').val();
+                var subjectid = $('#subjectEdit').val();
+                var teacherind = $('#teacherEdit').val();
+                var studydate = $('#txtStartEdit').val();
+                var studystime = $('#divStarttimeEdit').val();
+                var studyetime = $('#divEndtimeEdit').val();
+                var bookingdetailind = $('#bookingdetailind').val();
+                $.ajax({
+                        data: { bookingid: bookingid, courseid: courseid, arrteacher: arrteacher, subjectid: subjectid, teacherind: teacherind, studydate: studydate, studystime: studystime, studyetime: studyetime, bookingdetailind: bookingdetailind },
+                        url: '@Url.Action("CheckRepeat", "Learning")',
+                        dataType: "json",
+                        type: "POST",
+                        success: function (item) {
+                            var data = '';
+                            if (item.result == "Y") {
+                                if ($('#txtStartEdittext').val() >= 0) {
+                                    if ($('#subTimeEdit').val() > 0) {
+                                        if ($('#remainingTimeEdit').val() >= 0) {
+                                   
+                                            $(".RepeatCheck tbody").empty();
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                //alert(JSON.stringify(item));
+                                $(".RepeatCheckGroup").show();
+                                $.each(item.resultlist, function (i, data) {
+                                    //alert(data.nickname);
+                                    var rows = '<tr>'
+                                        + '<td style="text-align:left;"> ' + data.nickname + '</td >'
+                                        + '<td style="text-align:left;">' + data.subjectnickname + '</td>'
+                                        + '<td style="text-align:left;">' + data.studydate +' ' + data.studystime + '-' + data.studyetime + '</td>'
+                                        + '<td style="text-align:left;color:red">' + data.msg + '</td>'
+                                        + '</tr>';
+                                    $('.RepeatCheck tbody').append(rows);
+                                });
+                            }
+
+                        },
+                        error: function (a, b, c) {
+                            alert("เกิดข้อผิดพลาด : กรุณาตรวจสอบข้อมูล");
+                        }
+                        });        
+                }
+            });
+        function calendar(item) {
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                    //right: 'month,agendaWeek'
+                },
+                defaultView: 'agendaWeek',
+                //lang: 'th',
+                allDaySlot: false,
+                slotDuration: '00:30:00',
+                slotLabelInterval: 5,
+                slotLabelFormat: 'HH(:mm)',
+                slotEventOverlap: false,
+                titleFormat: 'DD MMMM YYYY',
+                columnFormat: 'dddd',
+                slotDuration: '00:30:00',
+                minTime: '08:00:00',
+                maxTime: '22:00:00',
+                dragOpacity: {
+                    agenda: .5
+                },
+                businessHours: true,
+                editable: false,
+                droppable: true,
+                handleWindowResize: true,
+                buttonIcons: false, // show the prev/next text
+                navLinks: true, // can click day/week names to navigate views
+                eventLimit: true, // allow "more" link when too many events
+                displayEventTime: false,
+                events: item, //ข้อมูล
+                listDayAltFormat: false,
+                drop: function (date, element) {
+                    selectedEvent = {
+                        eventID: 0,
+                        title: $(this).data('eventObject').title,
+                        description: $(this).data('eventObject').description,
+                        start: date,
+                        end: date,
+                        allDay: true,
+                        color: '',
+
+                    };
+                    addEventDrop();//add
+                },
+
+                // click : Openmodal
+                eventClick: function (event, jsEvent, view) {
+                    OpenEvent(event);
+                },
+                dayClick: function (date) {
+                   // alert(date.format('DD/MM/YYYY HH:mm'));
+                      selectedEvent = {
+                      eventID: 0,
+                      title: '',
+                      description: '',
+                          start: date,
+                          end: date,
+                      allDay: false,
+                      color: '',
+                    };
+                    addEvent();//add
+                },
+                eventRender: function (eventObj, $el) {
+                    var strtitle = eventObj.title.split('-');
+                    var $content = $('<div/>');
+
+                    $.each(strtitle, function (i, item) {
+                        if (i % 2 == 0) {
+                            $content.append($('<p/>').html('<span style="color:blue">' + item + '</span>'));
+                        } else {
+                            $content.append($('<p/>').html('<span style="color:green">' + item + '</span>'));
+                        }
+
+                    })
+                    $el.popover({
+                        html: true,
+                        title: 'ข้อมูล',
+                        content: $content,
+                        trigger: 'hover',
+                        placement: 'top',
+                        container: 'body'
+                    });
+                },
+                //selectable: true,
+                //select: function (start, end) {
+                //    selectedEvent = {
+                //        eventID: 0,
+                //        title: '',
+                //        description: '',
+                //        start: start,
+                //        end: end,
+                //        allDay: false,
+                //        color: '',
+
+                //    };
+                //    addEvent();//add
+                //    $('#calendar').fullCalendar('unselect');
+                //},
+            });
+            }
+            $(".btnEditbkdt").click(function () {
+                var calEvent = {
+                    eventID: 0,
+                    description: '',
+                };
+                var ind = this.value;
+                var bookingind = $('#bookingind').val();
+                calEvent.eventID = parseInt(ind);
+                calEvent.description = bookingind;
+                OpenEvent(calEvent);
+            });
+
+
+            $(".closeEdit").click(function () {
+                $(".RepeatCheck tbody").empty();
+                $("#subjectEdit").val("");
+                $("#subjectEdit").unbind();
+                $("#divStarttimeEdit").unbind();
+                $("#txtStartEditChang").unbind();
+                $("#divEndtimeEdit").unbind();
+                $('#remainingTempEdittxt').text("");
+                $('#remainingTimeEdittxt').text("");
+                $('#txtStartEdittext').text("");
+
+
+            });
+            $("[data-dismiss=modal]").click(function () {
+                //$("#RepeatCheckDrop tbody").empty();
+                $(".RepeatCheck tbody").empty();
+
+                $('#ShowEventModal').modal('hide');
+                $("#subjectT").val("");
+                $("#subjectAdd").val("");
+                $("#teacherAdd").val("");
+                $("#teacherDrop").val("");
+
+
+                $("#subjectAdd").unbind();
+                $("#txtStartAddChang").unbind();
+                $("#divStarttimeAdd").unbind();
+                $("#divEndtimeAdd").unbind();
+                $('#remainingTempAddtxt').text("");
+                $('#remainingTimeAddtxt').text("");
+                $('#txtStartAddtext').text("");
+
+            });
+            $(".cancel").click(function () {
+                var Addfrm = $("#AddEventAddfrm"),
+                    validatorAddfrm = Addfrm.validate();
+                validatorAddfrm.resetForm();
+                var Editfrm = $("#EditEventfrm"),
+                    validatorEditfrm = Editfrm.validate();
+                validatorEditfrm.resetForm();
+                var Dropfrm = $("#AddEventDropfrm"),
+                    validatorDropfrm = Dropfrm.validate();
+                validatorDropfrm.resetForm();
+                form.find(".error").removeClass("error");
+            });
+    });
+
+    </script>
+}

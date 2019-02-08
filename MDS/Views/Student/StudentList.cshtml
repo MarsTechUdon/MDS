@@ -1,0 +1,587 @@
+﻿@using MDS.Models;
+@model MDS.Models.ManageStudentModel
+@{
+    ViewBag.Title = "StudentList";
+}
+<link href="~/assets/widgets/datatable/datatable.css" rel="stylesheet" />
+<style>
+    .icon-size20 {
+        font-size: 20px;
+    }
+
+    .icon-size23 {
+        font-size: 23px;
+    }
+    table, th, td {
+        border: 1px solid #ededed !important;
+    }
+    @@media screen and (max-width: 1920px) {
+        .SearchFilter {
+            width: 22%;
+        }
+    }
+    @@media screen and (max-width: 1400px) {
+        .SearchFilter {
+            width: 25%;
+        }
+    }
+    @@media screen and (max-width: 800px) {
+        .SearchFilter {
+            width: 100%;
+        }
+    }
+</style>
+
+<style>
+    .tooltipBtn {
+        position: relative;
+        display: inline-block;
+    }
+
+        .tooltipBtn .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -75px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            .tooltipBtn .tooltiptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+        .tooltipBtn:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+</style>
+
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="content-box">
+            <div class="content-box-header bg-blue" style="text-align:left;">
+                <i class="glyph-icon icon-users"></i> <span class="font-size-18">ข้อมูลนักเรียน</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="glyph-icon icon-user"></i> เพิ่มนักเรียน
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" style="margin: 2px -95px 0!important;">
+                        <li><a href="@Url.Action("Createstudent","Student",new { Studenttype = "1"})">- บัตรประชาชน</a></li>
+                        <li><a href="@Url.Action("CreateForeignStudent","Student",new { Studenttype = "2"})">- พาร์สปอร์ต</a></li>
+                        <li><a href="@Url.Action("Createstudent","Student",new { Studenttype = "3"})">- บัตรประจำตัวซึ่งคนไม่มีสัญชาติไทย/<br />ไม่มีสถานะทางทะเบียน</a></li>
+                    </ul>
+                </div>
+            </div>
+           
+            <div class="content-box-wrapper">
+                <div class="row">
+                    @*  col-md-3 col-lg-3*@
+                    <div class="col-xs-12  SearchFilter float-right" style="padding-right:0px!important;">
+                        <label class="control-label col-sm-2" style="margin-bottom:0px!important;">ค้นหา</label>
+                        <div class="col-sm-10 float-left" style="margin-bottom:5px!important;">
+                            <div class="input-group custom-search-form">
+                                @Html.DropDownListFor(x => x.filterno, new SelectList(ViewData["FilterList"] as List<SelectListItem>, "Value", "Text"),
+                               new { @class = "form-control", style = "font-size: 0.8em;" })
+                                <span class="input-group-btn">
+                                    <a class="btn btn-info tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="" id="SearchByFilter">
+                                        <i class="glyph-icon icon-search icon-size20"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <table id="datatable-responsive" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            @*<th width="5%">รูปถ่าย</th>*@
+                            <th width="15%">รายละเอียด</th>
+                            <th>วันที่สมัคร</th>
+                            <th width="20%">หลักสูตร <br />รูปหลักสูตร</th>
+                            <th>วันที่สอบ</th>
+                            <th style="width: 130px!important;">สถานะ</th>
+                            <th>ตารางเรียน</th>
+                            <th>รับเงิน</th>
+                            <th>Pretest</th>
+                            <th style="width: 130px!important;">สาขา/ผู้บันทึก</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ListStudents in ViewData["ListStudents"] as IList<ManageStudentModel>)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="#"><img src="~/MDSMiddleFile/DefaultMediaIMG/QRUrl.png" width="25" height="25" onclick="changeIt('@ListStudents.studentname','@ListStudents.course','@ListStudents.URL')" /></a>
+                                    @*<p>@ListStudents.studenttype </p>*@
+                                    <p id="deleteId_@ListStudents.studentind">@ListStudents.studentname </p>
+                                    <p>@ListStudents.idcard </p>
+                                    <p>อายุ  @ListStudents.age ปี สัญชาติ  @ListStudents.nation</p>
+                                    <p>โทร  @ListStudents.mobileno</p>
+                                    <input type="hidden" name="bookingno" id="bookingno" value="@ListStudents.bookingno" />
+                                    <input type="hidden" name="voucherno" id="voucherno" value="@ListStudents.voucherno" />
+                                    <input type="hidden" name="studentid" id="studentid" value="@ListStudents.studentind" />
+                                </td>
+                                <td> @ListStudents.regisdate</td>
+                                <td>
+                                    <span class="tooltip-button" data-original-title="@ListStudents.coursename">@ListStudents.course</span>
+                                    <a class="btn btn-info tooltip-button" style="@ListStudents.courseiconcolor">
+                                        <i class="glyph-icon tooltip-button @ListStudents.courseicon icon-size20"></i>
+                                    </a>
+                                    <br />
+                                    (@ListStudents.courseamount)
+                                </td>
+                                <td> @ListStudents.examdate</td>
+                                <td style="text-align:center;">
+                                    @if (ListStudents.status == "A")
+                                    {
+                                        <div class="col-sm-12 col-md-6">
+                                            @using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                            {
+                                                <button class="btn btn-yellow tooltip-button" data-original-title="แก้ไข" name="studentind" value="@ListStudents.studentind">
+                                                    <i class="glyph-icon tooltip-button icon-edit icon-size20"></i>
+                                                </button>
+                                                <input type="hidden" name="tabActive" value="1" />
+                                                <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                                <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                            }
+                                        </div>
+                                        <div class="col-sm-12 col-md-6">
+                                            <button class="btn btn-danger tooltip-button deleteBtn" data-original-title="ลบ" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-trash icon-size20"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (ListStudents.status == "C")
+                                    {
+                                        <button class="btn btn-purple tooltip-button redeleteBtn" data-original-title="คืนสถานะ" value="@ListStudents.studentind">
+                                            <i class="glyph-icon tooltip-button icon-rotate-left icon-size20"></i>
+                                        </button>
+                                    }
+
+                                </td>
+                                <td style="text-align:center;">
+                                    @if (ListStudents.studytable == "1")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-azure tooltip-button" data-original-title="ยังไม่จัดตารางเรียน" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-columns icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="2" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+                                    }
+                                    else if (ListStudents.studytable == "2")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-azure tooltip-button" data-original-title="กำลังจัดตารางเรียน" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-table icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="2" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+                                    else if (ListStudents.studytable == "3")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-primary tooltip-button" data-original-title="จัดตารางเรียนแล้ว" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-table icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="2" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+                                    else if (ListStudents.studytable == "4")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-primary tooltip-button" data-original-title="กำลังเรียน" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-user icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="2" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+                                    else if (ListStudents.studytable == "5")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-success tooltip-button" data-original-title="จบการเรียน" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-check-square-o icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="2" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+
+                                </td>
+                                <td style="text-align:center;">
+                                    @if (ListStudents.moneystatus == "3")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-success tooltip-button" data-original-title="จ่ายแล้ว (0.00)" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button  icon-linecons-money icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="3" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+                                    else if (ListStudents.moneystatus == "2")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-yellow  tooltip-button" data-original-title="ค้างชำระ (@Convert.ToDecimal((Convert.ToInt32(Convert.ToDecimal(ListStudents.moneyremain))).ToString("#,###.00")))" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button  icon-linecons-money icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="3" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+
+                                    }
+                                    else if (ListStudents.moneystatus == "1")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-danger tooltip-button" data-original-title="ยังไม่ชำระ (@Convert.ToDecimal(ListStudents.moneyremain).ToString("#,###.00"))" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button  icon-linecons-money icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="3" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+
+
+                                </td>
+                                <td style="text-align:center;">
+                                    @if (ListStudents.pretest == "3")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-success tooltip-button" data-original-title="ครบแล้ว" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-smile-o icon-size20"></i>
+                                                <span class="bs-badge badge-purple badge-absolute float-right">@ListStudents.pretestcount</span>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="4" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+                                    else if (ListStudents.pretest == "2")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-yellow  tooltip-button" data-original-title="ยังไม่ครบ" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-meh-o icon-size20"></i>
+                                                <span class="bs-badge badge-primary badge-absolute float-right">@ListStudents.pretestcount</span>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="4" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+                                    else if (ListStudents.pretest == "1")
+                                    {
+                                        using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                                        {
+                                            <button class="btn btn-danger tooltip-button" data-original-title="ยังไม่ทดสอบ" name="studentind" value="@ListStudents.studentind">
+                                                <i class="glyph-icon tooltip-button icon-frown-o icon-size20"></i>
+                                            </button>
+                                            <input type="hidden" name="tabActive" value="4" />
+                                            <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                                            <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />
+                                        }
+
+                                    }
+
+                                </td>
+                                <td style="text-align:center;">
+                                    <p>@ListStudents.branchid / @ListStudents.updateby @ListStudents.uname</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel">ยืนยันการลบข้อมูล</h3>
+            </div>
+            @using (Html.BeginForm("DeleteStudent", "Student", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <!-- content goes here -->
+                    <span>คุณต้องการลบข้อมูล </span><span id="delTag" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                    <input type="hidden" name="frmId" id="frmId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success" data-action="save" role="button">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="RedeleteModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel">ยืนยันการลบข้อมูล</h3>
+            </div>
+            @using (Html.BeginForm("ReDeleteStudent", "Student", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <!-- content goes here -->
+                    <span>คุณต้องการคืนค่าให้ </span><span id="redelTag" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                    <input type="hidden" name="frmreId" id="frmreId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success" data-action="save" role="button">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@* *************************QR ***************************** *@
+<div class="modal fade" id="QRCodeModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel">QR Code</h3>
+            </div>
+           
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom:0px !important;">
+                        <label class="font-size-20" style="color:darkorange;" id="QR_name"></label>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom:0px !important;">
+                        <label class="font-size-20" style="color:black;" id="QR_course"></label>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom:0px !important;">
+                        URL : <a class="font-size-18" href="" target="_blank" id="QR_URL">ลิ้ง</a>
+                        <div class="tooltipBtn">
+                            <button id="btnCopy" onclick="coppyClip()" onmouseout="outFunc()" link="">
+                                <span class="tooltiptext" id="myTooltip">คัดลอก</span>
+                                <i class="glyph-icon icon-copy font-size-14"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display:none">
+                        <input id="QR_URLText" value="" />
+                    </div>
+                </div>
+                <div class="row">
+                    <img src="" id="ImgQR" width="100%"/>
+                </div>
+            </div>
+              
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/assets/widgets/datatable/datatable.js"></script>
+    <script src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script type="text/javascript">
+
+        /* Datatables responsive */
+        $(document).ready(function () {
+            //$('#datatable-responsive').DataTable({
+            //    responsive: true
+            //});
+            $('#datatable-responsive').DataTable({
+                "responsive": true,
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "order": [],
+                "language": {
+                    "search": "",
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                },
+
+                "bStateSave": true,
+                "fnStateSave": function (oSettings, oData) {
+                    localStorage.setItem('offersDataTables', JSON.stringify(oData));
+                },
+                "fnStateLoad": function (oSettings) {
+                    return JSON.parse(localStorage.getItem('offersDataTables'));
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+        });
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#success-alert").hide();
+            $("#success-alert").fadeTo(3000, 1000).slideUp(700, function () {
+                $("#success-alert").slideUp(1000);
+            });
+        });
+        $(document).ready(function () {
+            $(document).on("click", ".deleteBtn", function () {
+                var modal = $('#deleteModal');
+                $('#delTag').text($('#deleteId_' + $(this).val()).text());
+                $('#frmId').val($(this).val());
+                modal.modal("show");
+            });
+        });
+        $(document).ready(function () {
+            $(document).on("click", ".redeleteBtn", function () {
+                var modal = $('#RedeleteModal');
+                $('#redelTag').text($('#deleteId_' + $(this).val()).text());
+                $('#frmreId').val($(this).val());
+                modal.modal("show");
+            });
+        });
+
+        $('#SearchByFilter').click(function () {
+            var filter = $('#filterno').val();
+            window.location.href = '@Url.Action("StudentList", "Student")' +'?filterno=' + filter;
+        });
+        
+    </script>
+    <script type="text/javascript">
+        function changeIt(studentname, course, url) {
+            $.ajax({
+                url: '@Url.Action("GenQR", "Public")',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'Json',
+                data: JSON.stringify({ Url: url }),
+                success: successFunction,
+                error: errorFunction
+            });
+            function successFunction(data) {
+                //alert(_src);
+                var modal = $('#QRCodeModal');
+                //$('#ImgQR').attr('src', _src);
+                $('#ImgQR').attr('src', data);
+                $('#QR_name').text('ชื่อ: ' + studentname);
+                $('#QR_course').text('หลักสูตร: ' + course);
+                $('#QR_URL').attr("href", url);
+                $('#btnCopy').attr("link", url);
+                $('#QR_URLText').val(url);
+                modal.modal("show");
+            }
+            function errorFunction(result) {
+                alert(result);
+            }
+            
+        }
+        function coppyClip() {
+            //var copyText = document.getElementById("QR_URLText");
+            //copyText.select();
+            //document.execCommand("copy");
+            var link = $('#btnCopy').attr('link');
+            var tempInput = document.createElement("input");
+            tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+            tempInput.value = link;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            console.log("Copied :", tempInput.value);
+            document.body.removeChild(tempInput);
+
+            var tooltip = document.getElementById("myTooltip");
+            tooltip.innerHTML = "คัดลอกสำเร็จ";
+        }
+
+        function outFunc() {
+            var tooltip = document.getElementById("myTooltip");
+            tooltip.innerHTML = "คัดลอก";
+        }
+    </script>
+}

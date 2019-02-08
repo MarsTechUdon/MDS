@@ -1,0 +1,430 @@
+﻿@*@model IEnumerable<MDS.Models.ComBankModel>*@
+@model MDS.Models.ListBatchModel
+@{
+    ViewBag.Title = "แก้ไขข้อมูลนำฝาก";
+}
+
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+
+<div class="content-box-header bg-blue" style="text-align:left;">
+    <div class="form-inline">
+        <i class="glyph-icon icon-money">&nbsp;รายการนำฝาก</i>
+    </div>
+</div>
+<div class="panel">
+    <div class="form-inline">
+        <br />
+        <div>&emsp;<label>เลขที่ใบนำฝาก : @ViewBag.batchno</label>&emsp;&emsp;&emsp;<label>วันที่สร้างใบนำฝาก : @ViewBag.batchdate น.</label></div>
+    </div>
+    <div class="panel-body">
+        <table id="datatable-fixedcolumns" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("สาขา")
+                    </th>
+                    <th>
+                        @Html.DisplayName("เจ้าหน้าที่")
+                    </th>
+                    <th style="width: 20%;">
+                        @Html.DisplayName("รายละเอียด")
+                    </th>
+                    <th>
+                        @Html.DisplayName("วันที่รับเงิน")
+                    </th>
+                    <th>
+                        @Html.DisplayName("วันที่บันทึก")
+                    </th>
+                    <th>
+                        @Html.DisplayName("จำนวนเงิน")
+                    </th>
+                    <th style="display:none;">
+                        @Html.DisplayName("จำนวนเงิน")
+                    </th>
+                    <th style="display:none;">
+                        @Html.DisplayName("id")
+                    </th>
+                    <th>
+                        <input type="checkbox" onClick="toggle(this)" checked disabled />&nbsp;เลือกท้งหมด
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var payid = "";}
+                @foreach (var batch in Model.BatchList)
+                {
+                    string amountComma = decimal.Parse(batch.amount2).ToString("N2");
+                    if (@batch.payid != "0")
+                    {
+                        payid = payid + batch.payid + ",";
+                    }
+                    if (@batch.rno != ("999") && @batch.rno != ("9999"))
+                    {
+                        <tr>
+                            <td>@batch.branch</td>
+                            <td>@batch.uname</td>
+                            <td>
+                                @batch.detail
+                            </td>
+                            <td>
+                                @batch.paydate
+                            </td>
+                            <td>
+                                @batch.keydate
+                            </td>
+                            <td style="text-align:right;">
+                                @{
+                                    if (@batch.amount2.Substring(0, 1) == "-")
+                                    {
+                                        <p style="color:red;">@amountComma</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color:green;">@amountComma</p>
+                                    }
+                                }
+                            </td>
+                            <td style="text-align:right;display:none;">
+                                @{
+                                    if (@batch.amount2.Substring(0, 1) == "-")
+                                    {
+                                        <p style="color:red;">@batch.amount2</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color:green;">@batch.amount2</p>
+                                    }
+                                }
+                            </td>
+                            <td style="display:none;">
+                                @batch.rcby
+                            </td>
+                            <td style="text-align:center;">
+                                @{
+                                    if (@batch.rno != ("999") && @batch.rno != ("9999"))
+                                    {
+                                        if (batch.rcby == ("cash") || batch.rcby == ("dbnote") || batch.rcby == ("cheque"))
+                                        {
+                                            <p style="display:none;">@batch.payid</p>
+                                            <input type="checkbox" class="form-control messageCheckbox" name="messageCheckbox" value="@batch.amount2" checked />
+                                        }
+                                        else
+                                        {
+                                            <p style="display:none;">@batch.payid</p>
+                                            <input type="checkbox" class="form-control messageCheckbox" name="messageCheckbox" value="@batch.amount2" checked disabled />
+                                        }
+
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                    if (batch.rno == ("999"))
+                    {
+                        <tr>
+                            <td>@batch.branch</td>
+                            <td></td>
+                            <td>
+                                @batch.detail
+                            </td>
+                            <td>
+                                @batch.paydate
+                            </td>
+                            <td>
+                                @batch.keydate
+                            </td>
+                            <td style="text-align:right;">
+                                @{
+                                    if (@batch.amount2.Substring(0, 1) == "-")
+                                    {
+                                        <p style="color:red;">@amountComma</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color:green;">@amountComma</p>
+                                    }
+                                }
+                            </td>
+                            <td style="text-align:right;display:none;">
+                                @{
+                                    if (@batch.amount2.Substring(0, 1) == "-")
+                                    {
+                                        <p style="color:red;">@batch.amount2</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color:green;">@batch.amount2</p>
+                                    }
+                                }
+                            </td>
+                            <td style="display:none;"></td>
+                            <td style="text-align:center;">
+                                @{
+                                    if (@batch.rno != ("999") && @batch.rno != ("9999"))
+                                    {
+                                        <input type="checkbox" class="form-control messageCheckbox" name="name" value="" checked />
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                    else if (batch.rno == ("9999"))
+                    {
+                        <tr>
+                            <td>@batch.branch</td>
+                            <td></td>
+                            <td>
+                                @batch.uname
+                            </td>
+                            <td>
+                                @batch.paydate
+                            </td>
+                            <td>
+                                @batch.keydate
+                            </td>
+                            <td style="text-align:right;">
+                                @{
+                                    if (@batch.amount2.Substring(0, 1) == "-")
+                                    {
+                                        <p style="color:red;">@amountComma</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color:green;">@amountComma</p>
+                                    }
+                                }
+                            </td>
+                            <td style="text-align:right;display:none;">
+                                @{
+                                    if (@batch.amount2.Substring(0, 1) == "-")
+                                    {
+                                        <p style="color:red;">@batch.amount2</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color:green;">@batch.amount2</p>
+                                    }
+                                }
+                            </td>
+                            <td style="display:none;"></td>
+                            <td style="text-align:center;">
+                                @{
+                                    if (@batch.rno != ("999") && @batch.rno != ("9999"))
+                                    {
+                                        if (@batch.status == "A")
+                                        {
+                                            <input type="checkbox" name="name" class="form-control messageCheckbox" value="@batch.amount2" />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" name="name" class="form-control messageCheckbox" value="@batch.amount2" />
+                                        }
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="panel">
+    <div class="panel-body">
+        @using (Html.BeginForm("editDeposit", "Deposit", FormMethod.Post))
+        {
+            <div>
+                <div>
+                    @{
+                        var str = payid;
+                        if (str != "")
+                        {
+                            str = str.Remove(str.Length - 1);
+                        }
+                        else
+                        {
+                            str = "-";
+                        }
+                    }
+
+                    <h2>รายละเอียด</h2>
+                    <input type="text" class="form-control payid" id="payid" name="payid" value="@str" style="width:100%; display:none; " required />
+                </div>
+                <br />
+                <div>
+                    <input type="hidden" name="batchno" id="batchno" value="@ViewBag.batchno" />
+                    <label>จำนวนเงินนำฝากรวม </label>
+
+                    @{
+                        try
+                        {
+                            decimal amouuu = decimal.Parse(@ViewBag.amount);
+                            string max = amouuu.ToString("N2");
+                            <input type="text" class="form-control" id="summsad" name="summsad" value="@max" style="text-align:center;" readonly />
+                            <input type="text" class="form-control" id="summary" name="summary" value="@ViewBag.amount" style="text-align:center;display:none;" readonly />
+                        }
+                        catch (Exception)
+                        {
+                            <input type="text" class="form-control" id="summary" name="summary" style="text-align:center;" value="0.00" readonly />
+                        }
+                    }
+
+                    <label>เข้าบัญชี <i style="color:red;">*</i></label>
+                    <select class="form-control accountno" name="accountno" id="accountno" oninvalid="this.setCustomValidity('เลือกเลขบัญชี')"
+                            oninput="setCustomValidity('')" required>
+                        <option value="" disabled selected>กรุณาเลือกเลขบัญชี</option>
+                        @foreach (var BankAccount in Model.BankAccount)
+                        {
+                            if (ViewBag.accountno == @BankAccount.AccountNo)
+                            {
+                                <option value="@BankAccount.AccountNo" selected>@BankAccount.AccountNo : @BankAccount.AccountName</option>
+                            }
+                            else
+                            {
+                                <option value="@BankAccount.AccountNo">@BankAccount.AccountNo : @BankAccount.AccountName</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+                <div>
+                    @{ var batchD = @ViewBag.depositdate; }
+                    <label>วันที่นำฝาก <i style="color:red;">*</i></label>
+                    <select class="form-control depositdate" name="depositdate" id="depositdate" oninvalid="this.setCustomValidity('เลือกวันที่นำฝาก')"
+                            oninput="setCustomValidity('')" required>
+                        <option value="@batchD" selected>@batchD (วันที่ที่ทำการนำฝากล่าสุด)</option>
+                    </select>
+
+                    <label>หมายเหตุ</label>
+                    <textarea type="text" class="form-control remark" id="remark" name="remark" style="resize:none;font-size:14px;">@ViewBag.remark</textarea>
+                </div>
+
+                <br />
+                <div style="text-align:center;">
+                    <a href="@Url.Action("ListBatch","Deposit")">
+                        <div class="btn btn-lg btn-danger" s>
+                            กลับ
+                        </div>
+                    </a>
+                    <button type="submit" class="btn btn-lg btn-success" data-action="save" role="button">แก้ไขข้อมูล</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts{
+
+
+    <!-- Data tables -->
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-fixedcolumns.js"></script>
+    <script type="text/javascript">
+            /* Datatables responsive */
+
+            $(document).ready(function () {
+                $('#datatable-responsive').DataTable({
+                    responsive: true
+                });
+            });
+
+            $(document).ready(function () {
+                $('.dataTables_filter input').attr("placeholder", "Search...");
+            });
+
+            /* Data table fixed columns */
+
+            $(document).ready(function () {
+                var table = $('#datatable-fixedcolumns').DataTable({
+                    scrollY: "500",
+                    scrollX: "100%",
+                    scrollCollapse: true,
+                    paging: false
+                });
+                new $.fn.dataTable.FixedColumns(table);
+            });
+
+            $(document).ready(function () {
+                $('.dataTables_filter').hide();
+            });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var date = new Date();
+            var yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
+            var fulldate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            var yesterday_date = yesterday.getFullYear() + "-" + (yesterday.getMonth() + 1) + "-" + yesterday.getDate();
+            $('#depositdate').append('<option value="' + fulldate + '" >' + fulldate + '</option><option value="' + yesterday_date + '">' + yesterday_date + '</option>');
+    });
+    </script>
+
+    <script>
+            $('input').on('change', function () {
+                var result = $("tr:has(:checked)")
+                var StrPayID = "";
+                var json = result.map(function () {
+                    return [$(this).children().slice(5).map(function () {
+                        return $(this).text().trim()
+                    }).get()]
+                }).get()
+
+                for (var i = 0; i < json.length; i++) {
+                    StrPayID = StrPayID + json[i] + ",";
+                }
+                StrPayID = StrPayID.slice(0, -1);
+
+                var chkPayID = StrPayID.split(",");
+                var AmountValues = 0;
+                var StrpayID = "";
+                for (var j = 0; j < chkPayID.length; j++) {
+                    if (chkPayID[j] == ("cash") || chkPayID[j] == ("cheque") || chkPayID[j] == ("dbnote")) {
+                        AmountValues = AmountValues + parseInt(chkPayID[j - 1]);
+                        StrpayID = StrpayID + chkPayID[j + 1] + ",";
+                    } else if (chkPayID[j] == ("discount") || chkPayID[j] == ("tran") || chkPayID[j] == ("crcard")) {
+                        StrpayID = StrpayID + chkPayID[j + 1] + ",";
+                    }
+                }
+                document.getElementById("summary").value = AmountValues;
+
+                StrpayID = StrpayID.slice(0, -1);
+                document.getElementById("payid").value = StrpayID;
+            });
+    </script>
+
+    <script>
+            function toggle(source) {
+                checkboxes = document.getElementsByName('messageCheckbox');
+                for (var i = 0, n = checkboxes.length; i < n; i++) {
+                    checkboxes[i].checked = source.checked;
+                }
+            }
+    </script>
+}

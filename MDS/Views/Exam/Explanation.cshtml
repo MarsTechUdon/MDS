@@ -1,0 +1,188 @@
+﻿@{
+    ViewBag.Title = "แบบทดสอบ";
+}
+@{
+    /**/
+    Layout = "~/Views/Shared/_LayoutExam.cshtml";
+}
+
+<script type="text/javascript">
+    $(window).load(function () {
+        setTimeout(function () {
+            $('#loading').fadeOut(400, "linear");
+        }, 300);
+    });
+</script>
+
+<div class="row">
+    <label class="col-md-1"></label>
+    <div class="col-md-10">
+        <br /><br />
+        <div class="panel" style="margin-left:20px;margin-right:20px;margin-bottom:600px;margin-top:15px;">
+            <div class="panel panel-default">
+                <div class="panel-heading"
+                     style="display: block;width: 100%;height: 70px;background-image: linear-gradient(60deg,#b6ff00,#119a23);margin: -60px auto 0;
+                       box-shadow: 0 5px 20px rgba(0,0,0,.5);padding: 15px 20px;font-size: 2rem;text-align: left;">
+                    <div class="text-center" style="margin-top:-8px;">
+                        <h1 style="color:white;"> วิธีทำข้อสอบ</h1>
+                    </div>
+
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <b style="font-size:30px;">ขั้นตอนการทำข้อสอบ</b>
+                        <p style="font-size:20px;">1. ข้อสอบมีทั้งหมด 50 ข้อ กำหนดเวลาสอบ 60 นาที</p>
+                        <p style="font-size:20px;">2. ข้อสอบจะแสดงทีละข้อ โดยผู้เข้าสอบสามารถ</p>
+                        <p style="font-size:20px;padding-left:50px;">คลิกที่ o หน้าตัวเลือกที่ต้องการเลือกเป็นคำตอบ</p>
+                        <p style="font-size:20px;padding-left:50px;">
+                            คลิกที่ปุ่ม <img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAG0AAAAvCAYAAADpaEQxAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+                                jwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAXZSURBVHhe7ZzdSyNXGMb7x+2VCItFEUlFlIW6
+                                4LKseJGb2gsRdwsqLO6FQu1FgxSC7AouuCyhZZdCSEFZdAsSTExt7MbxY2pMtq3g2/PMySSZmTPJ
+                                zGQ+DJ4Xnpv5OBl+z5xz3vec0S9IRtdFx6ZVq1U6Pz+n4+O/qFD4g3K5HB0cHNxpgQFYgAnYgJGf
+                                4cm06+trOjs7o8PDQzo6+pNOTk7Zw13S5eVnqlT+Yw95facFBmABJmADRmAFZmDXabgy7ebmhk5P
+                                T7U3qVRS2INVhQ8tZRVYgRnYgSFYeg3HplUqFdblC/Tp0wldXf0jfDCp9gI7MARLMPUSjky7uLjQ
+                                uje6u+hBpNwLLMEUbN1GW9MwkWJMLpc/C39cyrvAFGzB2E20NA1vARq9uvpX+KNSnQtswdhNj7M1
+                                DeMtuq/sYcELjMHa6RwnNA2ZDSZKOYeFJ7AGcydZpdA0pKTIcESNSwUnMAf7dmExDcUfagmZ1ocv
+                                MAf7dgW4xTRU7SgCRY1KBS+whwetwmIaJkS50hGdwB4etAqDaVjYRPopaswvFX/P0Lv3O5Q/F593
+                                LoU2Zscp9sCsBG0Lr+8ecQ/sF5kNpqHIwwKnqCG/lH7+Jd3rjVOyID7vXEbTBvrRLlPfMqWF13eP
+                                +AK8fcFtMI1vJQSb5nPTRBqmpQ/ie9pJ/W2VYn2sja9XaVsRX2OW/hwT60Xh+SgFD+CFXRhMwx4Q
+                                thREDfml/a1lWnwh0ktKl8T3tNYhrT2EAYO0mBadF+s2mwYP4IVdGExDutl1+2HlDD3Teiobco8E
+                                523k3LQq7f8Up9h3v1KxzI9pPXuUDcMOe7VbwQN4YRcG07DrKmqkE6m5HUouTlPsq0ENEtQzNE6T
+                                i5uUtoNcyNDKt5ONeYr1ooEH0/TsdZaUGrjGtZs0oV1jmsu2E3y+m31DxebjNbnpafmtpzTArh3Q
+                                jctt0iSebSQ44+CFXQRnWlmh1Pw49WhAuVHWpIH1jpzxPiW9rAEy3DM63GhnapPyzcbZmcba0X7j
+                                Cbu++XhNbofHsI2LxjQd5shTSu6qxnNlld7ND3MTGARVP378M8WRUPSO0cxbE8xShhZHBKBDMg0S
+                                GTeB5w3AuGhN6x+jybkEJd9mjcPUh1W6j/NDLOOrHcuvxzWQBiObpKYWuBGst9XbCtE0KCzjojGN
+                                Sc1+pI2VODfHDNUCu0qpOQ5yJmWzIiMyImTToL3vx7R7Yz9m+bHdBB/SH4t/y4siM00DireQzV0r
+                                aRMcC+wiJZ9wkLap+y0wDXMuasKeqZe0j56m7PBhu3/aMj93oshM04e7e/MZ63kLbIWSUxzkbTUt
+                                LMMgx6b5XafVTXu+Yz0vgJ1+wcsCW5C+mdYYiuNbpiTJRmEa5qpO83tFxK1p6i8LPLV/mKA9gGm+
+                                Hmpp2gKlmhehj9/QpHY8TmtmqHry0PuI1rKmcwKFaRjkakXE77XH4quaaX3DWr31zeumfTpRDymz
+                                eW2K97aeoTjNaMtbS7SxWzsvMq2+IjJI90ebi+kq67k8YcDvT8zVlsvmWGKkGcYyQPYyKXo7tuLt
+                                1A1jx5T3S6zWDMYwyNXao++r/MpHWnncWAkxDHt2w5qSpeRsoyiH6nOczZCXfzVTN8JoqEp76ws0
+                                Wl9Zqan/EcV/yNSXpdoK15mvdXqvB7la5cdbFfR+mmP9rZJSYlL82ZBVFX/bC1Ku9tMQcuc6Wrne
+                                uUbIb0SiladvROTXWNHJ89dYCPndYzTy/N0jQn5hHL7AuqMvjBHyW/7w5Mu3/HrIv5oJXr7+1Ywe
+                                KPLQqOxx/gtMwbZVIS2KtqYh8Bag+8o5zj+BJZi66WF6ODINgfEWEyUyHFkOeBfYgSFYOp3DzOHY
+                                NAQyG6SkqCVQBMqVE+cCKzADOzB0kiXahSvT9EDxh6od3RtjMl/glP9HRBcYgAWYgA0YgRWYtSuc
+                                nYQn05oDC5uYSLGVgD0gvEnYdb3LAgOw4Ftdt+Q/9siINqRpXRjStK4Lov8B4/sHSC9P/yoAAAAA
+                                SUVORK5CYII=" />
+                            เพื่อไปยังข้อสอบข้อถัดไป และเป็นการบันทึกคำตอบข้อนั้นๆ
+                        </p>
+                        <p style="font-size:20px;padding-left:50px;">
+                            คลิกที่ปุ่ม <img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAIcAAAA4CAYAAADXe+uqAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+                                jwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAbzSURBVHhe7ZsPb9o4GMbv+38D1GjRxESFNq5M
+                                UcUOiemiS1WN6drrRsVUVFZ2q8pGO3RImUQLfc9PYpuEOsHhTwfUP8kSDW7i+Hl4/dpOfiODIQFj
+                                DkMixhyGRIw5DIkYcxgSMeYwJLKQOX7+/Ek/fvygq6sr+vLlC7XbbTo/PzflEQv6HH0PDaAFNFkW
+                                mc1xd3dHNzc3dHFxQV+/fg0++75Pt7e3NB6PeS3DY4E+R99DA2gBTaANPkOrRdA2x/39PV1fXwdO
+                                xYXRIMN6Am2gEbSCZtBuHrTMAVd2Oh3q9Xo0Go34UcO6A62gGbSDhlmZaY5+vx+EqXlOblgPoB00
+                                hJZZSDUHEhyMYYuOXYZfDzSEltBUl0RzwGU4mRlGtgdoCU11I4jSHCIMmYixfUBT3TThgTmQ2c6b
+                                wBg2A2gLjWfNYh6YA1MfZLiG7QYaQ+s0YuZAyMHc2OQZ2w80htZpqUPMHFg4QTE8DWbpHTMHEhWz
+                                8vl0gNbQPAlpDmzYYJqz1tzUqfTcJjsoNWrxw5vFgDofG9Q469KQH/mVQPOkzTppDiyOrP2QIsxh
+                                5SiXc6jJD28WTXJyrP0Fj9Yh7YfmSQtj0hzY8t2U6WvvoMDMAYPES+WMV1hruDlU5VmV2rzWYwHN
+                                ob0KaQ48E7Ap+cbgk0uVN5Wp4lJzwCusNZd09KDtvLhNNug8LtAc2quQ5sC0ZmXPY9ycUPl5gbxv
+                                /O9xlw6LFhUOuvyA4VcBzaG9CmkOPFW0EmAMm4VMu0wnSGkCYyCM2uQ0dYaxEV0eO1QI8gxWdiyq
+                                iUxUJqiT5HT4b50qr/Jk21YsZFsvSlQ7vqRBzP99qv8eJrjynBH670th8jv15fBbk7z9ItnPJufP
+                                WTYV9z1qKdI22aZofXYf+Vc1OrqK90GrFran9F61/9GiWnC/JaovMT1M0n615kgzxqleAO2/L8oO
+                                tYKOsakqcovvHhWC7ybJqchHLDusG5SoKMV6JBHskVcIjzuK7FbmNvv8y3GfThx7ci5mCHENa4cf
+                                24lESI6qTbI+64tqpOub++HxwoEqXRX5CrvGd35oCTy+OZZgDEz76i/DziodK6KMwhw09GmoGB1H
+                                10dhe1j98gcxicxoDnE9u0Te56l7GA+o4fBo9fokPk1VtslnRuBG25vU335zLMUYoE+Hu2FnOaf8
+                                UBSVOVLwj0vBuSZizGkONiQU92rkHXfiCeR5lSx8rzvrEPWfuyxNDdlyc3TYuIgbyJPL77jzNvyF
+                                FN9lexIJyGGFhWvn4IgaHxvU+Y9/qTDHyB/QYBApfmSf6JtHedSXYmQ0B8t//Ks21f8ohKJOmzLF
+                                rCO/S20sfkXLO4fsqfpbHzn8C5cKGFNfVKmF0cBvUfUF+xvj8WXGTT0Wro/24smlFFIhhuhcWaSw
+                                jAf1s5qD8f0wvDd2L9VPPWaXCCpzsKiJpDfWpgflCZkDLMsgl24+7MBdl9rXYTTwxXJMijmsXSdc
+                                O/hbBGyGqL9T4bOb7OaQx5wGPxJB0Z7+Ox752BB7eN6NR7XPbhjJ1t0cq1jnWNwgQjwrltFLxDAh
+                                xZ7RuU0n+C63e8iyGbCAOaLRRJBiVt2cKbX9Q5bLBfWLVM+SuqWgtc6xqhXSNIO4F4oZSIxJQqqa
+                                rXT/4kK9rMvEMLFzWXj3+Lkmuc9kNpT/MxJhwKBNLq+/DHPozrZkpCl41J36rXbFtfOTBHZRtFZI
+                                V7m3EhrEpsoZn7Bxg9hvWjN3JqPrHPlXfKhgpbwr8pDIeRlCjJxVoLJYln5Tniyi2WwmEel0/58y
+                                P0/k/Hss4YSh+fFFzDFJqLFIxtvzthFGLkV9Graowqfc0XuI3q/e4qEeWnsrq96VHd1ODSPsb93M
+                                o39ao1Ked1i05EvknsXja+9DhdWNJ7BBwYrka486D/rVp45bjJthJ0+lGhPwlA9DC5gD52/Vpswm
+                                dmSV9Rksanmvea4VLex+a6fZZ3xpaO3KbsTzHLe+TOb8WSEH006Z/PmzjSjPrVF3HsZD3h71Ip0S
+                                +T869zsfWs9zAPMk2NMCWms9CQYQYtb+gR/D0pild8wc5unzp0Pmp8+BeW/laZD5vRVg3njbfqDt
+                                XG+8AfwzEpW0kGPYTKAptNX58SvNAcxb9tsHtISmC71lL8DiCE5mIsjmAw2hZdKCl4pUcwC4TDcM
+                                GdYTkSboRgzBTHMAkcAgwzXDzOYAraDZvBMMLXMAZLaY+mBujIUTs5K6vkAbaAStoNmsWUkS2uYQ
+                                YOzChRGmMIbhM1yJBq3svRdDIuhz9D00gBbQBNrg86K5YmZzRMGGDRIcbPnimQA4FU8VmfJ4BX2O
+                                vocG0CJpE20eFjKHYbsx5jAkYsxhSMSYw5CIMYchEWMOQyLGHIYEiP4HbKQ0bSkI9k0AAAAASUVO
+                                RK5CYII=" />
+                            เพื่อไปยังข้อสอบข้อก่อนหน้า
+                        </p>
+                        <p style="font-size:20px;padding-left:50px;">
+                            คลิกที่ปุ่ม <img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAAAyCAYAAABVu5kZAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+                                jwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAZUSURBVHhe7VxBiyNFFPYPij9C8OJJFA8LnrwI
+                                C4IXcWHBixEPCgvB4GCQlZGIg3MYGYkQDBsMMhIIGAwSGCi/r1Kv9qW6erp7piKTzPvgI6b61atX
+                                VV+/et075hVnMBSGicpQHCYqQ3GYqAzFkRXVizPnnr3r3JPXnPvkVaOxSmqDGqFWUlRERaOcE6Ox
+                                jqmwKqKi+nIdjcY6UjMaFVHZkWfsSmpGoyKqXCejsYkaJipjEWqYqIxFqGGiMhahhonKWIQaJipj
+                                EWqYqIxFqGGiMhahhokK7H/g3PBDfL6Rv95I9DtBf/o4eZS5/gCoYaIC5/9s5z5/mr/eSPTbbF24
+                                zS+Z6w+AGgctquE3zi1fOHeFz9z1tryzqEKmuqKfv7cxCe8a26FQ46BFNUJWIOqyQ1uxzP5y7vpf
+                                fD7JX29L8aO5/C5ve2zUOF5RfYZN5cWlc8/Ta8bi1NiPqN5zbvqrc2tkCt6t3N30Dl4Mtra9x7jD
+                                /9i2RTscIfNnwRfsfNskfFe8SVRnGJ9Y/6zaO8SluUD7BllogXFO33rZfomYpN/yJxT60gcZb8V2
+                                9DnF9/6nOAYxxw3bWHyFcVeIRfvz/Ahzh9/UVpMZ9Xkf8UhmFDvMa4n5DtUDxynios0KnzvjgBJ/
+                                bs5dqbEfUYXClQFvFpgo6CcuwH/PkUm4yUtpxyc3bgVB0TYK5dtwHZuSjnOTqK4wNjFDrRPb28al
+                                /JAUVbTD5/j9bfsYNRN9CcbSRwp3bPII332cQRxrzMOLGt89lD9PzjfYxvUQW4DtE6zbGH7Yl99X
+                                iMOLUOzQZxSEddMaeR/AEmOm17pSYz+iwoR6mfbJn9sxVt+HtiAYZqHUvid3221E9QV88gKOvqFu
+                                bxtXDWW8a2SY2I4NXrFRH7OJqOJcEp4Ff+53FVcuRrRJfXgVRJ/1ibZJEIpk6OMRVQ0rE8STkQfu
+                                rPO69zu3ENUFNolY/bDbXscdP++EzIRNvEhtkfXWNFRiZbbyTfopLxFVbE8JEcCVvwMqYyVsLQAZ
+                                O8R4PKLCYp2PECyPF26QMKRnPUHJEoSvpfC0pGuCzqJC30UYh8eEtm8b12UQ5QJ1y05/0ItAMhDq
+                                Pt8Vx9RA2yWiOuOY4RUDOVVHrGSgeHSixhojDn/sZWIUAYyRLbXPsTrmdYxHIyoJVmqDdGHSCQ5x
+                                XC2w0RGwixvaUVQ99POAWGPhHNg6LnlyzPjIbVglIyaiiuMG6E3cERVEP4eYPOAgF6P0lX4C/drk
+                                +EQlRwQW4lxnHPCmCXrCfoRM5TcEi+iPhI6ikixTWaiOcc38zuATT2PRFk9xPjZkJopN+lXGqhFV
+                                bvPkgcKLCpnPI818YOqj9h0csrOv8SBOPnkeh6hkQcPC62uNogqMC8aXkVJ0c4MSMcQCWzIFrnst
+                                oMNlYts1rj6KdkIX5ee/bdukCB7iMZ24RrvYkDFbhrHqNq8nc5OMiOtE6o9sK6oB1oKQuPvhO8fY
+                                ESrWR3xcIY7Yfktq7OX4k5pmjae6CTLPBAuRLRqxICsce3z/4+3AOeoD3x0KkOJVsgaFNcci0W4h
+                                bbQLAhIh7DxNKbaOi4RPbw+yzpvxnY43wgYjG3gbZDGf/QDxOYWPTRhHincRxDXmOuO49IdNF7u4
+                                qZJNgVVYk2koA+pEtWGNFnzGtQOm8pqC8/B3E65hzfz4WMNl6M+7sMTLYY29iGrwFRYlTMQDE8ie
+                                78hEa1kFDaTuycfKJ4pX/hNIBbC7fPzSTjJXrsAmW8cVKC9QI5LxyC9Rf/FF5w4wJ/7zjAh7BLFv
+                                9LgC9JsjJu3vFP1EbB4QE9tTUV0oUe4gXTuQL5gXaE/Bl7Nn6cvXW1JjL6ISyp+UDBoC7z3a2jXa
+                                4q6TPzFp8nkT28ZFim3Tn7TEOegXmSlV/E3+BsGu8c9xMAc/Ltg4H2V76z/zqaHGXkXVlT3cpYIS
+                                xaPx/6PG/RIV7/ZQWJqoDosa90pUnhATYaI6LGrcP1Gh8E3fOhvvPzXun6iMB0kNE5WxCDVMVMYi
+                                1DBRGYtQw0RlLEINE5WxCDVMVMYi1KiIyn7z09iVjb/5ab9ObOzKxl8ntt9RN3Zl4++oEzSi+uwo
+                                NNaR2qBGUkERWVEZDHdBOVFdPnXu67edO8Gn/j9jDA8O5UT14+vO9eDu8zedm4c2wwOEc/8Bhe93
+                                DvYHCIcAAAAASUVORK5CYII=" /> เพื่อไปยังหน้าเฉลยคำตอบและเสร็จสิ้นการสอบ
+                        </p>
+                        <p style="font-size:20px;">3. การไปยังข้อสอบที่ต้องการทำได้โดย คลิก ที่เลขที่ของข้อที่ต้องการบน Answer Sheet Bar ทางด้านขวามือ</p>
+                        <p style="font-size:20px;padding-left:50px;">หากผู้เข้าสอบยินยอมรับข้อกำหนดและต้องการเริ่มการสอบให้ คลิก ที่ปุ่ม “เริ่มทำข้อสอบ” ข้างล่างเพื่อเริ่มการสอบ</p>
+                        <br /><br />
+
+                        @using (Html.BeginForm("ExamList", "Exam", FormMethod.Post))
+                        {
+                            <input type="hidden" id="" name="studentind" value="@ViewBag.temp_studentind">
+                            <input type="hidden" id="" name="examid" value="@ViewBag.temp_examid">
+                            <input type="hidden" id="" name="LangValue" value="@ViewBag.LangValue">
+                            <div class="text-center">
+                                <div style="margin:3em;">
+                                    <button type="submit" class="btn btn-success btn-lg" id="load"
+                                            data-loading-text=" กรุณารอ...">
+                                        เริ่มทำข้อสอบ
+                                    </button>
+                                    <div class="loading-spinner" id="jojo" style="display:none;">
+                                        <i class="bg-blue"></i>
+                                        <i class="bg-blue"></i>
+                                        <i class="bg-blue"></i>
+                                        <i class="bg-blue"></i>
+                                        <i class="bg-blue"></i>
+                                        <i class="bg-blue"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <script>
+                            $("button").click(function () {
+                                var $btn = $(this);
+                                $btn.button('loading');
+                                // simulating a timeout
+                                setTimeout(function () {
+                                    $btn.button('reset');
+                                }, 2000000);
+                                document.getElementById("jojo").style.display = "block";
+                            });
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WIDGETS -->
+<script type="text/javascript" src="~/assets/bootstrap/js/bootstrap.js"></script>

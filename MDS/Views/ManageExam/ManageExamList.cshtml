@@ -1,0 +1,862 @@
+﻿@using MDS.Models;
+@{
+    ViewBag.Title = "รายการข้อสอบ";
+}
+
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+
+<style>
+    .card {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        border-radius: 3px;
+        color: rgba(0,0,0, 0.87);
+        background: #fff;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    }
+
+        .card .card-image {
+            height: 60%;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card .card-image img {
+                width: 100%;
+                height: 100%;
+                border-top-left-radius: 2px;
+                border-top-right-radius: 2px;
+                pointer-events: none;
+            }
+
+            .card .card-image .card-image-headline {
+                position: absolute;
+                bottom: 16px;
+                left: 18px;
+                color: #fff;
+                font-size: 2em;
+            }
+
+        .card .content {
+            padding: 15px;
+        }
+
+    .loader {
+        z-index: 1;
+        border: 10px solid #fbfbfb;
+        border-top: 10px solid #5ba4d8;
+        border-radius: 50%;
+        width: 75px;
+        height: 75px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        position: absolute;
+        top: 105px;
+        left: 50%;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cnotice {
+        position: absolute;
+        z-index: 1;
+        top: 100px;
+        right: 10px;
+        display: block;
+        border-radius: 5px;
+        background-color: #FFF;
+        padding: 15px;
+        box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.42), 0 3px 20px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -ms-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .custom-file-upload {
+        position: absolute;
+        display: inline-block;
+        cursor: pointer;
+        font-size: 26px;
+        left: 40%;
+        top: 35%;
+    }
+
+    .pic-btn {
+        font-size: 20px;
+        position: absolute;
+        top: 50%;
+        color: #000;
+        background-color: #fff;
+        padding: 10px 10px;
+        border-radius: 50%;
+    }
+
+    .pic-hov i {
+        transition-duration: .5s;
+        transform: scale(0);
+        transition: transform 300ms 0ms cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    }
+
+    .pic-hov:hover i {
+        transform: scale(0.8);
+        transition: transform 300ms 100ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: rgba(0, 0, 0, 0) 0px 14px 26px -12px, rgba(0, 0, 0, 0.30) 0px 4px 23px 0px;
+    }
+
+    .pic-hov:hover img {
+        opacity: .5;
+        background-color: #fff;
+    }
+
+    /* CSS3 basic */
+    .loading-spinner {
+        position: absolute;
+        width: 85px;
+        height: 85px;
+        margin: 0 auto;
+        display: none;
+        z-index: 1;
+        top: 15%;
+        left: 55%;
+    }
+
+        .loading-spinner i {
+            position: absolute;
+            top: 25px;
+            left: 52px;
+            display: block;
+            -webkit-transform-origin: -20px;
+            border-radius: 50%;
+        }
+
+            .loading-spinner i:nth-child(1) {
+                width: 14px;
+                height: 14px;
+                -webkit-animation: spin 1.8s .1s infinite;
+            }
+
+            .loading-spinner i:nth-child(2) {
+                width: 12px;
+                height: 12px;
+                -webkit-animation: spin 1.8s .2s infinite;
+            }
+
+            .loading-spinner i:nth-child(3) {
+                width: 10px;
+                height: 10px;
+                -webkit-animation: spin 1.8s .3s infinite;
+            }
+
+            .loading-spinner i:nth-child(4) {
+                width: 8px;
+                height: 8px;
+                -webkit-animation: spin 1.8s .4s infinite;
+            }
+
+            .loading-spinner i:nth-child(5) {
+                width: 6px;
+                height: 6px;
+                -webkit-animation: spin 1.8s .5s infinite;
+            }
+
+            .loading-spinner i:nth-child(6) {
+                width: 4px;
+                height: 4px;
+                -webkit-animation: spin 1.8s .6s infinite;
+            }
+</style>
+
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+@if (ViewBag.boolResult == "Y" && ViewBag.msg != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.msg</p>
+        </div>
+    </div>
+}
+else if (ViewBag.boolResult == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.msg</p>
+        </div>
+    </div>
+}
+
+<!---cancle--->
+<div class="modal fade" id="cancleManageExam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">ยืนยันการลบข้อมูล</h4>
+            </div>
+            @using (Html.BeginForm("DeleteManageExam", "ManageExam", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <span>คุณต้องการลบข้อมูล </span><span id="ca_question" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="qind" id="ca_id" />
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!---end cancle--->
+
+
+<h2>จัดการข้อสอบ</h2><br />
+<div class="row">
+    <div class="col-md-2"></div>
+    @using (Html.BeginForm("ManageExamList", "ManageExam", FormMethod.Post))
+    {<div class="col-md-1 text-right">
+            <b>หมวดวิชา :</b>
+        </div>
+        <div class="col-md-2 text-center">
+            @Html.DropDownList("ugmData", new SelectList(ViewData["ListSubjectGroup"] as List<SelectListItem>, "Value", "Text"),
+           "-- กรุณาเลือก --", new { @class = "form-control", style = "font-size: 0.9em", @id = "subjectgroupid" , @required = "required" })
+
+        </div>
+        <div class="col-md-1 text-right">
+            <b>
+                เลือกภาษา :
+            </b>
+        </div>
+        <div class="col-md-2 ">
+            @Html.DropDownList("ugmData2", new SelectList(ViewData["ListLanguage"] as List<SelectListItem>, "Text", "Text"),
+"-- กรุณาเลือก --", new { @class = "form-control", style = "font-size: 0.9em", @id = "langid", @required = "required" })
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-success"> <i class="glyphicon glyphicon-search"></i> ค้นหา</button>
+        </div>
+    }
+</div><br>
+
+<div class="panel">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="glyph-icon icon-map-marker"></i>
+        รายการข้อมูลรายรับ
+        <div class="header-buttons">
+            <a href="@Url.Action("CreateManageExam","ManageExam")" class="btn btn-sm btn-success pull-right"><i class="glyphicon glyphicon-plus"></i> เพิ่มข้อมูล</a>
+
+            @*<button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#addManageExam">
+                        <i class="glyphicon glyphicon-plus"></i> เพิ่มข้อมูล
+                </a>
+                </button>*@
+        </div>
+    </h3><br />
+    <div class="panel-body">
+        <div class="example-box-wrapper">
+            <table id="datatable-responsive22" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th class="text-center">QID</th>
+                        <th class="text-center">คำถาม</th>
+                        <th class="text-center">AnsId</th>
+                        <th class="text-center">คำตอบ</th>
+                        <th class="text-center">การจัดการ</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @{ int i = 0; int j = 1;}
+                    @foreach (var ListExam in ViewData["ListExam"] as IList<ManageExamModel>)
+                    {
+                        if (@j == 1)
+                        {
+                            <tr>
+                                <td>@{ i = i + 1; } @i</td>
+                                <td>@ListExam.ind</td>
+                                <td>
+                                    @if (@ListExam.QuestionImage != "")
+                                    {<div class="row">
+                                            <script language="javascript">
+                                                function zoom() {
+                                                    document.getElementById("image1").width = 256; //กำหนดความกว้างใหม่
+                                                    document.getElementById("image1").height = 424; // กำหนดความสูงใหม่
+                                                }
+                                            </script>
+                                            @*<div class="col-sm-4">
+                                                <img src="data:image/jpeg;base64,@ListExam.QuestionImage" class="img-responsive" style="width:300px;height:150px;" />
+                                            </div>*@
+                                            <div class="col-sm-8">
+                                                คำถาม @ListExam.ind : @ListExam.Question (@ListExam.dltNo)
+                                                <br />
+                                                @*<audio controls="controls" autobuffer="autobuffer" style="width:250px;">
+            <source src="data:audio/mp3;base64,@ListExam.Questionsound">
+        </audio>*@
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                     <div class="col-sm-12">
+                                         คำถาม @ListExam.ind : @ListExam.Question (@ListExam.dltNo)
+                                         @*<audio controls="controls" autobuffer="autobuffer" style="width:250px;">
+            <source src="data:audio/mp3;base64,@ListExam.Questionsound">
+        </audio>*@
+                                     </div>
+                                    }
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    @using (Html.BeginForm("ManageExamDetail", "ManageExam", FormMethod.Post))
+                                    {
+                                        <button class="btn btn-warning btn-md" data-original-title="แก้ไข" name="ind" value="@ListExam.ind">
+                                            <i class="glyph-icon  icon-edit"></i>
+                                        </button>
+                                    }
+                                    @*<a href="@Url.Action("ManageExamDetail","ManageExam")" class="btn btn-warning btn-md">
+                                            <i class="glyph-icon tooltip-button icon-edit icon-size20"></i>
+                                        </a>*@
+                                    <button class="btn btn-danger btn-md" data-toggle="modal" data-target="#cancleManageExam"
+                                            data-id="@ListExam.ind" data-question="@ListExam.Question">
+                                        <i class="glyph-icon icon-trash"></i>
+                                    </button>
+                                </td>
+
+                            </tr>
+                        }
+                        <tr>
+                            <td>@{ i = i + 1; } @i</td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (ListExam.iscorrect == "True")
+                                {
+                                    <b style="color:red;">คำตอบ @j</b>
+                                }
+                                else
+                                {
+                                    <b>คำตอบ @j</b>
+                                }
+                            </td>
+                            <td>
+                                @if (@ListExam.ChoiceImage != "")
+                                {<div class="row">
+                                        @*<div class="col-sm-4">
+                                            <img src="data:image/jpeg;base64,@ListExam.ChoiceImage" class="img-responsive" style="width:300px;height:150px;" />
+                                        </div>*@
+                                        <div class="col-sm-8">
+                                            @if (ListExam.iscorrect == "True")
+                                            {
+                                                <b>=></b> <b style="color:red;">@ListExam.Choice</b>
+                                            }
+                                            else
+                                            {
+                                                <b>=></b> @ListExam.Choice
+                                            }
+                                            <br />
+                                            @*<audio controls="controls" autobuffer="autobuffer" style="width:250px;">
+                                                <source src="data:audio/mp3;base64,@ListExam.ChoiceSound">
+                                            </audio>*@
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-sm-12">
+                                        @if (ListExam.iscorrect == "True")
+                                        {
+                                            <b style="color:red;">@ListExam.Choice</b>
+                                        }
+                                        else
+                                        {
+                                            @ListExam.Choice <br>
+                                        }
+                                        @*<audio controls="controls" autobuffer="autobuffer" style="width:250px;">
+                                            <source src="data:audio/mp3;base64,@ListExam.ChoiceSound">
+                                        </audio>*@
+                                    </div>
+                                }
+                            </td>
+                            <td></td>
+                        </tr>
+                        j = j + 1;
+                        if (@j == 5)
+                        {
+                            j = 1;
+
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+@* /datepicker_buddhist_year *@
+<script type="text/javascript" src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+<script type="text/javascript" src="~/Content/Jquery/jquery-ui.js"></script>
+<!-- Data tables -->
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+
+@*เสียง*@
+<script>
+    function showimagepreview0(input) {
+        var typ = document.getElementById("file").value
+        var jpgS = typ.match(".jpg");
+        var jpgB = typ.match(".JPG");
+        var jpegS = typ.match(".jpeg");
+        var jpegB = typ.match(".JPEG");
+        var pngS = typ.match(".png");
+        var pngB = typ.match(".PNG");
+        if (input.files[0].size <= 2097152) {
+            if (jpgS || jpgB || jpegS || jpegB || pngS || pngB) {
+                //  alert("sucess");
+                //console.log(input.files[0].size);
+                if (input.files && input.files[0]) {
+                    var filerdr = new FileReader();
+                    filerdr.onload = function (e) {
+                        $('#photo0').attr('src', e.target.result);
+                        var temppic = e.target.result.split(',');
+                        document.getElementById('questionimage0').value = temppic[1];
+                    }
+                    filerdr.readAsDataURL(input.files[0]);
+                }
+            } else {
+                //
+                alert("กรุณาใช้ไฟล์ภาพนามสกุล .jpg .jpeg .png เท่านั้น");
+                // document.getElementById("file").value;
+                return false;
+            }
+        } else {
+            alert('รูปภาพมีขนาดใหญ่เกิน 100 kb');
+        }
+    }
+    function showimagepreview1(input) {
+        var typ = document.getElementById("file1").value
+        var jpgS = typ.match(".jpg");
+        var jpgB = typ.match(".JPG");
+        var jpegS = typ.match(".jpeg");
+        var jpegB = typ.match(".JPEG");
+        var pngS = typ.match(".png");
+        var pngB = typ.match(".PNG");
+        if (input.files[0].size <= 2097152) {
+            if (jpgS || jpgB || jpegS || jpegB || pngS || pngB) {
+                //  alert("sucess");
+                //console.log(input.files[0].size);
+                if (input.files && input.files[0]) {
+                    var filerdr = new FileReader();
+                    filerdr.onload = function (e) {
+                        $('#photo1').attr('src', e.target.result);
+                        var temppic = e.target.result.split(',');
+                        document.getElementById('choiceimage1').value = temppic[1];
+                    }
+                    filerdr.readAsDataURL(input.files[0]);
+                }
+            } else {
+                //
+                alert("กรุณาใช้ไฟล์ภาพนามสกุล .jpg .jpeg .png เท่านั้น");
+                // document.getElementById("file").value;
+                return false;
+            }
+        } else {
+            alert('รูปภาพมีขนาดใหญ่เกิน 100 kb');
+        }
+    }
+    function showimagepreview2(input) {
+        var typ = document.getElementById("file2").value
+        var jpgS = typ.match(".jpg");
+        var jpgB = typ.match(".JPG");
+        var jpegS = typ.match(".jpeg");
+        var jpegB = typ.match(".JPEG");
+        var pngS = typ.match(".png");
+        var pngB = typ.match(".PNG");
+        if (input.files[0].size <= 2097152) {
+            if (jpgS || jpgB || jpegS || jpegB || pngS || pngB) {
+                //  alert("sucess");
+                //console.log(input.files[0].size);
+                if (input.files && input.files[0]) {
+                    var filerdr = new FileReader();
+                    filerdr.onload = function (e) {
+                        $('#photo2').attr('src', e.target.result);
+                        var temppic = e.target.result.split(',');
+                        document.getElementById('choiceimage2').value = temppic[1];
+                    }
+                    filerdr.readAsDataURL(input.files[0]);
+                }
+            } else {
+                //
+                alert("กรุณาใช้ไฟล์ภาพนามสกุล .jpg .jpeg .png เท่านั้น");
+                // document.getElementById("file").value;
+                return false;
+            }
+        } else {
+            alert('รูปภาพมีขนาดใหญ่เกิน 100 kb');
+        }
+    }
+    function showimagepreview3(input) {
+        var typ = document.getElementById("file3").value
+        var jpgS = typ.match(".jpg");
+        var jpgB = typ.match(".JPG");
+        var jpegS = typ.match(".jpeg");
+        var jpegB = typ.match(".JPEG");
+        var pngS = typ.match(".png");
+        var pngB = typ.match(".PNG");
+        if (input.files[0].size <= 2097152) {
+            if (jpgS || jpgB || jpegS || jpegB || pngS || pngB) {
+                //  alert("sucess");
+                //console.log(input.files[0].size);
+                if (input.files && input.files[0]) {
+                    var filerdr = new FileReader();
+                    filerdr.onload = function (e) {
+                        $('#photo3').attr('src', e.target.result);
+                        var temppic = e.target.result.split(',');
+                        document.getElementById('choiceimage3').value = temppic[1];
+                    }
+                    filerdr.readAsDataURL(input.files[0]);
+                }
+            } else {
+                //
+                alert("กรุณาใช้ไฟล์ภาพนามสกุล .jpg .jpeg .png เท่านั้น");
+                // document.getElementById("file").value;
+                return false;
+            }
+        } else {
+            alert('รูปภาพมีขนาดใหญ่เกิน 100 kb');
+        }
+    }
+    function showimagepreview4(input) {
+        var typ = document.getElementById("file4").value
+        var jpgS = typ.match(".jpg");
+        var jpgB = typ.match(".JPG");
+        var jpegS = typ.match(".jpeg");
+        var jpegB = typ.match(".JPEG");
+        var pngS = typ.match(".png");
+        var pngB = typ.match(".PNG");
+        if (input.files[0].size <= 2097152) {
+            if (jpgS || jpgB || jpegS || jpegB || pngS || pngB) {
+                //  alert("sucess");
+                //console.log(input.files[0].size);
+                if (input.files && input.files[0]) {
+                    var filerdr = new FileReader();
+                    filerdr.onload = function (e) {
+                        $('#photo4').attr('src', e.target.result);
+                        var temppic = e.target.result.split(',');
+                        document.getElementById('choiceimage4').value = temppic[1];
+                    }
+                    filerdr.readAsDataURL(input.files[0]);
+                }
+            } else {
+                //
+                alert("กรุณาใช้ไฟล์ภาพนามสกุล .jpg .jpeg .png เท่านั้น");
+                // document.getElementById("file").value;
+                return false;
+            }
+        } else {
+            alert('รูปภาพมีขนาดใหญ่เกิน 100 kb');
+        }
+    }
+</script>
+<script>
+    function show0(input) {
+        var $audio = $('#myAudio0');
+        $('#sound00').on('change', function (e) {
+            var target = e.currentTarget;
+            var file = target.files[0];
+            var reader = new FileReader();
+            console.log($audio[0]);
+            if (target.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $audio.attr('src', e.target.result);
+                    var temppic = e.target.result.split(',');
+                    document.getElementById('sound0').value = temppic[1];
+                    $audio.play();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    //function show0(input) {
+    //    var $audio = $('#myAudio0');
+    //    var typ = document.getElementById("sound00").value
+    //    var tyMp3 = typ.match(".mp3");
+    //    var tyWma = typ.match(".wma");
+    //    var tyAac = typ.match(".aac");
+    //    var tyOgg = typ.match(".ogg");
+    //    var tyFlac = typ.match(".flac");
+    //    var tyWav = typ.match(".wav");
+    //    var tyCda = typ.match(".cda");
+    //    if (typ != "") {
+    //        if (tyMp3 || tyWma || tyAac || tyOgg || tyFlac || tyWav || tyCda) {
+    //            $('#sound00').on('change', function (e) {
+    //                var target = e.currentTarget;
+    //                var file = target.files[0];
+    //                var reader = new FileReader();
+    //                console.log($audio[0]);
+    //                if (target.files && file) {
+    //                    var reader = new FileReader();
+    //                    reader.onload = function (e) {
+    //                        $audio.attr('src', e.target.result);
+    //                        var temppic = e.target.result.split(',');
+    //                        document.getElementById('sound0').value = temppic[1];
+    //                        $audio.play();
+    //                    }
+    //                    reader.readAsDataURL(file);
+    //                }
+    //            });
+    //        }
+    //        else {
+    //            alert("กรุณาใช้ไฟล์เสียงนามสกุล .mp3 .wma .aac .ogg .flac .wav .cda เท่านั้น");
+    //            return false;
+    //        }
+    //    }
+    //}
+    function show1(input) {
+        var $audio = $('#myAudio1');
+        $('#sound11').on('change', function (e) {
+            var target = e.currentTarget;
+            var file = target.files[0];
+            var reader = new FileReader();
+            console.log($audio[0]);
+            if (target.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $audio.attr('src', e.target.result);
+                    var temppic = e.target.result.split(',');
+                    document.getElementById('sound1').value = temppic[1];
+                    $audio.play();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    function show2(input) {
+        var $audio = $('#myAudio2');
+        $('#sound22').on('change', function (e) {
+            var target = e.currentTarget;
+            var file = target.files[0];
+            var reader = new FileReader();
+            console.log($audio[0]);
+            if (target.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $audio.attr('src', e.target.result);
+                    var temppic = e.target.result.split(',');
+                    document.getElementById('sound2').value = temppic[1];
+                    $audio.play();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    function show3(input) {
+        var $audio = $('#myAudio3');
+        $('#sound33').on('change', function (e) {
+            var target = e.currentTarget;
+            var file = target.files[0];
+            var reader = new FileReader();
+            console.log($audio[0]);
+            if (target.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $audio.attr('src', e.target.result);
+                    var temppic = e.target.result.split(',');
+                    document.getElementById('sound3').value = temppic[1];
+                    $audio.play();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    function show4(input) {
+        var $audio = $('#myAudio4');
+        $('#sound44').on('change', function (e) {
+            var target = e.currentTarget;
+            var file = target.files[0];
+            var reader = new FileReader();
+            console.log($audio[0]);
+            if (target.files && file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $audio.attr('src', e.target.result);
+                    var temppic = e.target.result.split(',');
+                    document.getElementById('sound4').value = temppic[1];
+                    $audio.play();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
+<script>
+    /* Datatables responsive */
+    $(document).ready(function () {
+        $('#datatable-responsive22').DataTable({
+            responsive: true
+        });
+    });
+
+    $(document).ready(function () {
+        $('.dataTables_filter input').attr("placeholder", "Search...");
+    });
+</script>
+
+<script type="text/javascript">
+    //aleat
+    $(document).ready(function () {
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
+        });
+
+        $(document).on("click", ".editManageExam", function () {
+            var ind = $(this).val();
+            var serviceURL = "GetManageExamByID";
+            $.ajax({
+                url: serviceURL,
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'Json',
+                data: JSON.stringify({ ind: ind }),
+                success: successFunction,
+                error: errorFunction
+            });
+            function successFunction(result) {
+                var $modal = $('#editManageExam');
+
+                var $qind = $modal.find('#qind');
+                $qind.val(result.qind);
+                var $Question = $modal.find('#question');
+                $Question.val(result.Question);
+
+                //  var $QuestionImage = $modal.find('#photo05');
+                /// $QuestionImage.src = result.QuestionImage;
+
+                //var $photo0 = $modal.find('#photo0');
+                //$photo0.src = 'data:image/jpeg;base64,'+result.QuestionImage;
+
+                var $QuestionImage = $modal.find('#photo05');
+                $QuestionImage.src = result.QuestionImage;
+
+                var $Questionsound = $modal.find('#sound0');
+                $Questionsound.val(result.Questionsound);
+
+                var $Langid = $modal.find('#Langid');
+                $Langid.val(result.Langid);
+                var $subjectGroupid = $modal.find('#subjectGroupid');
+                $subjectGroupid.val(result.subjectGroupid);
+
+                var $choice1 = $modal.find('#choice1');
+                $choice1.val(result.choice1);
+                var $choiceimage1 = $modal.find('#choiceimage1');
+                $choiceimage1.val(result.choiceimage1);
+                var $choicesound1 = $modal.find('#choicesound1');
+                $choicesound1.val(result.choicesound1);
+                var $iscorrect1 = $modal.find('#iscorrect1');
+                $iscorrect1.val(result.iscorrect1);
+
+                var $choice2 = $modal.find('#choice2');
+                $choice2.val(result.choice2);
+                var $choiceimage2 = $modal.find('#choiceimage2');
+                $choiceimage2.val(result.choiceimage2);
+                var $choicesound2 = $modal.find('#choicesound2');
+                $choicesound2.val(result.choicesound2);
+                var $iscorrect2 = $modal.find('#iscorrect2');
+                $iscorrect2.val(result.iscorrect2);
+
+                var $choice3 = $modal.find('#choice3');
+                $choice3.val(result.choice3);
+                var $choiceimage3 = $modal.find('#choiceimage3');
+                $choiceimage3.val(result.choiceimage3);
+                var $choicesound3 = $modal.find('#choicesound3');
+                $choicesound3.val(result.choicesound3);
+                var $iscorrect3 = $modal.find('#iscorrect3');
+                $iscorrect3.val(result.iscorrect3);
+
+                var $choice4 = $modal.find('#choice4');
+                $choice4.val(result.choice4);
+                var $choiceimage4 = $modal.find('#choiceimage4');
+                $choiceimage4.val(result.choiceimage4);
+                var $choicesound4 = $modal.find('#choicesound4');
+                $choicesound4.val(result.choicesound4);
+                var $iscorrect4 = $modal.find('#iscorrect4');
+                $iscorrect4.val(result.iscorrect4);
+
+                $modal.modal("show");
+            }
+            function errorFunction(result) {
+
+            }
+        });
+    });
+    //modal edit
+    $(document).ready(function () {
+        $('#editManageExam').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+
+            var id = button.data('id');
+            var Question = button.data('question');
+
+            var modal = $(this);
+            modal.find('#id').val(id);
+            //document.getElementById("e_question").innerHTML = Question;
+
+        });
+    });
+    //modal cancle
+    $(document).ready(function () {
+        $('#cancleManageExam').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+
+            var id = button.data('id');
+            var Question = button.data('question');
+
+            var modal = $(this);
+            modal.find('#ca_id').val(id);
+            // modal.find('#ca_RcName_RcNamename').val(RcNameName);
+            document.getElementById("ca_question").innerHTML = Question;
+
+        });
+    });
+
+
+</script>
+
+
+
+
+
+

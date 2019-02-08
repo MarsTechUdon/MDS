@@ -1,0 +1,224 @@
+﻿
+@{
+    ViewBag.Title = "ReceiptsAndDeposit";
+}
+
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/calendar/calendar.css">
+
+@*<div class="panel">
+    <div class="panel-body">
+        <h3 class="title-hero">
+            External draggable
+        </h3>
+        <div class="example-box-wrapper row">
+
+            <div class="col-md-10 center-margin">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div id="calendar"></div>
+                        <div id="popoverContent" class="hide">This <em>rich</em>  <pre>html</pre> content goes inside popover</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="content-box" id="external-events">
+                            <h3 class="content-box-header bg-default">
+                                <span class="icon-separator">
+                                    <i class="glyph-icon icon-calendar"></i>
+                                </span>
+                                Draggable Events
+                            </h3>
+                            <div class="content-box-wrapper">
+                                <div class="btn display-block mrg5B bg-orange external-event" data-class="bg-orange">
+                                    <div class="button-content">My Event 1</div>
+                                </div>
+                                <div class="btn display-block mrg5B bg-primary external-event">
+                                    <div class="button-content">My Event 2</div>
+                                </div>
+                                <div class="btn display-block mrg5B bg-yellow external-event">
+                                    <div class="button-content">My Event 3</div>
+                                </div>
+                                <div class="btn display-block mrg5B bg-blue-alt external-event">
+                                    <div class="button-content">My Event 4</div>
+                                </div>
+                                <div class="btn display-block mrg5B bg-red external-event">
+                                    <div class="button-content">My Event 5</div>
+                                </div>
+                                <p>
+                                    <input type="checkbox" id="drop-remove">
+                                    <label for="drop-remove">remove after drop</label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<!-- Bootstrap Datepicker -->
+<script type="text/javascript" src="~/assets/widgets/datepicker/datepicker.js"></script>
+<!-- Calendar -->
+
+<script type="text/javascript" src="~/assets/widgets/interactions-ui/resizable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/interactions-ui/draggable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/interactions-ui/sortable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/interactions-ui/selectable.js"></script>
+
+<!--<link rel="stylesheet" type="text/css" href="~/assets/widgets/calendar/calendar.css">-->
+<script type="text/javascript" src="~/assets/widgets/daterangepicker/moment.js"></script>
+<script type="text/javascript" src="~/assets/widgets/calendar/calendar.js"></script>
+<script type="text/javascript" src="~/assets/widgets/calendar/lang/th.js"></script>
+<script type="text/javascript" src="~/Content/Other/jquery.ui.touch-punch.js"></script>
+@*<script type="text/javascript" src="~/assets/widgets/calendar/calendar-demo.js"></script>*@
+<script type="text/javascript" src="~/Content/Other/jquery.ui.touch-punch.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#widget').draggable();
+        var popTemplate = [
+            '<div class="popover" style="max-width:600px;" >',
+            '<div class="arrow"></div>',
+            '<div class="popover-header">',
+            '<button id="closepopover" type="button" class="close" aria-hidden="true">&times;</button>',
+            '<h3 class="popover-title"></h3>',
+            '</div>',
+            '<div class="popover-content"></div>',
+            '</div>'].join('');
+
+        $('#widget').draggable();
+        $('#external-events div.external-event').each(function () {
+
+            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+            // it doesn't need to have a start or end
+            var eventObject = {
+                title: $.trim($(this).text()) // use the element's text as the event title
+            };
+
+            // store the Event Object in the DOM element so we can get to it later
+            $(this).data('eventObject', eventObject);
+
+            // make the event draggable using jQuery UI
+            $(this).draggable({
+                zIndex: 999,
+                revert: true, // will cause the event to go back to its
+                revertDuration: 0 //  original position after the drag
+            });
+
+        });
+
+
+        /* initialize the calendar
+            -----------------------------------------------------------------*/
+
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            minTime: '09:00:00',
+            maxTime: '22:00:00',
+            editable: true,
+            selectable: true,
+            selectHelper: true,
+            lang: 'th',
+            droppable: true, // this allows things to be dropped onto the calendar !!!
+            events: [
+                {
+                    title: 'Business Lunch',
+                    start: '2018-10-03T13:00:00',
+                    constraint: 'businessHours',
+                },
+                {
+                    title: 'Meeting',
+                    start: '2018-10-13T11:00:00',
+                    constraint: 'availableForMeeting', // defined below
+                    color: '#257e4a',
+                },
+                {
+                    title: 'Conference',
+                    start: '2018-10-18',
+                    end: '2018-10-20'
+                },
+                {
+                    title: 'Party',
+                    start: '2018-10-29T20:00:00'
+                },
+
+                // areas where "Meeting" must be dropped
+                {
+                    id: 'availableForMeeting',
+                    start: '2018-10-11T10:00:00',
+                    end: '2018-10-11T16:00:00',
+                    rendering: 'background'
+                },
+                {
+                    id: 'availableForMeeting',
+                    start: '2018-10-13T10:00:00',
+                    end: '2018-10-13T16:00:00',
+                    rendering: 'background'
+                },
+
+                // red areas where no events can be dropped
+                {
+                    start: '2018-10-24',
+                    end: '2018-10-28',
+                    overlap: false,
+                    rendering: 'background',
+                    color: '#ff9f89'
+                },
+                {
+                    start: '2018-10-06',
+                    end: '2018-10-08',
+                    overlap: false,
+                    rendering: 'background',
+                    color: '#ff9f89'
+                }
+            ],
+            select: function (start, end, jsEvent) {
+                closePopovers();
+                popoverElement = $(jsEvent.target);
+                $(jsEvent.target).popover({
+                    title: 'the title',
+                    content: function () {
+                        return $("#popoverContent").html();
+                    },
+                    template: popTemplate,
+                    placement: 'left',
+                    html: 'true',
+                    trigger: 'click',
+                    animation: 'true',
+                    container: 'body'
+                }).popover('show');
+            },
+
+            eventClick: function (calEvent, jsEvent, view) {
+                popoverElement = $(jsEvent.currentTarget);
+            },
+            eventRender: function (event, element) {
+                element.popover({
+                    title: 'the title',
+                    content: function () {
+                        return $("#popoverContent").html();
+                    },
+                    template: popTemplate,
+                    placement: 'left',
+                    html: 'true',
+                    trigger: 'click',
+                    animation: 'true',
+                    container: 'body'
+                });
+
+            },
+
+        });
+        var popoverElement;
+        function closePopovers() {
+            $('.popover').not(this).popover('hide');
+        }
+        $('body').on('click', function (e) {          
+            if (popoverElement && ((!popoverElement.is(e.target) && popoverElement.has(e.target).length === 0 && $('.popover').has(e.target).length === 0) || (popoverElement.has(e.target) && e.target.id === 'closepopover'))) {
+                closePopovers();
+            }
+        });
+    });
+  
+</script>

@@ -1,0 +1,1165 @@
+﻿@model MDS.Models.ManageExamModel
+@{
+    /**/
+    Layout = "~/Views/Shared/_LayoutExam.cshtml";
+}
+@{
+    ViewBag.Title = "แบบทดสอบ";
+}
+
+<!-- Components theme -->
+<link rel="stylesheet" type="text/css" href="~/assets/themes/components/default.css">
+<script type="text/javascript">
+    $(window).load(function () {
+        setTimeout(function () {
+            $('#loading').fadeOut(400, "linear");
+        }, 300);
+    });
+</script>
+
+<!---submit chk--->
+<div class="modal fade bs-example-modal-sm" id="countexam" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-orange">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                @if (@ViewBag.LangValue == "TH")
+                {<h4 class="modal-title">แบบทดสอบ</h4>}
+                else
+                { <h4 class="modal-title">Pretest</h4>}
+            </div>
+            <div class="modal-body">
+
+                @if (@ViewBag.LangValue == "TH")
+                {<h3>ข้อสอบที่ทำไป <b id="count_exam_show"></b> / 50 ข้อ</h3>}
+                else
+                { <h3>Do it <b id="count_exam_show"></b> / 50 choice</h3>}
+
+                <input type="hidden" id="count_exam" value="" style="width:25px;" disabled />
+                @if (@ViewBag.LangValue == "TH")
+                {<h4><b id="count_exam_not_ok" style="color:orange;">ทำข้อสอบให้ครบ 50 ข้อ</b></h4>}
+                else
+                { <h4 class="modal-title"></h4>}
+
+
+            </div>
+            <div class="modal-footer">
+
+                @if (@ViewBag.LangValue == "TH")
+                {<button type="button" id="btn_back" class="btn btn-warning" data-dismiss="modal">กลับไปทำข้อสอบต่อ</button>}
+                else
+                { <button type="button" id="btn_back" class="btn btn-warning" data-dismiss="modal">Back to Exam</button>}
+
+                @using (Html.BeginForm("ExamListScore", "Exam", FormMethod.Post))
+                {
+                    <input type="hidden" id="" name="studentind" value="@ViewBag.temp_studentind">
+                    <input type="hidden" id="" name="examid" value="@ViewBag.temp_examid">
+                    <input type="hidden" id="" name="examid" value="@ViewBag.temp_studentind">
+                    <input type="hidden" id="" name="LangValue" value="@ViewBag.LangValue">
+                    // <input type="hidden" id="score_exam" name="score" value="">
+                    <button type="submit" id="count_exam_ok_na" class="btn btn-success chk_send" data-loading-text="กรุณารอ..." style="display:none;">ยืนยันการส่งข้อสอบ</button>
+                    <h4><b id="count_exam_ok" style="color:orange;">กดปุ่ม "สรุป/ส่งข้อสอบ"</b></h4>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!---end--->
+<!---submit chk--->
+<div class="modal fade bs-example-modal-sm" id="countexamnot" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-orange">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                @if (@ViewBag.LangValue == "TH")
+                {<h4 class="modal-title">แบบทดสอบ</h4>
+                }
+                else
+                { <h4 class="modal-title">Pretest</h4>
+                }
+            </div>
+            <div class="modal-body">
+                @if (@ViewBag.LangValue == "TH")
+                {<h4><b style="color:orange;">ท่านยังทำข้อสอบไม่ครบ 50 ข้อ กรุณาตรวจสอบคำตอบของท่าน</b></h4>}
+                else
+                { <h4><b style="color:orange;">Please complete the exam.</b></h4>}
+
+            </div>
+            <div class="modal-footer">
+                @if (@ViewBag.LangValue == "TH")
+                {<button type="button" class="btn btn-warning" data-dismiss="modal">กลับไปทำข้อสอบต่อ</button>}
+                else
+                { <button type="button" class="btn btn-warning" data-dismiss="modal">Back to Exam</button>}
+
+            </div>
+        </div>
+    </div>
+</div>
+<!---end--->
+
+@if (ViewBag.hhh == "ko")
+{
+    <button type="button" class="btn btn-warning" data-dismiss="modal">testtesttest</button>
+}
+else
+{
+    <div class="row" style="width:100%;">
+        <div id="form-wizard-1">
+            <div class="col-md-4">
+                <br /><br />
+                <div class="panel" style="margin-right:-5px;margin-left:10px;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <b class="text-left" style="font-size:35px;" id="demo"></b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                @* <button class="btn btn-purple" onClick="fnc_reload();" id="load" data-loading-text="กรุณารอ...">สรุป/ส่งข้อสอบ</button><br />&nbsp;*@
+                                @if (@ViewBag.LangValue == "TH")
+                                {<button class="btn btn-purple" onClick="fnc_send();" id="load" data-loading-text="กรุณารอ...">สรุป/ส่งข้อสอบ</button><br />}
+                                else
+                                { <button class="btn btn-purple" onClick="fnc_send();" id="load" data-loading-text="please wait...">Send Exam</button><br />}
+                            </div>
+                            <div class="col-md-6">
+                                @using (Html.BeginForm("Student", "Public", FormMethod.Post))
+                                {
+                                    <input type="hidden" id="" name="id" value="@ViewBag.temp_en_studentind">
+                                    <input type="hidden" id="" name="id" value="@ViewBag.temp_en_studentind">
+                                    if (@ViewBag.LangValue == "TH")
+                                    {<button type="submit" class="btn btn-info back_to_page_student" id="back_to_student">กลับหน้าข้อมูลนักเรียน</button><br><br>
+                                    }
+                                    else
+                                    { <button type="submit" class="btn btn-info back_to_page_student" id="back_to_student">Back</button><br><br>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+
+
+                       @* <b style="color:orange;">เมื่อกดปุ่มแล้วกรุณารอเพื่อกดปุ่ม "ยืนยันการส่งข้อสอบ" อีกครั้งหนึ่งเป็นการเสร็จสิ้นการทำแบบทดสอบ </b><br />*@
+                        <h3 style="margin-top:-20px;">
+                            <br />
+                            @foreach (var de in Model.Detail)
+                            {
+                                if (@ViewBag.LangValue == "TH")
+                                {<b> ชื่อ: </b><b style="color:gray;">@de.studentname</b><br />
+                                <b>หลักสูตร : </b><b style="color:gray;">@de.coursenickname</b> <br />}
+                                else
+                                { <b> Name: </b><b style="color:gray;">@de.studentname</b><br />
+                                <b>Course : </b><b style="color:gray;">@de.coursenickname</b> <br />}
+
+                    }
+                            <hr />
+                        </h3>
+                        <ul>
+                            @{
+                                var temp = "";
+                                var sub = 0;
+                                var count_chk_ra = 0;
+                                var score = 0;
+                                for (int i = 0; i < 1; i++)
+                                {
+                                    foreach (var Question in Model.QuestionList)
+                                    {
+                                        foreach (var Choice in Model.ChoiceList)
+                                        {
+                                            if (Choice.examQNO == Question.examQNO)
+                                            {
+                                                sub = sub + 1;
+                                                string chk_eno = @Choice.examQNO;
+                                                var num = Convert.ToInt32(chk_eno);
+                                                <b></b>
+                                                if (@Choice.answer.Equals("True"))
+                                                {
+                                                    count_chk_ra = count_chk_ra + 1;
+                                                    if (@Choice.iscorrect.Equals("True"))
+                                                    {
+                                                        score = score + 1;
+                                                    }
+                                                }
+                                                if (sub == 1 || sub == 2 || sub == 3 || sub == 4)
+                                                {
+                                                    if (sub == 1) { if (@Choice.answer.Equals("True")) { temp = "1"; } }
+                                                    if (sub == 2) { if (@Choice.answer.Equals("True")) { temp = "2"; } }
+                                                    if (sub == 3) { if (@Choice.answer.Equals("True")) { temp = "3"; } }
+                                                    if (sub == 4) { if (@Choice.answer.Equals("True")) { temp = "4"; } }
+                                                    if (sub == 4)
+                                                    {
+                                                        i = i + 1;
+                                                        <li class="col-md-3 col-xs-3" style="border:solid 1px;">
+                                                            <a class="col-md-9 col-xs-9 chk_click" style="margin-left:-8px;padding-top:1px;padding-bottom:1px;"
+                                                               href="#@i" data-toggle="tab" type="submit" onclick="chk_q_by_choice_right(@ViewBag.temp_examid,@i)">@i)</a>
+                                                            <b class="col-md-3 col-xs-3" style="color:orange;" id="@i." value="">@temp</b>
+                                                        </li>
+                                                        if (i == 50)
+                                                        {
+                                                            <li class="col-md-3 col-xs-3" style="border:solid 1px;display:none;">
+                                                                <a class="col-md-9 col-xs-9" style="margin-left:-8px;padding-top:1px;padding-bottom:1px;"
+                                                                   href="#@i" data-toggle="tab" type="submit" onclick="chk_q_by_choice_right(@ViewBag.temp_examid,@i)">@i)</a>
+                                                                <b class="col-md-3 col-xs-3" style="color:orange;" id="@i." value="">@temp</b>
+                                                            </li>
+                                                        }
+
+                                                        sub = 0; temp = "";
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        </ul>
+                        <input type="hidden" name="name" id="xxx" value="@count_chk_ra" />
+                        <input type="hidden" name="name" id="yyy" value="@score" />
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="col-md-8">
+
+                    <br /><br /><br /><br /><br />
+                    <div class="panel" style="margin-left:10px;margin-right:-5px;">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"
+                                 style="display: block;width: 100%;height: 70px;background-image: linear-gradient(60deg,#b6ff00,#119a23);margin: -60px auto 0;
+                       box-shadow: 0 5px 20px rgba(0,0,0,.5);padding: 15px 20px;font-size: 2rem;text-align: left;">
+                                <div class="text-center">
+
+                                    @if (@ViewBag.LangValue == "TH")
+                                    {
+                                        <h1 style="color:white;margin-top:-5px;"> <i class="glyph-icon  icon-file-text"></i> แบบทดสอบ</h1>
+                                    }
+                                    else
+                                    {
+                                        <h1 style="color:white;margin-top:-5px;"> <i class="glyph-icon  icon-file-text"></i> Pretest</h1>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <div>
+                                @{
+                                    for (int i = 0; i < 1; i++)
+                                    {
+                                        foreach (var Question in Model.QuestionList)
+                                        {
+                                            i = i + 1;
+                                            <div class="tab-pane" id="@i">
+
+                                                @*@if (@Question.QuestionImage != "" && @Question.QuestionImage != "/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAA8AAD/4QMtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NTY0Q0IxRjk1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NTY0Q0IxRkE1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1NjRDQjFGNzVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1NjRDQjFGODVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/iDFhJQ0NfUFJPRklMRQABAQAADEhMaW5vAhAAAG1udHJSR0Ig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AAAAAUCUBQAAIBQIAABQJQAAAFAgAJIIAAAAAAAAAAAAAAAAAAAAAAAAAACwCgAAUCgAAUCgAAtAUCgAUC0AAC0BQFAAAAAAAAAUBQJQAAFAlAAAlAgAAFAgAAAICSCAAAAAAAAAAAAAAAAAAAAAAAAAAAsAoALQAAALQAAKBQKAC0AAC0AACgUBQFAUCgAAAlAUBQFAAgFAUCAAlAAAlAgAAIAACAkggAAAAAAAAAAAAAAAAAAAAAAAAAALAKCgAAAoAALQKABQKBQLQALQFAoFAUC0BQAAAAAAFAlAUACUBQIABQIACUACUACAAUCAgAICAAAAAAAAAAAAAAAAAAAAAAAAAAsAsAoAAKAAC0CgUCgAtAAtAAoLQAFAtAUAACgUBQAIABQFAlAUCUACUBQIBQIBQIACUCAASDIAJIIAAAAAAAAAAAAAAAAAAAAAAAAACgsAoAKAACgoFAoLQALQKBQLQFAtAAtAUC0ABQFAUBQFAUBQJQFAUCAUCAUCAlAgAIACSACUCASDMgAkggAAAAAAAAAAAAAAAAAAAAAAAALAKBAKCgAoKACgAoALQKCgUC0C0BQLQFAtAUC0BQFAUBQFAUBQJQFAlAAlAgFAgJQAJQIBQICUACTAJIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoEA0AACgoKACgoKBQKC0C0BQLQLQLQFAtAUBQLQFAUBQFAUCUBQJQFAlAUCUCUCAUCAgJMAgFAgJMAAzIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoLAKACgoKACgsQCgtARAKC0C0CxALQLQFAtAUC0C0BQFAUBQFAUCUBQJQFAlAgFAlAkwCUCAgJQICASCAkwCSCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwCgoKCwCgsAAoLAKCgsQCgtAtAtAoFAtAtAtAUC0BQLQFAUBQFAUCUBQJQFAlAkwCUCUCUCUCUCAgJMAgIBMAgMyCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwDUAA1AKBEAoLAKCgoLEAtAoLQLQLQLQLEAtAtAtAUC0C0BQFAUBQFAUCUBQJQJQFAlAlAkwCAlAzMAgICAkggIBIMyDMggIDIAAAAAAAAAAAAAAAAAAAAAAAALANQADUAoKCwADQLALEAoKCgoLEAtA1QLQLEAtAtAUC0BQLQFAUBQFAu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llhPOJno4g89ggJYICAkggIDIEgzPMGZBAQGQAAAAAAAAAAAAAAAAAAAAAAAAWAWAUFBoAFBYABYBQUFBYkFsFsFBbBbBYkFsFsCwWwLAsFsCwLAsEsCwSwLBLAsEsEsEsEsEsEmQQEsEBASwQEBJBmQZkAGQAAAAAAAAAAAAAAAAAAAAAAAAWAUFBQUFABQWJABYBbBQWwWwUFsFsCwWwWwWwLBbAsFsCwLAsCwSwLAsEsEsCwSwSwSwSwSwQCwQEBJBAQAGZBJBmQAZAAAAAAAAAAAAAAAAAAAAAAAABYBQIBoAFgFABQWwAWJBQUFsAFsFsFsFsCwWwLBbAsCwWwLAsCwSwLAsEsCwSwSwSwLBLBAQEsAEsEBAAQEkGQSQSQQAAAAAAAAAAAAAAAAAAAAAAAAFgFAgGoAABYBQLBQWwAWwUCwUFsFAsFsCwWwWwLAsFsCwLAsCwLBLAsCwSwSwASwQCwQEsEABAQCwQEBJBASQSQQAAAAAAAAAAAAAAAAAAAAAAAAAGgIBQWAAAWwUAFABQUCwUFsCwWwAWwLBbAsCwWwLAsCwLAsEsCwLBLAsEAsEBLABLBALBALBAQAEkEBASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFgFABbAABbBQAWwAWwAWwAUFsAFsCwAUCwLAsCwLAsCwLBAALBLABLABLABASwASwAQEAAkGZABJBAAAAAAAAAAAAAAAAAAAAAAAAAAWAUFAAAsFABQLBQLBQAWwAWwLBQLBbAAAsFsCwLAsCwLBLAAsEsCwQCwQACwQCwQAEsEAAsEBAASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFAgFAAABQAAWwUACwUAFsAAFsCwLBQALAsCwLAsCwAASwLABAALBAASwAQCwQAAEABAQEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAUAAAFgAAFAsFAAsFAAsFsAAAFAsCwLAsCwLBAAALAsEAAsEsAAEsEAABLAAABASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAABQAAAAUAAFsCwUACwLBQAALAsFsCwLAsCwLBLAAAAsEsAAEAsEAAAsEAAABAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAAAAsFAAAAsFAAABbAsFAAAsCwLAsFsCwLAsEsCwLAAABALAsEAAABAAAAAQAAEkEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAAAAAWwAAAALBQAAAAWwLAsCwAUAAAAAAEsCwLBAAAAALBAAAAASwAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFABQAAAAAAAWwAAAAAWwAAAAAAAAAAAAAAAAAAALBLAAAAABLAAAAAABJBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWwUAAAAAAAAFsAAAAAACwWwLAAAAAAAAAAsCwLBAAAAAAASwAAAAAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFBQAAAAAAAAOIKAAAAAAAAAAAAAAAAAAAAAAACcQAAAAAAAAASQQAAAAAAAAAAAAAAH/9k=")
+                                                    {
+                                                        <img class="img-responsive q_img" src="" style="width:200px;height:200px;margin-top:-50px;margin: auto auto;" />
+                                                    }*@
+                                                <img class="img-responsive q_img" id="@i+'q_img'" src="" style="width:200px;height:200px;margin-left:auto;margin-right:auto;margin-top:-35px;display:none;" />
+                                                <div class="q_img_2" id="@i+'q_img_2'" src="" style="width:200px;height:200px;margin-left:auto;margin-right:auto;margin-top:-35px;display:none;"></div>
+                                                <h3>
+                                                    @*@if (@Question.Questionsound != "")
+                                                        {
+                                                            <audio controls preload="metadata" id="q_sound" class="q_sound" style="width:0px;" title="ฟังเสียง">
+                                                                <source src="" type="audio/ogg">
+                                                            </audio>
+
+                                                            <button type="submit" class="btn btn-primary" onclick="chk_q_sound(@ViewBag.temp_examid,@Question.examQNO)">
+                                                                <i class="glyph-icon icon-volume-up" title="กดเพื่อฟังเสียง"></i>
+                                                            </button>
+                                                        }*@
+
+                                                    <audio controls preload="metadata" id="q_sound" class="q_sound" style="width:0px;" title="ฟังเสียง">
+                                                        <source src="" type="audio/ogg">
+                                                    </audio>
+
+                                                    <button type="submit" class="btn btn-primary" onclick="chk_q_sound(@ViewBag.temp_examid,@Question.examQNO)">
+                                                        <i class="glyph-icon icon-volume-up" title="กดเพื่อฟังเสียง"></i>
+                                                    </button>
+
+                                                    @i .
+                                                    @Question.Question (@Question.dltNo)
+                                                </h3>
+
+                                                @foreach (var Choice in Model.ChoiceList)
+                                                {
+                                                    if (Choice.examQNO == Question.examQNO)
+                                                    {
+                                                        string chk_ans = @Choice.examAnswerNo;
+                                                        string m = @Choice.answer;
+                                                        var num = Convert.ToInt32(chk_ans);
+                                                        string chk_qno = @Question.examQNO;
+                                                        var qno = Convert.ToInt32(chk_qno);
+                                                        <b></b>
+                                                        if (num == 1 || num == 2 || num == 3 || num == 4)
+                                                        {
+                                                            if (@Choice.ChoiceImage != "" && @Choice.ChoiceImage != "/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAA8AAD/4QMtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NTY0Q0IxRjk1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NTY0Q0IxRkE1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1NjRDQjFGNzVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1NjRDQjFGODVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/iDFhJQ0NfUFJPRklMRQABAQAADEhMaW5vAhAAAG1udHJSR0Ig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AAAAAUCUBQAAIBQIAABQJQAAAFAgAJIIAAAAAAAAAAAAAAAAAAAAAAAAAACwCgAAUCgAAUCgAAtAUCgAUC0AAC0BQFAAAAAAAAAUBQJQAAFAlAAAlAgAAFAgAAAICSCAAAAAAAAAAAAAAAAAAAAAAAAAAAsAoALQAAALQAAKBQKAC0AAC0AACgUBQFAUCgAAAlAUBQFAAgFAUCAAlAAAlAgAAIAACAkggAAAAAAAAAAAAAAAAAAAAAAAAAALAKCgAAAoAALQKABQKBQLQALQFAoFAUC0BQAAAAAAFAlAUACUBQIABQIACUACUACAAUCAgAICAAAAAAAAAAAAAAAAAAAAAAAAAAsAsAoAAKAAC0CgUCgAtAAtAAoLQAFAtAUAACgUBQAIABQFAlAUCUACUBQIBQIBQIACUCAASDIAJIIAAAAAAAAAAAAAAAAAAAAAAAAACgsAoAKAACgoFAoLQALQKBQLQFAtAAtAUC0ABQFAUBQFAUBQJQFAUCAUCAUCAlAgAIACSACUCASDMgAkggAAAAAAAAAAAAAAAAAAAAAAAALAKBAKCgAoKACgAoALQKCgUC0C0BQLQFAtAUC0BQFAUBQFAUBQJQFAlAAlAgFAgJQAJQIBQICUACTAJIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoEA0AACgoKACgoKBQKC0C0BQLQLQLQFAtAUBQLQFAUBQFAUCUBQJQFAlAUCUCUCAUCAgJMAgFAgJMAAzIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoLAKACgoKACgsQCgtARAKC0C0CxALQLQFAtAUC0C0BQFAUBQFAUCUBQJQFAlAgFAlAkwCUCAgJQICASCAkwCSCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwCgoKCwCgsAAoLAKCgsQCgtAtAtAoFAtAtAtAUC0BQLQFAUBQFAUCUBQJQFAlAkwCUCUCUCUCUCAgJMAgIBMAgMyCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwDUAA1AKBEAoLAKCgoLEAtAoLQLQLQLQLEAtAtAtAUC0C0BQFAUBQFAUCUBQJQJQFAlAlAkwCAlAzMAgICAkggIBIMyDMggIDIAAAAAAAAAAAAAAAAAAAAAAAALANQADUAoKCwADQLALEAoKCgoLEAtA1QLQLEAtAtAUC0BQLQFAUBQFAu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llhPOJno4g89ggJYICAkggIDIEgzPMGZBAQGQAAAAAAAAAAAAAAAAAAAAAAAAWAWAUFBoAFBYABYBQUFBYkFsFsFBbBbBYkFsFsCwWwLAsFsCwLAsEsCwSwLBLAsEsEsEsEsEsEmQQEsEBASwQEBJBmQZkAGQAAAAAAAAAAAAAAAAAAAAAAAAWAUFBQUFABQWJABYBbBQWwWwUFsFsCwWwWwWwLBbAsFsCwLAsCwSwLAsEsEsCwSwSwSwSwSwQCwQEBJBAQAGZBJBmQAZAAAAAAAAAAAAAAAAAAAAAAAABYBQIBoAFgFABQWwAWJBQUFsAFsFsFsFsCwWwLBbAsCwWwLAsCwSwLAsEsCwSwSwSwLBLBAQEsAEsEBAAQEkGQSQSQQAAAAAAAAAAAAAAAAAAAAAAAAFgFAgGoAABYBQLBQWwAWwUCwUFsFAsFsCwWwWwLAsFsCwLAsCwLBLAsCwSwSwASwQCwQEsEABAQCwQEBJBASQSQQAAAAAAAAAAAAAAAAAAAAAAAAAGgIBQWAAAWwUAFABQUCwUFsCwWwAWwLBbAsCwWwLAsCwLAsEsCwLBLAsEAsEBLABLBALBALBAQAEkEBASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFgFABbAABbBQAWwAWwAWwAUFsAFsCwAUCwLAsCwLAsCwLBAALBLABLABLABASwASwAQEAAkGZABJBAAAAAAAAAAAAAAAAAAAAAAAAAAWAUFAAAsFABQLBQLBQAWwAWwLBQLBbAAAsFsCwLAsCwLBLAAsEsCwQCwQACwQCwQAEsEAAsEBAASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFAgFAAABQAAWwUACwUAFsAAFsCwLBQALAsCwLAsCwAASwLABAALBAASwAQCwQAAEABAQEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAUAAAFgAAFAsFAAsFAAsFsAAAFAsCwLAsCwLBAAALAsEAAsEsAAEsEAABLAAABASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAABQAAAAUAAFsCwUACwLBQAALAsFsCwLAsCwLBLAAAAsEsAAEAsEAAAsEAAABAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAAAAsFAAAAsFAAABbAsFAAAsCwLAsFsCwLAsEsCwLAAABALAsEAAABAAAAAQAAEkEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAAAAAWwAAAALBQAAAAWwLAsCwAUAAAAAAEsCwLBAAAAALBAAAAASwAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFABQAAAAAAAWwAAAAAWwAAAAAAAAAAAAAAAAAAALBLAAAAABLAAAAAABJBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWwUAAAAAAAAFsAAAAAACwWwLAAAAAAAAAAsCwLBAAAAAAASwAAAAAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFBQAAAAAAAAOIKAAAAAAAAAAAAAAAAAAAAAAACcQAAAAAAAAASQQAAAAAAAAAAAAAAH/9k=")
+                                                            {
+                                                                if (@Choice.answer.Equals("True"))
+                                                                {
+                                                                    <div class="col-md-1">
+                                                                        <input type="radio" class="count_choice_radio" name="-@i" id="-@i" value="@Choice.iscorrect" checked onclick="hiddenn('1',@i,@chk_qno)"
+                                                                               style="width:20px;height:20px;" />
+                                                                    </div>
+                                                                }
+                                                                else if (@Choice.answer.Equals("False"))
+                                                                {
+                                                                    <div class="col-md-1">
+                                                                        <input type="radio" class="count_choice_radio" name="-@i" id="-@i" value="@Choice.iscorrect" onclick="hiddenn('1',@i,@chk_qno)"
+                                                                               style="width:20px;height:20px;" />
+                                                                    </div>
+                                                                }
+                                                                <div class="col-md-5">
+                                                                    @if (num == 1)
+                                                                    {
+                                                                        <img src="data:image/jpeg;base64,@Choice.ChoiceImage" class="img-responsive "
+                                                                             style="width:200px;height:200px;margin-top:10px;" />
+                                                                        @*<img src="data:image/jpeg;base64,@Choice.ChoiceImage" class="img-responsive a_img1"
+                                                                            style="width:200px;height:200px;margin-top:10px;" />*@
+                                                                    }
+                                                                    else if (num == 2)
+                                                                    {
+                                                                        <img src="data:image/jpeg;base64,@Choice.ChoiceImage" class="img-responsive "
+                                                                             style="width:200px;height:200px;margin-top:10px;" />
+                                                                    }
+                                                                    else if (num == 3)
+                                                                    {
+                                                                        <img src="data:image/jpeg;base64,@Choice.ChoiceImage" class="img-responsive "
+                                                                             style="width:200px;height:200px;margin-top:10px;" />
+                                                                    }
+                                                                    else if (num == 4)
+                                                                    {
+                                                                        <img src="data:image/jpeg;base64,@Choice.ChoiceImage" class="img-responsive "
+                                                                             style="width:200px;height:200px;margin-top:10px;" />
+                                                                    }
+                                                                </div>
+                                                            }
+                                                            else if (!@Choice.Choice.Equals(""))
+                                                            {
+
+                                                                if (@Choice.answer.Equals("True"))
+                                                                {
+                                                                    <p style="font-size:20px;">
+                                                                        <h4>
+                                                                            <input type="radio" class="count_choice_radio" name="-@i" id="-@i" value="@Choice.iscorrect"
+                                                                                   checked onclick="hiddenn(@num,@i,@chk_qno)" style="width:20px;height:20px;" />
+                                                                            @Choice.Choice
+                                                                            @*@if (@Choice.ChoiceSound != "")
+                                                                                {
+                                                                                    <button type="submit" class="btn btn-primary" onclick="chk_a_sound(@ViewBag.temp_examid,@Choice.examQNO,@num)">
+                                                                                        <i class="glyph-icon icon-volume-up" title="กดเพื่อฟังเสียง"></i>
+                                                                                    </button>
+                                                                                    using (Html.BeginForm("GetASound", "Exam", FormMethod.Post))
+                                                                                    {
+                                                                                        <audio controls autoplay preload="metadata" class="a_sound1" style="width:0px;height:0px;" title="ฟังเสียง">
+                                                                                            <source src="" type="audio/ogg">
+                                                                                        </audio>
+                                                                                    }
+                                                                                }*@
+
+                                                                            <button type="submit" class="btn btn-primary" onclick="chk_a_sound(@ViewBag.temp_examid,@Choice.examQNO,@num)">
+                                                                                <i class="glyph-icon icon-volume-up" title="กดเพื่อฟังเสียง"></i>
+                                                                            </button>
+                                                                            @using (Html.BeginForm("GetASound", "Exam", FormMethod.Post))
+                                                                            {
+                                                                                <audio controls autoplay preload="metadata" class="a_sound1" style="width:0px;height:0px;" title="ฟังเสียง">
+                                                                                    <source src="" type="audio/ogg">
+                                                                                </audio>
+                                                                            }
+                                                                        </h4>
+                                                                    </p>
+                                                                }
+                                                                else if (@Choice.answer.Equals("False"))
+                                                                {
+                                                                    <p style="font-size:20px;">
+                                                                        <h4>
+                                                                            <input type="radio" class="count_choice_radio" name="-@i" id="-@i" value="@Choice.iscorrect" onclick="hiddenn(@num,@i,@chk_qno)" style="width:20px;height:20px;" />
+                                                                            @Choice.Choice
+                                                                            @*@if (@Choice.ChoiceSound != "")
+                                                                                {
+                                                                                    <button type="submit" class="btn btn-primary" onclick="chk_a_sound(@ViewBag.temp_examid,@Choice.examQNO,@num)">
+                                                                                        <i class="glyph-icon icon-volume-up" title="กดเพื่อฟังเสียง"></i>
+                                                                                    </button>
+                                                                                    using (Html.BeginForm("GetASound", "Exam", FormMethod.Post))
+                                                                                    {
+                                                                                        <audio controls autoplay class="a_sound1" style="width:0px;height:0px;" title="ฟังเสียง">
+                                                                                            <source src="" type="audio/ogg">
+                                                                                        </audio>
+                                                                                    }
+
+                                                                                }*@
+                                                                            <button type="submit" class="btn btn-primary" onclick="chk_a_sound(@ViewBag.temp_examid,@Choice.examQNO,@num)">
+                                                                                <i class="glyph-icon icon-volume-up" title="กดเพื่อฟังเสียง"></i>
+                                                                            </button>
+                                                                            @using (Html.BeginForm("GetASound", "Exam", FormMethod.Post))
+                                                                            {
+                                                                                <audio controls autoplay class="a_sound1" style="width:0px;height:0px;" title="ฟังเสียง">
+                                                                                    <source src="" type="audio/ogg">
+                                                                                </audio>
+                                                                            }
+                                                                        </h4>
+                                                                    </p>
+                                                                }
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                }
+
+                                <ul class="pager wizard">
+                                    @using (Html.BeginForm("AddExam", "Exam", FormMethod.Post, new { id = "myFormAns" }))
+                                    {
+
+                                    <li class="previous" type="submit" onclick="chk_back_submit()">
+                                        @* 611206 EditByTopKhun *@
+                                        <input type="hidden" id="examid" name="examid" value="@ViewBag.temp_examid" />
+                                        @*<input type="hidden" id="examqno2" name="" value="1">*@
+                                        <input type="hidden" id="examqno" name="examQNO" />
+                                        <input type="hidden" id="examqno2" name="" value="1" />
+                                        <input type="hidden" id="examanswerno" name="examAnswerNo" />
+
+                                        @if (@ViewBag.LangValue == "TH")
+                                        {
+                                            <a href="#">
+                                                <i class="glyph-icon  icon-angle-double-left"></i> ย้อนกลับ
+                                            </a>
+                                        }
+                                        else
+                                        { 
+                                            <a href="#">
+                                                <i class="glyph-icon  icon-angle-double-left"></i> previous
+                                            </a>
+                                        }
+                                    </li>
+                                    <li class="next" type="submit" onclick="chk_submit()" onchange="momo()">
+                                        @if (@ViewBag.LangValue == "TH")
+                                        {
+                                            <a href="#">
+                                                ถัดไป <i class="glyph-icon  icon-angle-double-right"></i>
+                                            </a>
+                                        }
+                                        else
+                                        { 
+                                            <a href="#">
+                                                Next <i class="glyph-icon  icon-angle-double-right"></i>
+                                            </a>
+                                        }
+
+                                    </li>
+                                        <b id="vama"></b>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Bootstrap Wizard -->
+<!--<link rel="stylesheet" type="text/css" href="~/assets/widgets/wizard/wizard.css">-->
+<script type="text/javascript" src="~/assets/widgets/wizard/wizard.js"></script>
+<script type="text/javascript" src="~/assets/widgets/wizard/wizard-demo.js"></script>
+<!-- Boostrap Tabs -->
+<script type="text/javascript" src="~/assets/widgets/tabs/tabs.js"></script>
+<input type="hidden" name="name" value="" id="countexamnotok" />
+<script>
+    $("#load").click(function () {
+        var count = document.getElementById("countexamnotok").value;
+        var count_num = parseInt(count)
+        var $btn = $(this);
+        $btn.button('loading');
+        // simulating a timeout
+        if (count_num < 50) {
+            setTimeout(function () {
+                $btn.button('reset');
+            }, 1000);
+        }
+        else {
+            setTimeout(function () {
+                $btn.button('reset');
+            }, 2000000);
+        }
+
+    });
+
+</script>
+
+<script>
+    function fnc_send() {
+        ///ส่งไปตอบ///
+        var examid = $('#examid').val();
+        var examqno = $('#examqno').val();
+        var examanswerno = $('#examanswerno').val();
+
+        $.ajax({
+            type: "POST",
+            url: "AddExam/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: examqno, examAnswerNo: examanswerno }),
+            contentType: "application/json",
+            success: function (result) {
+                $('#vama').append("");
+                // console.log(result);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+        ///-------////
+
+        var count_choice_radio = $(':radio[class="count_choice_radio"]:checked').length;
+        var count = parseInt(count_choice_radio)
+        // alert(count);
+        if (count < 50) {
+            $('#countexamnot').modal('show');
+            document.getElementById("countexamnotok").value = count;
+        }
+        else {
+            document.getElementById("countexamnotok").value = count;
+            document.getElementsByClassName("chk_send")[0].click();
+        }
+    }
+</script>
+
+<script>
+    ///เก็ตเสียงคำตอบ เป็นรายข้อ///
+    var p = 0;
+    function chk_a_sound(temp_examid, examQNO, a_examanswerno) {
+        var temp_no = parseInt(a_examanswerno)
+        $.ajax({
+            type: "POST",
+            url: "GetASound/Exam",
+            data: JSON.stringify({ examid: temp_examid, examQNO: examQNO, examAnswerNo: a_examanswerno }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var a_sound = "data:audio/mp3;base64," + result.ChoiceSound;
+                var snd = new Audio(a_sound);
+                snd.play();
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        document.getElementById("examqno").value = temp_no;
+        //alert(a)
+    }
+</script>
+
+<script>
+    ///เก็ตเสียงคำถาม เป็นรายข้อ///
+    var p = 0;
+    function chk_q_sound(temp_examid, examQNO) {
+        $.ajax({
+            type: "POST",
+            url: "GetQSound/Exam",
+            data: JSON.stringify({ examid: temp_examid, examQNO: examQNO }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var q_sound = "data:audio/mp3;base64," + result.Questionsound;
+                var snd = new Audio(q_sound);
+                snd.play();
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+    }
+</script>
+
+<script>
+    ///เก็ตภาพคำถาม ภาพคำตอบ และส่งไปตอบ ทีละข้อ///
+    var p = 0;
+    function chk_submit() {
+        ///ส่งไปตอบ///
+        var examid = $('#examid').val();
+        var examqno = $('#examqno').val();
+        var examanswerno = $('#examanswerno').val();
+
+        $.ajax({
+            type: "POST",
+            url: "AddExam/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: examqno, examAnswerNo: examanswerno }),
+            contentType: "application/json",
+            success: function (result) {
+                $('#vama').append("");
+                // console.log(result);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+        ///-------////
+        var Q_examqno = $('#examqno2').val();
+        var temp_no = parseInt(Q_examqno)
+        var temp_no_51 = 0;///เป็นตัวแปลที่ใช้เฉพาะกด ถัดไปในข้อที่ 50 เท่านั้น///
+
+        if (temp_no == 50) {///ก็คือถ้ามัน เท่ากันข้อที่ 50 ต้องเขียนโค้ดดัก เพราะว่าปกติเมื่อครบข้อที่ เฟต จากดาต้าเบสมา เมื่อถึงข้อสุดท้ายจะคลิกถัดไป ไม่ได้ แต่เราทำให้คลิกได้ เพราะการตอบคำถามในข้อ 50 ต้องกดถัดไป///
+            temp_no = 49
+            temp_no_51 = 1
+        }
+        temp_no = temp_no + 1;
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "0" }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var q_img = "data:image/jpeg;base64," + result.QuestionImage;
+                if (result.QuestionImage != "" && result.QuestionImage != "/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAA8AAD/4QMtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NTY0Q0IxRjk1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NTY0Q0IxRkE1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1NjRDQjFGNzVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1NjRDQjFGODVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/iDFhJQ0NfUFJPRklMRQABAQAADEhMaW5vAhAAAG1udHJSR0Ig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AAAAAUCUBQAAIBQIAABQJQAAAFAgAJIIAAAAAAAAAAAAAAAAAAAAAAAAAACwCgAAUCgAAUCgAAtAUCgAUC0AAC0BQFAAAAAAAAAUBQJQAAFAlAAAlAgAAFAgAAAICSCAAAAAAAAAAAAAAAAAAAAAAAAAAAsAoALQAAALQAAKBQKAC0AAC0AACgUBQFAUCgAAAlAUBQFAAgFAUCAAlAAAlAgAAIAACAkggAAAAAAAAAAAAAAAAAAAAAAAAAALAKCgAAAoAALQKABQKBQLQALQFAoFAUC0BQAAAAAAFAlAUACUBQIABQIACUACUACAAUCAgAICAAAAAAAAAAAAAAAAAAAAAAAAAAsAsAoAAKAAC0CgUCgAtAAtAAoLQAFAtAUAACgUBQAIABQFAlAUCUACUBQIBQIBQIACUCAASDIAJIIAAAAAAAAAAAAAAAAAAAAAAAAACgsAoAKAACgoFAoLQALQKBQLQFAtAAtAUC0ABQFAUBQFAUBQJQFAUCAUCAUCAlAgAIACSACUCASDMgAkggAAAAAAAAAAAAAAAAAAAAAAAALAKBAKCgAoKACgAoALQKCgUC0C0BQLQFAtAUC0BQFAUBQFAUBQJQFAlAAlAgFAgJQAJQIBQICUACTAJIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoEA0AACgoKACgoKBQKC0C0BQLQLQLQFAtAUBQLQFAUBQFAUCUBQJQFAlAUCUCUCAUCAgJMAgFAgJMAAzIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoLAKACgoKACgsQCgtARAKC0C0CxALQLQFAtAUC0C0BQFAUBQFAUCUBQJQFAlAgFAlAkwCUCAgJQICASCAkwCSCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwCgoKCwCgsAAoLAKCgsQCgtAtAtAoFAtAtAtAUC0BQLQFAUBQFAUCUBQJQFAlAkwCUCUCUCUCUCAgJMAgIBMAgMyCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwDUAA1AKBEAoLAKCgoLEAtAoLQLQLQLQLEAtAtAtAUC0C0BQFAUBQFAUCUBQJQJQFAlAlAkwCAlAzMAgICAkggIBIMyDMggIDIAAAAAAAAAAAAAAAAAAAAAAAALANQADUAoKCwADQLALEAoKCgoLEAtA1QLQLEAtAtAUC0BQLQFAUBQFAu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llhPOJno4g89ggJYICAkggIDIEgzPMGZBAQGQAAAAAAAAAAAAAAAAAAAAAAAAWAWAUFBoAFBYABYBQUFBYkFsFsFBbBbBYkFsFsCwWwLAsFsCwLAsEsCwSwLBLAsEsEsEsEsEsEmQQEsEBASwQEBJBmQZkAGQAAAAAAAAAAAAAAAAAAAAAAAAWAUFBQUFABQWJABYBbBQWwWwUFsFsCwWwWwWwLBbAsFsCwLAsCwSwLAsEsEsCwSwSwSwSwSwQCwQEBJBAQAGZBJBmQAZAAAAAAAAAAAAAAAAAAAAAAAABYBQIBoAFgFABQWwAWJBQUFsAFsFsFsFsCwWwLBbAsCwWwLAsCwSwLAsEsCwSwSwSwLBLBAQEsAEsEBAAQEkGQSQSQQAAAAAAAAAAAAAAAAAAAAAAAAFgFAgGoAABYBQLBQWwAWwUCwUFsFAsFsCwWwWwLAsFsCwLAsCwLBLAsCwSwSwASwQCwQEsEABAQCwQEBJBASQSQQAAAAAAAAAAAAAAAAAAAAAAAAAGgIBQWAAAWwUAFABQUCwUFsCwWwAWwLBbAsCwWwLAsCwLAsEsCwLBLAsEAsEBLABLBALBALBAQAEkEBASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFgFABbAABbBQAWwAWwAWwAUFsAFsCwAUCwLAsCwLAsCwLBAALBLABLABLABASwASwAQEAAkGZABJBAAAAAAAAAAAAAAAAAAAAAAAAAAWAUFAAAsFABQLBQLBQAWwAWwLBQLBbAAAsFsCwLAsCwLBLAAsEsCwQCwQACwQCwQAEsEAAsEBAASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFAgFAAABQAAWwUACwUAFsAAFsCwLBQALAsCwLAsCwAASwLABAALBAASwAQCwQAAEABAQEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAUAAAFgAAFAsFAAsFAAsFsAAAFAsCwLAsCwLBAAALAsEAAsEsAAEsEAABLAAABASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAABQAAAAUAAFsCwUACwLBQAALAsFsCwLAsCwLBLAAAAsEsAAEAsEAAAsEAAABAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAAAAsFAAAAsFAAABbAsFAAAsCwLAsFsCwLAsEsCwLAAABALAsEAAABAAAAAQAAEkEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAAAAAWwAAAALBQAAAAWwLAsCwAUAAAAAAEsCwLBAAAAALBAAAAASwAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFABQAAAAAAAWwAAAAAWwAAAAAAAAAAAAAAAAAAALBLAAAAABLAAAAAABJBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWwUAAAAAAAAFsAAAAAACwWwLAAAAAAAAAAsCwLBAAAAAAASwAAAAAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFBQAAAAAAAAOIKAAAAAAAAAAAAAAAAAAAAAAACcQAAAAAAAAASQQAAAAAAAAAAAAAAH/9k=") {
+                    var elems = document.getElementsByClassName('q_img');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'block';
+                    }
+                    $(".q_img").attr('src', q_img);
+                    var elems = document.getElementsByClassName('q_img_2');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'none';
+                    }
+                }
+                else {
+                    var elems = document.getElementsByClassName('q_img');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'none';
+                    }
+                    var elems = document.getElementsByClassName('q_img_2');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'block';
+                    }
+                }
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        ///รูปคำตอบ 1///
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "1" }),
+            contentType: "application/json",
+            success: function (result) {
+                var a_img1 = "data:image/jpeg;base64," + result.choiceimage1;
+                $(".a_img1").attr('src', a_img1);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        ///รูปคำตอบ 2///
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "2" }),
+            contentType: "application/json",
+            success: function (result) {
+                var a_img2 = "data:image/jpeg;base64," + result.choiceimage2;
+                $(".a_img2").attr('src', a_img2);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        ///รูปคำตอบ 3///
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "3" }),
+            contentType: "application/json",
+            success: function (result) {
+                var a_img3 = "data:image/jpeg;base64," + result.choiceimage3;
+                $(".a_img3").attr('src', a_img3);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        ///รูปคำตอบ 4///
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "4" }),
+            contentType: "application/json",
+            success: function (result) {
+                var a_img4 = "data:image/jpeg;base64," + result.choiceimage4;
+                $(".a_img4").attr('src', a_img4);
+
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+        document.getElementById("examqno2").value = temp_no + temp_no_51;
+    }
+</script>
+
+<script>
+    ///นี่คือการกดย้อนกลับ จะเหมือการกดถัดไปเพียงแค่เราลบ temp_no - 1 ที่ต่างกัน ทำฟังชั่นแยกจากอันเดิมเพื่อดูง่าย///
+    var p = 0;
+    function chk_back_submit() {
+        ///ส่งไปตอบ///
+        var examid = $('#examid').val();
+        var examqno = $('#examqno').val();
+        var examanswerno = $('#examanswerno').val();
+
+        $.ajax({
+            type: "POST",
+            url: "AddExam/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: examqno, examAnswerNo: examanswerno }),
+            contentType: "application/json",
+            success: function (result) {
+                $('#vama').append("");
+                // console.log(result);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+        ///-------////
+
+        ///get img,sound ข้อต่อไป///
+        //  var examid = $('#examid').val();
+        var Q_examqno = $('#examqno2').val();
+        // alert(Q_examqno);
+        var temp_no = parseInt(Q_examqno)
+        temp_no = temp_no - 1;
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "0" }),
+            contentType: "application/json",
+            success: function (result) {
+                var q_img = "data:image/jpeg;base64," + result.QuestionImage;
+                if (result.QuestionImage != "" && result.QuestionImage != "/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAA8AAD/4QMtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NTY0Q0IxRjk1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NTY0Q0IxRkE1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1NjRDQjFGNzVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1NjRDQjFGODVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/iDFhJQ0NfUFJPRklMRQABAQAADEhMaW5vAhAAAG1udHJSR0Ig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AAAAAUCUBQAAIBQIAABQJQAAAFAgAJIIAAAAAAAAAAAAAAAAAAAAAAAAAACwCgAAUCgAAUCgAAtAUCgAUC0AAC0BQFAAAAAAAAAUBQJQAAFAlAAAlAgAAFAgAAAICSCAAAAAAAAAAAAAAAAAAAAAAAAAAAsAoALQAAALQAAKBQKAC0AAC0AACgUBQFAUCgAAAlAUBQFAAgFAUCAAlAAAlAgAAIAACAkggAAAAAAAAAAAAAAAAAAAAAAAAAALAKCgAAAoAALQKABQKBQLQALQFAoFAUC0BQAAAAAAFAlAUACUBQIABQIACUACUACAAUCAgAICAAAAAAAAAAAAAAAAAAAAAAAAAAsAsAoAAKAAC0CgUCgAtAAtAAoLQAFAtAUAACgUBQAIABQFAlAUCUACUBQIBQIBQIACUCAASDIAJIIAAAAAAAAAAAAAAAAAAAAAAAAACgsAoAKAACgoFAoLQALQKBQLQFAtAAtAUC0ABQFAUBQFAUBQJQFAUCAUCAUCAlAgAIACSACUCASDMgAkggAAAAAAAAAAAAAAAAAAAAAAAALAKBAKCgAoKACgAoALQKCgUC0C0BQLQFAtAUC0BQFAUBQFAUBQJQFAlAAlAgFAgJQAJQIBQICUACTAJIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoEA0AACgoKACgoKBQKC0C0BQLQLQLQFAtAUBQLQFAUBQFAUCUBQJQFAlAUCUCUCAUCAgJMAgFAgJMAAzIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoLAKACgoKACgsQCgtARAKC0C0CxALQLQFAtAUC0C0BQFAUBQFAUCUBQJQFAlAgFAlAkwCUCAgJQICASCAkwCSCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwCgoKCwCgsAAoLAKCgsQCgtAtAtAoFAtAtAtAUC0BQLQFAUBQFAUCUBQJQFAlAkwCUCUCUCUCUCAgJMAgIBMAgMyCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwDUAA1AKBEAoLAKCgoLEAtAoLQLQLQLQLEAtAtAtAUC0C0BQFAUBQFAUCUBQJQJQFAlAlAkwCAlAzMAgICAkggIBIMyDMggIDIAAAAAAAAAAAAAAAAAAAAAAAALANQADUAoKCwADQLALEAoKCgoLEAtA1QLQLEAtAtAUC0BQLQFAUBQFAu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llhPOJno4g89ggJYICAkggIDIEgzPMGZBAQGQAAAAAAAAAAAAAAAAAAAAAAAAWAWAUFBoAFBYABYBQUFBYkFsFsFBbBbBYkFsFsCwWwLAsFsCwLAsEsCwSwLBLAsEsEsEsEsEsEmQQEsEBASwQEBJBmQZkAGQAAAAAAAAAAAAAAAAAAAAAAAAWAUFBQUFABQWJABYBbBQWwWwUFsFsCwWwWwWwLBbAsFsCwLAsCwSwLAsEsEsCwSwSwSwSwSwQCwQEBJBAQAGZBJBmQAZAAAAAAAAAAAAAAAAAAAAAAAABYBQIBoAFgFABQWwAWJBQUFsAFsFsFsFsCwWwLBbAsCwWwLAsCwSwLAsEsCwSwSwSwLBLBAQEsAEsEBAAQEkGQSQSQQAAAAAAAAAAAAAAAAAAAAAAAAFgFAgGoAABYBQLBQWwAWwUCwUFsFAsFsCwWwWwLAsFsCwLAsCwLBLAsCwSwSwASwQCwQEsEABAQCwQEBJBASQSQQAAAAAAAAAAAAAAAAAAAAAAAAAGgIBQWAAAWwUAFABQUCwUFsCwWwAWwLBbAsCwWwLAsCwLAsEsCwLBLAsEAsEBLABLBALBALBAQAEkEBASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFgFABbAABbBQAWwAWwAWwAUFsAFsCwAUCwLAsCwLAsCwLBAALBLABLABLABASwASwAQEAAkGZABJBAAAAAAAAAAAAAAAAAAAAAAAAAAWAUFAAAsFABQLBQLBQAWwAWwLBQLBbAAAsFsCwLAsCwLBLAAsEsCwQCwQACwQCwQAEsEAAsEBAASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFAgFAAABQAAWwUACwUAFsAAFsCwLBQALAsCwLAsCwAASwLABAALBAASwAQCwQAAEABAQEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAUAAAFgAAFAsFAAsFAAsFsAAAFAsCwLAsCwLBAAALAsEAAsEsAAEsEAABLAAABASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAABQAAAAUAAFsCwUACwLBQAALAsFsCwLAsCwLBLAAAAsEsAAEAsEAAAsEAAABAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAAAAsFAAAAsFAAABbAsFAAAsCwLAsFsCwLAsEsCwLAAABALAsEAAABAAAAAQAAEkEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAAAAAWwAAAALBQAAAAWwLAsCwAUAAAAAAEsCwLBAAAAALBAAAAASwAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFABQAAAAAAAWwAAAAAWwAAAAAAAAAAAAAAAAAAALBLAAAAABLAAAAAABJBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWwUAAAAAAAAFsAAAAAACwWwLAAAAAAAAAAsCwLBAAAAAAASwAAAAAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFBQAAAAAAAAOIKAAAAAAAAAAAAAAAAAAAAAAACcQAAAAAAAAASQQAAAAAAAAAAAAAAH/9k=") {
+                    var elems = document.getElementsByClassName('q_img');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'block';
+                    }
+                    $(".q_img").attr('src', q_img);
+                    var elems = document.getElementsByClassName('q_img_2');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'none';
+                    }
+                }
+                else {
+                    var elems = document.getElementsByClassName('q_img');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'none';
+                    }
+                    var elems = document.getElementsByClassName('q_img_2');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'block';
+                    }
+                }
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "1" }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var a_img1 = "data:image/jpeg;base64," + result.choiceimage1;
+                $(".a_img1").attr('src', a_img1);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "2" }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var a_img2 = "data:image/jpeg;base64," + result.choiceimage2;
+                $(".a_img2").attr('src', a_img2);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "3" }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var a_img3 = "data:image/jpeg;base64," + result.choiceimage3;
+                $(".a_img3").attr('src', a_img3);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "4" }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var a_img4 = "data:image/jpeg;base64," + result.choiceimage4;
+                $(".a_img4").attr('src', a_img4);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+        document.getElementById("examqno2").value = temp_no;
+
+    }
+</script>
+
+<script>
+    ///อันนี้คือการกดมาจากข้อคำตอบ ในกระดาษคำตอบ///
+    var p = 0;
+    function chk_q_by_choice_right(examidd, i) {
+        ///ส่งไปตอบ///
+        var examid = $('#examid').val();
+        var examqno = $('#examqno').val();
+        var examanswerno = $('#examanswerno').val();
+
+        $.ajax({
+            type: "POST",
+            url: "AddExam/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: examqno, examAnswerNo: examanswerno }),
+            contentType: "application/json",
+            success: function (result) {
+                $('#vama').append("");
+                // console.log(result);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+        ///-------////
+
+        var examid2 = examidd;
+        var Q_examqno = i;
+        var temp_no = parseInt(Q_examqno)
+        // temp_no = temp_no - 1;
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid2, examQNO: temp_no, examAnswerNo: "0" }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var q_img = "data:image/jpeg;base64," + result.QuestionImage;
+                if (result.QuestionImage != "" && result.QuestionImage != "/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAA8AAD/4QMtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NTY0Q0IxRjk1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NTY0Q0IxRkE1QzQyMTFFMkI0NDdEQzA2MUI0RUFGREQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1NjRDQjFGNzVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1NjRDQjFGODVDNDIxMUUyQjQ0N0RDMDYxQjRFQUZERCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/iDFhJQ0NfUFJPRklMRQABAQAADEhMaW5vAhAAAG1udHJSR0Ig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AAAAAUCUBQAAIBQIAABQJQAAAFAgAJIIAAAAAAAAAAAAAAAAAAAAAAAAAACwCgAAUCgAAUCgAAtAUCgAUC0AAC0BQFAAAAAAAAAUBQJQAAFAlAAAlAgAAFAgAAAICSCAAAAAAAAAAAAAAAAAAAAAAAAAAAsAoALQAAALQAAKBQKAC0AAC0AACgUBQFAUCgAAAlAUBQFAAgFAUCAAlAAAlAgAAIAACAkggAAAAAAAAAAAAAAAAAAAAAAAAAALAKCgAAAoAALQKABQKBQLQALQFAoFAUC0BQAAAAAAFAlAUACUBQIABQIACUACUACAAUCAgAICAAAAAAAAAAAAAAAAAAAAAAAAAAsAsAoAAKAAC0CgUCgAtAAtAAoLQAFAtAUAACgUBQAIABQFAlAUCUACUBQIBQIBQIACUCAASDIAJIIAAAAAAAAAAAAAAAAAAAAAAAAACgsAoAKAACgoFAoLQALQKBQLQFAtAAtAUC0ABQFAUBQFAUBQJQFAUCAUCAUCAlAgAIACSACUCASDMgAkggAAAAAAAAAAAAAAAAAAAAAAAALAKBAKCgAoKACgAoALQKCgUC0C0BQLQFAtAUC0BQFAUBQFAUBQJQFAlAAlAgFAgJQAJQIBQICUACTAJIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoEA0AACgoKACgoKBQKC0C0BQLQLQLQFAtAUBQLQFAUBQFAUCUBQJQFAlAUCUCUCAUCAgJMAgFAgJMAAzIICSCSCAAAAAAAAAAAAAAAAAAAAAAAAAsAoLAKACgoKACgsQCgtARAKC0C0CxALQLQFAtAUC0C0BQFAUBQFAUCUBQJQFAlAgFAlAkwCUCAgJQICASCAkwCSCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwCgoKCwCgsAAoLAKCgsQCgtAtAtAoFAtAtAtAUC0BQLQFAUBQFAUCUBQJQFAlAkwCUCUCUCUCUCAgJMAgIBMAgMyCSDMgAyAAAAAAAAAAAAAAAAAAAAAAAACwDUAA1AKBEAoLAKCgoLEAtAoLQLQLQLQLEAtAtAtAUC0C0BQFAUBQFAUCUBQJQJQFAlAlAkwCAlAzMAgICAkggIBIMyDMggIDIAAAAAAAAAAAAAAAAAAAAAAAALANQADUAoKCwADQLALEAoKCgoLEAtA1QLQLEAtAtAUC0BQLQFAUBQFAu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llhPOJno4g89ggJYICAkggIDIEgzPMGZBAQGQAAAAAAAAAAAAAAAAAAAAAAAAWAWAUFBoAFBYABYBQUFBYkFsFsFBbBbBYkFsFsCwWwLAsFsCwLAsEsCwSwLBLAsEsEsEsEsEsEmQQEsEBASwQEBJBmQZkAGQAAAAAAAAAAAAAAAAAAAAAAAAWAUFBQUFABQWJABYBbBQWwWwUFsFsCwWwWwWwLBbAsFsCwLAsCwSwLAsEsEsCwSwSwSwSwSwQCwQEBJBAQAGZBJBmQAZAAAAAAAAAAAAAAAAAAAAAAAABYBQIBoAFgFABQWwAWJBQUFsAFsFsFsFsCwWwLBbAsCwWwLAsCwSwLAsEsCwSwSwSwLBLBAQEsAEsEBAAQEkGQSQSQQAAAAAAAAAAAAAAAAAAAAAAAAFgFAgGoAABYBQLBQWwAWwUCwUFsFAsFsCwWwWwLAsFsCwLAsCwLBLAsCwSwSwASwQCwQEsEABAQCwQEBJBASQSQQAAAAAAAAAAAAAAAAAAAAAAAAAGgIBQWAAAWwUAFABQUCwUFsCwWwAWwLBbAsCwWwLAsCwLAsEsCwLBLAsEAsEBLABLBALBALBAQAEkEBASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFgFABbAABbBQAWwAWwAWwAUFsAFsCwAUCwLAsCwLAsCwLBAALBLABLABLABASwASwAQEAAkGZABJBAAAAAAAAAAAAAAAAAAAAAAAAAAWAUFAAAsFABQLBQLBQAWwAWwLBQLBbAAAsFsCwLAsCwLBLAAsEsCwQCwQACwQCwQAEsEAAsEBAASQQAAAAAAAAAAAAAAAAAAAAAAAAAFgFAgFAAABQAAWwUACwUAFsAAFsCwLBQALAsCwLAsCwAASwLABAALBAASwAQCwQAAEABAQEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAUAAAFgAAFAsFAAsFAAsFsAAAFAsCwLAsCwLBAAALAsEAAsEsAAEsEAABLAAABASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAABQAAAAUAAFsCwUACwLBQAALAsFsCwLAsCwLBLAAAAsEsAAEAsEAAAsEAAABAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFgFAAAAAsFAAAAsFAAABbAsFAAAsCwLAsFsCwLAsEsCwLAAABALAsEAAABAAAAAQAAEkEAAAAAAAAAAAAAAAAAAAAAAAAAABYBQAAAAAAWwAAAALBQAAAAWwLAsCwAUAAAAAAEsCwLBAAAAALBAAAAASwAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAFABQAAAAAAAWwAAAAAWwAAAAAAAAAAAAAAAAAAALBLAAAAABLAAAAAABJBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWwUAAAAAAAAFsAAAAAACwWwLAAAAAAAAAAsCwLBAAAAAAASwAAAAAAAASQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFBQAAAAAAAAOIKAAAAAAAAAAAAAAAAAAAAAAACcQAAAAAAAAASQQAAAAAAAAAAAAAAH/9k=") {
+                    var elems = document.getElementsByClassName('q_img');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'block';
+                    }
+                    $(".q_img").attr('src', q_img);
+                    var elems = document.getElementsByClassName('q_img_2');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'none';
+                    }
+                }
+                else {
+                    var elems = document.getElementsByClassName('q_img');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'none';
+                    }
+                    var elems = document.getElementsByClassName('q_img_2');
+                    for (var i = 0; i < elems.length; i += 1) {
+                        elems[i].style.display = 'block';
+                    }
+                }
+
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "1" }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var a_img1 = "data:image/jpeg;base64," + result.choiceimage1;
+                $(".a_img1").attr('src', a_img1);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "2" }),
+            contentType: "application/json",
+            success: function (result) {
+
+                var a_img2 = "data:image/jpeg;base64," + result.choiceimage2;
+                $(".a_img2").attr('src', a_img2);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "3" }),
+            contentType: "application/json",
+            success: function (result) {
+                var a_img3 = "data:image/jpeg;base64," + result.choiceimage3;
+                $(".a_img3").attr('src', a_img3);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "GetQImage/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: temp_no, examAnswerNo: "4" }),
+            contentType: "application/json",
+            success: function (result) {
+                var a_img4 = "data:image/jpeg;base64," + result.choiceimage4;
+                $(".a_img4").attr('src', a_img4);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+
+        document.getElementById("examqno2").value = temp_no;
+        //alert(a)
+
+    }
+</script>
+
+<script>
+    function fnc_reload() {
+        // document.getElementById("reload_id").value = "maha";
+        //  document.getElementById("reload_id").disabled = true;
+        ///ส่งไปตอบ///
+        var examid = $('#examid').val();
+        var examqno = $('#examqno').val();
+        var examanswerno = $('#examanswerno').val();
+
+        $.ajax({
+            type: "POST",
+            url: "AddExam/Exam",
+            //  dataType: "html",
+            data: JSON.stringify({ examid: examid, examQNO: examqno, examAnswerNo: examanswerno }),
+            contentType: "application/json",
+            success: function (result) {
+                $('#vama').append("");
+                // console.log(result);
+            },
+            error: function (request, status, error) {
+                //Do Something on Failure
+            }
+        });
+        ///-------////
+        javascript: location.reload();
+    }
+</script>
+@*<script type="text/javascript">
+        --เช็คการตอบคำถามเมื่อโหลดหน้าใหม่ และจะเด้ง modal ขึ้นมา ตอบครบจะส่งคำตอบได้ ถ้าไม่ครบจะมีปุ่มกลับมาทำข้อสอบต่อ///
+        $(window).on('loadder', function () {
+            alert("maha");
+            var j = document.getElementById("xxx").value;
+            var a = parseInt(j);
+            document.getElementById("count_exam").value = a;
+            document.getElementById("count_exam_show").innerHTML = a;
+            if (a < 50) {
+                $("#count_exam_ok").hide();
+                $("#count_exam_not_ok").show();
+                $("#btn_back").show();
+            } else {
+                $("#count_exam_ok").show();
+                $("#count_exam_not_ok").hide();
+                $("#btn_back").hide();
+            }
+            var q = document.getElementById("yyy").value;
+            var b = parseInt(q);
+            document.getElementById("score_exam").value = b;
+
+            -- document.getElementById('btn').click();
+
+           -- document.getElementsByClassName("next")[0].click();
+          --  document.getElementsByClassName("previous")[0].click();
+            if (a >= 1) {
+                $('#countexam').modal('show');
+            }
+           document.getElementsByClassName("chk_click")[0].click();
+        });
+    </script>*@
+
+<script type="text/javascript">
+    ///เช็คการตอบคำถามเมื่อโหลดหน้าใหม่ และจะเด้ง modal ขึ้นมา ตอบครบจะส่งคำตอบได้ ถ้าไม่ครบจะมีปุ่มกลับมาทำข้อสอบต่อ///
+    var j = document.getElementById("xxx").value;
+    var a = parseInt(j);
+    document.getElementById("count_exam").value = a;
+    document.getElementById("count_exam_show").innerHTML = a;
+    if (a < 50) {
+        $("#count_exam_ok").hide();
+        $("#count_exam_not_ok").show();
+        $("#btn_back").show();
+    } else {
+        $("#count_exam_ok").show();
+        $("#count_exam_not_ok").hide();
+        $("#btn_back").hide();
+    }
+    var q = document.getElementById("yyy").value;
+    var b = parseInt(q);
+    //  document.getElementById("score_exam").value = b;
+    // document.getElementById('btn').click();
+    // document.getElementsByClassName("next")[0].click();
+    //  document.getElementsByClassName("previous")[0].click();
+
+    document.getElementsByClassName("chk_click")[0].click();
+
+    if (a >= 1) {
+        //$('#countexam').modal('show');
+       // $(window).load(function () {
+        $('#countexam').modal('show');
+       //  });
+    }
+
+</script>
+
+<script>
+    var j = 0; var k = 1;
+    function hiddenn(num, i, chk_qno) {
+        document.getElementById("examanswerno").value = num;
+        document.getElementById("examqno").value = chk_qno;
+        for (j = 1; j < 51; j++) {
+            //  alert(i + ".");
+            if (num >= 0) {
+                document.getElementById(i + ".").innerHTML = num;
+            }
+            else {
+                //document.getElementById("txt1").style.display = '';
+                document.getElementById(i + ".").innerHTML = "";
+            }
+        }
+    }
+</script>
+
+<script>
+    // Set the date we're counting down to
+    // var countDownDate = new Date("Jan 5, 2019").getTime();
+    // Update the count down every 1 second
+    var today = new Date();
+
+    var y = today.getYear();
+    var yyyy = today.getFullYear();
+    var month = today.getMonth() + 1;
+
+    //var mo = today.getMonth();
+    var d = today.getDate();
+    var h = today.getHours();
+    var num = parseInt(h);
+
+    var j = num + 1;
+    var n = j.toString();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    var distance;
+    var countDownDate = new Date(yyyy + "-" + month + "-" + d + "," + n + ":" + m + ":" + s).getTime();
+
+    var x = setInterval(function () {
+
+        // Get todays date and time
+        var now = new Date().getTime();
+        // Find the distance between now and the count down date
+        if (minutes != 59) {
+            if (seconds != 55) {
+                distance = countDownDate - now;
+            }
+        }
+        // Time calculations for days, hours, minutes and seconds
+        //  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("demo").innerHTML =
+            //days + "d "
+            + hours + ":"
+            + minutes + ":" + seconds + "";
+
+        // If the count down is over, write some text
+        if (distance < -10) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXPIRED";
+        }
+
+        if (minutes == 00 || minutes == 0) {
+            if (seconds == 01 || seconds == 1) {
+                //javascript: location.reload();
+                document.getElementsByClassName("back_to_page_student")[0].click();
+            }
+            //if (seconds == 58) {
+            //    $('#showtime15').modal({
+            //        show: 'true'
+            //    });
+            //}
+            //if (seconds == 50) {
+            //    $('#showtime5').modal({
+            //       show: 'true'
+            //    });
+            //}
+        }
+    }, 1000);
+</script>
+
+<!-- WIDGETS -->

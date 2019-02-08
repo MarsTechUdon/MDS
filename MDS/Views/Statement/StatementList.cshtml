@@ -1,0 +1,607 @@
+﻿@*@model List<MDS.Models.StatementModel>*@
+@{
+    /**/
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using MDS.Models;
+@{
+    /**/
+    ViewBag.Title = "Statement ธนาคาร";
+}
+
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+<style type="text/css">
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none;
+        line-height: 30px;
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+</style>
+@if (ViewBag.boolResult == "Y" && ViewBag.msg != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.msg</p>
+        </div>
+    </div>
+}
+else if (ViewBag.boolResult == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.msg</p>
+        </div>
+    </div>
+}
+else if (ViewBag.boolResult < 0)
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.msg</p>
+        </div>
+    </div>
+}
+<!---add--->
+<div class="modal fade" id="addStatement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">เพิ่มข้อมูล</h4>
+            </div>
+            <div class="modal-body">
+
+                @using (Html.BeginForm("AddStatement", "Statement", FormMethod.Post))
+                {
+                    @*<div class="form-group">*@
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">เลขบัญชี <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="AccountNo">
+                                <option value="" disabled selected>กรุณาเลือกเลขบัญชี</option>
+                                @foreach (var data in ViewBag.bankaccount as List<ComBankAccountModel>)
+                                {
+                                    <option value="@data.AccountNo">@data.AccountNo : @data.AccountName</option>
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">วันที่โอน <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            @* <input type="date" class="form-control" placeholder="วันที่โอน..." name="transdate_day" required>*@
+                            <input type="text" class="form-control bootstrap-datepicker" placeholder="วันที่โอน..." name="transdate_day" value="@ViewBag.temp_search_datet" id="c_statement_subDay"  readonly required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">เวลาโอน <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <input type="time" class="form-control" placeholder="เวลาโอน..." value="@ViewBag.temp_time" name="transdate_time" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">จำนวนเงิน <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" placeholder="จำนวนเงิน..." name="amount" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">เลขอ้างอิง </label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="เลขอ้างอิง..." name="re_f">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">หมายเหตุ </label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <textarea rows="4" cols="50" class="form-control" style="resize: none;" placeholder="หมายเหตุ..." name="detail"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    @*</div>*@
+                    <div class="modal-footer">
+                        @if (ViewBag.temp_search_datef != "0" || ViewBag.temp_search_datet != "0")
+                        {
+                            <input type="hidden" name="ugmData" value="@ViewBag.temp_search_datef" />
+                            <input type="hidden" name="ugmData2" value="@ViewBag.temp_search_datet" />
+                        }
+                        <button type="submit" class="btn btn-success">เพิ่มข้อมูล</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!---end add--->
+<!---edit--->
+<div class="modal fade" id="editStatement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">แก้ไขข้อมูล</h4>
+            </div>
+            <div class="modal-body">
+
+                @using (Html.BeginForm("EditStatement", "Statement", FormMethod.Post))
+                {
+                    @*<div class="form-group">*@
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">เลขบัญชี <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="accountno" id="e_statement_accountno">
+                                <option value="" disabled selected>กรุณาเลือกเลขบัญชี</option>
+                                @foreach (var data in ViewBag.bankaccount as List<ComBankAccountModel>)
+                                {
+                                    <option value="@data.AccountNo">@data.AccountNo : @data.AccountName</option>
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">วันที่โอน <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            @*แ<input type="date" class="form-control" placeholder="วันที่โอน..." id="e_statement_subDay" name="transdate_day" required>*@
+                            <input type="text" class="form-control bootstrap-datepicker" placeholder="วันที่โอน..." name="transdate_day" id="e_statement_subDay"  readonly required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">เวลาโอน <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <input type="time" class="form-control" placeholder="เวลาโอน..." name="transdate_time" id="e_statement_subTIme" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">จำนวนเงิน <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" placeholder="จำนวนเงิน..." name="amount" id="e_statement_amount" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">เลขอ้างอิง </label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="เลขอ้างอิง..." name="re_f" id="e_statement_re_f">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">หมายเหตุ </label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <textarea rows="4" cols="50" class="form-control" placeholder="หมายเหตุ..." style="resize:none;" name="detail" id="e_statement_detail"></textarea>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="modal-footer">
+                        @if (ViewBag.temp_search_datef != "0" || ViewBag.temp_search_datet != "0")
+                        {
+                            <input type="hidden" name="ugmData" value="@ViewBag.temp_search_datef" />
+                            <input type="hidden" name="ugmData2" value="@ViewBag.temp_search_datet" />
+                        }
+                        <input type="hidden" name="ind" id="e_statement_id" />
+                        <button type="submit" class="btn btn-success">แก้ไข</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!---end edit--->
+<!---delete--->
+<div class="modal fade" id="deleteStatement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">ยืนยันการลบข้อมูล</h4>
+            </div>
+            @using (Html.BeginForm("DeleteStatement", "Statement", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <span>คุณต้องการลบข้อมูล </span><span id="d_statement_accountno" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                </div>
+                <div class="modal-footer">
+                    @if (ViewBag.temp_search_datef != "0" || ViewBag.temp_search_datet != "0")
+                    {
+                        <input type="hidden" name="ugmData" value="@ViewBag.temp_search_datef" />
+                        <input type="hidden" name="ugmData2" value="@ViewBag.temp_search_datet" />
+                    }
+                    <input type="hidden" name="ind" id="d_statement_id" />
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!---end delete--->
+
+<h2>Statement ธนาคาร</h2><br />
+<div class="row">
+    <div class="col-md-2"></div>
+    @using (Html.BeginForm("StatementList", "Statement", FormMethod.Post))
+    {<div class="col-md-1 text-right">
+            <b>ตั้งแต่วันที่ :</b>
+        </div>
+        <div class="col-md-2 text-center">
+            @*<label>ตั้งแต่วันที่</label>*@
+            <input type="text" class="form-control bootstrap-datepicker" placeholder="ตั้งแต่วันที่" name="ugmData" value="@ViewBag.temp_search_datef" id="ugmData"  readonly required>
+            @*<input type="text" name="ugmData" value="@ViewBag.temp_search_datef" id="ugmData" required />*@
+        </div>
+        <div class="col-md-1 text-right">
+            <b>
+                ถึงวันที่ :
+            </b>
+        </div>
+        <div class="col-md-2 ">
+            @*<label>
+                    ถึงวันที่
+                </label>*@
+            <input type="text" class="form-control bootstrap-datepicker" placeholder="ถึงวันที่" name="ugmData2" value="@ViewBag.temp_search_datet" id="ugmData2"  readonly required>
+            @*<input type="date" name="ugmData2" value="@ViewBag.temp_search_datet" required />*@
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-success"> <i class="glyphicon glyphicon-search"></i> ค้นหา</button>
+        </div>
+    }
+</div><br>
+<div class="panel">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="glyph-icon icon-map-marker"></i>
+        รายการ Statement ธนาคาร
+        <div class="header-buttons">
+            <button class="btn btn-sm btn-success " data-toggle="modal" data-target="#addStatement">
+                <i class="glyphicon glyphicon-plus"></i> เพิ่มข้อมูล</a>
+            </button>
+            <a href="@Url.Action("UploadStatement","Statement")" class="btn btn-sm btn-success pull-right" style="color:white;margin-left:20px;"><i class="glyphicon glyphicon-file"></i>อัพโหลด</a>
+        </div>
+    </h3>
+    <br />
+</div>
+<div class="panel">
+    <div class="panel-body">
+        <div class="table-responsive">
+
+            @foreach (var items in ViewBag.list as List<StatementModel>)
+            {
+                <b>เลขที่บัญชี : @items.accountno</b>
+                <table id="datatable-responsive2" class="table table-striped table-bordered no-wrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center">วันที่โอน</th>
+                            <th class="text-center">วันที่ยืนยัน</th>
+                            <th class="text-center">รายละเอียด</th>
+                            <th class="text-center">จำนวนเงิน</th>
+                            <th class="text-center">การจัดการ</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var data in ViewBag.detail as List<StatementModel>)
+                        {
+                            if (@items.accountno == @data.accountno2)
+                            {
+                                <tr>
+
+                                    <td>@data.transdate</td>
+                                    <td>@data.approvedate  </td>
+                                    <td>
+                                        @data.detail
+                                    </td>
+                                    <td>
+                                        @{
+                                            string momo = @data.amount;
+                                            var num_amount = Convert.ToDecimal(momo);
+                                            var num_amount2 = Convert.ToDecimal(momo);
+                                            string formatted = num_amount2.ToString("N2");
+                                        }
+                                        @if (num_amount <= -1)
+                                        {
+                                            <p style="color:red;">(@formatted)</p>
+                                        }
+                                        else
+                                        {
+                                            <p> @formatted</p>
+                                        }
+
+                                    </td>
+                                    <td class="text-center">
+                                        @if (@data.approvedate == "")
+                                        {
+                                            <button class="btn btn-warning btn-md" data-toggle="modal" data-target="#editStatement" data-ko="@data.ind" data-koko="@data.ind" data-accountno="@data.accountno2" data-transdate="@data.transdate" data-amount="@data.amount"
+                                                    data-re_f="@data.re_f" data-detail="@data.detail">
+                                                <i class="glyph-icon icon-pencil-square-o"></i>
+                                            </button>
+
+                                            <button class="btn btn-danger btn-md" data-toggle="modal" data-target="#deleteStatement" data-id="@data.ind" data-accountno="@data.accountno2">
+                                                <i class="glyph-icon icon-trash"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <p style="color:green">ยืนยันแล้ว</p>
+                                        }
+
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+
+            }
+        </div>
+
+    </div>
+    <div style="text-align:center;">
+        <a href="@Url.Action("ApproveStatement","Statement")" class="btn btn-lg btn-success pull-center" style="color:white;margin-left:20px;"><i class="glyphicon glyphicon-check"></i> ยืนยัน</a>
+    </div>
+</div>
+@section scripts{
+    @* /datepicker_buddhist_year *@
+    <script type="text/javascript" src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+    <script type="text/javascript" src="~/Content/Jquery/jquery-ui.js"></script>
+    <!-- Data tables -->
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script>
+        //modal edit statement
+        $(document).ready(function () {
+            $('#editStatement').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);
+                var accountno = button.data('accountno');
+                var transdate = button.data('transdate');
+                var amount = button.data('amount');
+                var re_f = button.data('re_f');
+                var detail = button.data('detail');
+                var id = button.data('koko');
+                var modal = $(this);
+
+                //var subD1 = transdate.substring(0, 2);
+                //var subD2 = transdate.substring(3, 5);
+                //var subD3 = transdate.substring(6, 10);
+                //var subDay = subD3 + "-" + subD2 + "-" + subD1;
+
+                var subD1 = transdate.substring(0, 10);
+
+                var subTIme = transdate.substring(11, 19);
+
+                var subT1 = transdate.substring(11, 13);
+                var subT2 = transdate.substring(14, 16);
+                var subTIme = subT1 + ":" + subT2;
+                modal.find('#e_statement_id').val(id);
+                modal.find('#e_statement_accountno').val(accountno);
+                modal.find('#e_statement_subDay').val(subD1);
+                modal.find('#e_statement_subTIme').val(subTIme);
+                modal.find('#e_statement_amount').val(amount);
+                modal.find('#e_statement_re_f').val(re_f);
+                modal.find('#e_statement_detail').val(detail);
+
+            });
+        });
+
+        /* Datatables responsive */
+        $(document).ready(function () {
+            $('#datatable-responsive22').DataTable({
+                responsive: true
+            });
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "Search...");
+        });
+    </script>
+
+    <script type="text/javascript">
+        //aleat
+        $(document).ready(function () {
+            $("#success-alert").hide();
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+        });
+
+        //modal edit statement
+        $(document).ready(function () {
+            $('#deleteStatement').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);
+
+                var id = button.data('id');
+                var accountno = button.data('accountno');
+
+                var modal = $(this);
+
+                modal.find('#d_statement_id').val(id);
+                document.getElementById("d_statement_accountno").innerHTML = accountno;
+
+            });
+        });
+    </script>
+    <script>
+        var d = new Date();
+        var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        $("#ugmData").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: toDay,
+            autoclose: true,
+            dateFormat: 'yy-mm-dd',
+            isBuddhist: true,
+            orientation: "bottom left",
+            yearRange: "-100:+0",
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        }).keydown(function (e) {
+            return false;
+        });
+
+    </script>
+    <script>
+        var d = new Date();
+        var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        $("#ugmData2").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: toDay,
+            autoclose: true,
+            dateFormat: 'yy-mm-dd',
+            isBuddhist: true,
+            orientation: "bottom left",
+            yearRange: "-100:+0",
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        }).keydown(function (e) {
+            return false;
+        });
+
+    </script>
+    <script>
+        var d = new Date();
+        var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        $("#c_statement_subDay").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: toDay,
+            autoclose: true,
+            dateFormat: 'yy-mm-dd',
+            isBuddhist: true,
+            orientation: "bottom left",
+            yearRange: "-100:+0",
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        }).keydown(function (e) {
+            return false;
+        });
+
+    </script>
+    <script>
+        var d = new Date();
+        var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        $("#e_statement_subDay").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: toDay,
+            autoclose: true,
+            dateFormat: 'yy-mm-dd',
+            isBuddhist: true,
+            orientation: "bottom left",
+            yearRange: "-100:+0",
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        }).keydown(function (e) {
+            return false;
+        });
+
+    </script>
+
+}

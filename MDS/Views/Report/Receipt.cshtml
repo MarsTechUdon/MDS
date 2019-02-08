@@ -1,0 +1,40 @@
+﻿@model  MDS.Models.StudentModel
+@using ReportViewerForMvc;
+@{
+    ViewBag.Title = "พิมพ์ใบเสร็จรับเงิน";
+}
+
+<div class="panel">
+    <div class="panel-body">
+        <div class="row">
+            <div class="float-left">
+                @using (Html.BeginForm("StudentDetail", "Student", FormMethod.Post))
+                {
+                    <button class="btn btn-md btn-danger tooltip-button" data-original-title="กลับ" name="studentind" value="@Model.studentind">
+                        <i class="glyph-icon icon-arrow-circle-left font-size-20"></i>
+                        <span>กลับ</span>
+                    </button>
+                    <input type="hidden" name="voucherid" value="@Model.voucherid" id="pvoucherid" />
+                    <input type="hidden" name="user" value="@Model.User" id="puser" />
+                    <input type="hidden" name="branchid" value="@Model.branchid" id="pbranchid" />
+                    <input type="hidden" name="tabActive" value="3" id="tabActive" />
+                }
+            </div>
+            <h2 style="text-align:center;">พิมพ์ใบเสร็จรับเงิน</h2>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            @Html.ReportViewer(ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer, new { @style = "width:100%; height:100%;" })
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+      
+    </script>
+}

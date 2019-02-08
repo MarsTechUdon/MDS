@@ -1,0 +1,1137 @@
+﻿@model List<MDS.Models.VehicleModel>
+@{
+    ViewBag.Title = "รถฝึกหัดขับ";
+    var str = "";
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font: 16px Arial;
+    }
+
+    .autocomplete {
+        /*the container must be positioned relative:*/
+        position: relative;
+        display: inline-block;
+    }
+
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+    }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+            .autocomplete-items div:hover {
+                /*when hovering an item:*/
+                background-color: #e9e9e9;
+            }
+
+    .autocomplete-active {
+        /*when navigating through the items using the arrow keys:*/
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+    }
+</style>
+
+<link href="~/assets/widgets/chosen/chosen.css" rel="stylesheet" />
+
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+<style type="text/css">
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none;
+        line-height: 30px;
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+</style>
+
+<div class="content-box-header bg-blue" style="text-align:left;">
+    <div class="form-inline">
+        <i class="glyph-icon icon-car">&nbsp;รถฝึกหัดขับในระบบ</i>
+        <div class="btn-group float-right">
+            <button class="btn btn-md btn-hover btn-success " data-toggle="modal" data-target="#addVehicle">
+                <span>เพิ่ม</span>
+                <i class="glyph-icon icon-plus"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+@if (Model != null)
+{
+    foreach (var chk_status in Model)
+    {
+        if (chk_status.Result == "Y")
+        {
+            <div class="alert alert-success" id="success-alert">
+                <div class="bg-green alert-icon">
+                    <i class="glyph-icon icon-check"></i>
+                </div>
+                <div class="alert-content">
+                    <h4 class="alert-title">แจ้งเตือน!</h4>
+                    <p>สำเร็จ</p>
+                </div>
+            </div>
+        }
+        else if (chk_status.Result == "N")
+        {
+            <div class="alert alert-danger" id="success-alert">
+                <div class="bg-red alert-icon">
+                    <i class="glyph-icon icon-times"></i>
+                </div>
+                <div class="alert-content">
+                    <h4 class="alert-title">แจ้งเตือน!</h4>
+                    <p>ไม่สำเร็จ</p>
+                </div>
+            </div>
+        }
+    }
+}
+
+<div class="panel">
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table id="datatable-responsive" class="table table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("ลำดับ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("เลขทะเบียน")
+                        </th>
+                        <th>
+                            @Html.DisplayName("จังหวัด")
+                        </th>
+                        <th>
+                            @Html.DisplayName("ประเภทรถ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("ประเภทเกียร์")
+                        </th>
+                        <th>
+                            @Html.DisplayName("ลักษณะ/มาตรฐานรถ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("ยี่ห้อ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("เลขตัวรถ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("เลขเครื่องยนต์")
+                        </th>
+                        <th>
+                            @Html.DisplayName("วันที่สิ้นอายุภาษี")
+                        </th>
+                        @*<th>
+                                @Html.DisplayName("สำเนาทะเบียนรถ")
+                            </th>*@
+                        <th>
+                            @Html.DisplayName("สถานะ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("การจัดการ")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var vehicle in Model)
+                    {
+                        <tr>
+                            <td style="text-align:center;">@vehicle.Ind</td>
+                            <td style="text-align:center;">@vehicle.Carno1@vehicle.CarNo2</td>
+                            <td>@vehicle.CarChangWat</td>
+                            <td>
+                                @if (vehicle.CarType == "1")
+                                {
+                                    <p>รถยนต์บรรทุกส่วนบุคคล</p>
+                                }
+                                else if (vehicle.CarType == "2")
+                                {
+                                    <p>รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน</p>
+                                }
+                                else
+                                {
+                                    <p style="text-align:center;">-</p>
+                                }
+
+                            </td>
+                            <td>
+                                @if (vehicle.GearID == "1")
+                                {
+                                    <p>เกียร์อัตโนมัติ</p>
+                                }
+                                else if (vehicle.GearID == "2")
+                                {
+                                    <p>เกียร์ธรรมดา</p>
+                                }
+                            </td>
+                            <td>
+                                @if (vehicle.CarSubType == "1")
+                                {
+                                    <p>กระบะบรรทุก</p>
+                                }
+                                else if (vehicle.CarSubType == "2")
+                                {
+                                    <p>เก๋งสองตอน</p>
+                                }
+                                else
+                                {
+                                    <p style="text-align:center;">-</p>
+                                }
+                            </td>
+                            <td>
+                                @if (vehicle.Brand == "1")
+                                {
+                                    <p>Toyota</p>
+                                }
+                                else if (vehicle.Brand == "2")
+                                {
+                                    <p>Honda</p>
+                                }
+                                else if (vehicle.Brand == "3")
+                                {
+                                    <p>Nissan</p>
+                                }
+                                else if (vehicle.Brand == "4")
+                                {
+                                    <p>Mitsubishi</p>
+                                }
+                                else if (vehicle.Brand == "5")
+                                {
+                                    <p>Mazda</p>
+                                }
+                                else if (vehicle.Brand == "6")
+                                {
+                                    <p>Isuzu</p>
+                                }
+                                else if (vehicle.Brand == "7")
+                                {
+                                    <p>Suzuki</p>
+                                }
+                                else if (vehicle.Brand == "8")
+                                {
+                                    <p>Subaru</p>
+                                }
+                                else if (vehicle.Brand == "9")
+                                {
+                                    <p>Hino</p>
+                                }
+                                else if (vehicle.Brand == "10")
+                                {
+                                    <p>MG</p>
+                                }
+                                else if (vehicle.Brand == "11")
+                                {
+                                    <p>Lexus</p>
+                                }
+                                else
+                                {
+                                    <p style="text-align:center;">-</p>
+                                }
+                            </td>
+                            <td>@vehicle.ChassisNo</td>
+                            <td>@vehicle.EngineNo</td>
+                            <td>@vehicle.ExpireDate</td>
+                            <td>
+                                @if (vehicle.status == "A")
+                                {
+                                    <p style="color:green;">ใช้งาน</p>
+                                }
+                                else if (vehicle.status == "C")
+                                {
+                                    <p style="color:red;">ไม่ใช้งาน</p>
+                                }
+                            </td>
+                            <td>
+
+                                @if (vehicle.status == "A")
+                                {
+                                    <div class="col-sm-12 col-md-6">
+                                        @{
+                                            str = @vehicle.Ind;
+                                        }
+                                        <button class="btn btn-yellow tooltip-button edit-btn" data-id="@vehicle.Ind" data-carno1="@vehicle.Carno1" data-carno2="@vehicle.CarNo2" data-changwat="@vehicle.CarChangWat" data-cartype="@vehicle.CarType" data-gearid="@vehicle.GearID" data-carsubtype="@vehicle.CarSubType" data-brand="@vehicle.Brand" data-chassisno="@vehicle.ChassisNo" data-engineno="@vehicle.EngineNo" data-expiredate="@vehicle.ExpireDate" data-original-title="แก้ไข" value="@vehicle.Ind" id="vehicleInd" name="vehicleInd" data-toggle="modal" data-target="#editVehicle">
+                                            <i class="glyph-icon tooltip-button icon-edit icon-size20"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-6">
+                                        <button class="btn btn-danger tooltip-button deleteBtn" data-original-title="ลบ" data-id="@vehicle.Ind" data-carno1="@vehicle.Carno1" data-carno2="@vehicle.CarNo2" value="@vehicle.Ind" data-toggle="modal" data-target="#deleteModal">
+                                            <i class="glyph-icon tooltip-button icon-trash icon-size20"></i>
+                                        </button>
+                                    </div>
+                                }
+                                else if (vehicle.status == "C")
+                                {
+                                    <button class="btn btn-purple tooltip-button redeleteBtn" data-original-title="คืนสถานะ" data-id="@vehicle.Ind" data-carno1="@vehicle.Carno1" data-carno2="@vehicle.CarNo2" value="@vehicle.Ind" data-toggle="modal" data-target="#redeleteModal">
+                                        <i class="glyph-icon tooltip-button icon-rotate-left icon-size20"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("ลำดับ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("เลขทะเบียน")
+                        </th>
+                        <th>
+                            @Html.DisplayName("จังหวัด")
+                        </th>
+                        <th>
+                            @Html.DisplayName("ประเภทรถ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("ประเภทเกียร์")
+                        </th>
+                        <th>
+                            @Html.DisplayName("ลักษณะ/มาตรฐานรถ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("ยี่ห้อ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("เลขตัวรถ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("เลขเครื่องยนต์")
+                        </th>
+                        <th>
+                            @Html.DisplayName("วันที่สิ้นอายุภาษี")
+                        </th>
+                        <th>
+                            @Html.DisplayName("สถานะ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("การจัดการ")
+                        </th>
+                    </tr>
+                </tfoot>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addVehicle" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title" id="lineModalLabel"><i class="glyph-icon tooltip-button  icon-car icon-size20"></i> เพิ่มข้อมูลรถฝึกหัดขับ</h3>
+            </div>
+            @using (Html.BeginForm("CreateVehicle", "Vehicle", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="table-responsive">
+                                <table border="0" id="table-responsive">
+                                    <tr>
+                                        <td><label>เลขทะเบียน<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>จังหวัด<label style="color:red;">*</label></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-inline">
+                                                <input type="text" class="form-control Carno1" placeholder="หมวด" name="Carno1" value="" id="Carno1" style="width: 75px" oninvalid="this.setCustomValidity('กรอกหมวดทะเบียนรภ')" oninput="setCustomValidity('')" required>&emsp;
+                                                <input type="number" class="form-control Carno2" placeholder="เลขทะเบียน" name="Carno2" value="" id="Carno2" style="width: 100px" oninvalid="this.setCustomValidity('กรอกทะเบียนรถ')" oninput="setCustomValidity('')" required>
+                                                </div">
+                                        </td>
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <input type="text" class="form-control CarChangWat" placeholder="กรุณาพิมพ์ชื่อจังหวัด" name="CarChangWat" id="CarChangWat" value="" list="province" style="width: 100%" oninvalid="this.setCustomValidity('กรุณากรอกจังหวัด')"
+                                                   oninput="setCustomValidity('')" required />
+                                            <datalist id="province">
+                                                <option value="กระบี่"></option>
+                                                <option value="กรุงเทพมหานคร"></option>
+                                                <option value="กาญจนบุรี"></option>
+                                                <option value="กาฬสินธุ์"></option>
+                                                <option value="กำแพงเพชร"></option>
+                                                <option value="ขอนแก่น"></option>
+                                                <option value="จันทบุรี"></option>
+                                                <option value="ฉะเชิงเทรา"></option>
+                                                <option value="เชียงใหม่"></option>
+                                                <option value="เชียงราย"></option>
+                                                <option value="ชลบุรี"></option>
+                                                <option value="ชัยนาท"></option>
+                                                <option value="ชัยภูมิ"></option>
+                                                <option value="ชุมพร"></option>
+                                                <option value="ตรัง"></option>
+                                                <option value="ตราด"></option>
+                                                <option value="ตาก"></option>
+                                                <option value="นครนายก"></option>
+                                                <option value="นครปฐม"></option>
+                                                <option value="นครพนม"></option>
+                                                <option value="นครราชสีมา"></option>
+                                                <option value="นครศรีธรรมราช"></option>
+                                                <option value="นครสวรรค์"></option>
+                                                <option value="นนทบุรี"></option>
+                                                <option value="นราธิวาส"></option>
+                                                <option value="น่าน"></option>
+                                                <option value="บึงกาฬ"></option>
+                                                <option value="บุรีรัมย์"></option>
+                                                <option value="ปทุมธานี"></option>
+                                                <option value="ประจวบคีรีขันธ์"></option>
+                                                <option value="ปราจีนบุรี"></option>
+                                                <option value="ปัตตานี"></option>
+                                                <option value="เพชรบุรี"></option>
+                                                <option value="เพชรบูรณ์"></option>
+                                                <option value="แพร่"></option>
+                                                <option value="พระนครศรีอยุธยา"></option>
+                                                <option value="พะเยา"></option>
+                                                <option value="พังงา"></option>
+                                                <option value="พัทลุง"></option>
+                                                <option value="พิจิตร"></option>
+                                                <option value="พิษณุโลก"></option>
+                                                <option value="ภูเก็ต"></option>
+                                                <option value="แม่ฮ่องสอน"></option>
+                                                <option value="มหาสารคาม"></option>
+                                                <option value="มุกดาหาร"></option>
+                                                <option value="ยโสธร"></option>
+                                                <option value="ยะลา"></option>
+                                                <option value="ร้อยเอ็ด"></option>
+                                                <option value="ระนอง"></option>
+                                                <option value="ระยอง"></option>
+                                                <option value="ราชบุรี"></option>
+                                                <option value="เลย"></option>
+                                                <option value="ลพบุรี"></option>
+                                                <option value="ลำปาง"></option>
+                                                <option value="ลำพูน"></option>
+                                                <option value="ศรีสะเกษ"></option>
+                                                <option value="สกลนคร"></option>
+                                                <option value="สงขลา"></option>
+                                                <option value="สมุทรปราการ"></option>
+                                                <option value="สมุทรสงคราม"></option>
+                                                <option value="สมุทรสาคร"></option>
+                                                <option value="สระแก้ว"></option>
+                                                <option value="สระบุรี"></option>
+                                                <option value="สิงห์บุรี"></option>
+                                                <option value="สุโขทัย"></option>
+                                                <option value="สุพรรณบุรี"></option>
+                                                <option value="สุราษฎร์ธานี"></option>
+                                                <option value="สุรินทร์"></option>
+                                                <option value="หนองคาย"></option>
+                                                <option value="หนองบัวลำภู"></option>
+                                                <option value="อ่างทอง"></option>
+                                                <option value="อำนาจเจริญ"></option>
+                                                <option value="อุดรธานี"></option>
+                                                <option value="อุตรดิตถ์"></option>
+                                                <option value="อุทัยธานี"></option>
+                                                <option value="อุบลราชธานี"></option>
+                                            </datalist>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>ประเภทรถ<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>ประเภทเกียร์<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>ลักษณะ/มาตรฐานรถ</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-control CarType" id="CarType" name="CarType" style="width: auto;" oninvalid="this.setCustomValidity('กรอกประเภทรภ')"
+                                                    oninput="setCustomValidity('')" required>
+                                                <option value="" selected>ไม่ระบุ</option>
+                                                <option value="1">รถยนต์บรรทุกส่วนบุคคล</option>
+                                                <option value="2">รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน</option>
+                                            </select>
+                                        </td>
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <select class="form-control GearID" id="GearID" name="GearID" style="width: auto;" oninvalid="this.setCustomValidity('กรอกประเภทเกียร์')"
+                                                    oninput="setCustomValidity('')" required>
+                                                <option value="">ไม่ระบุ</option>
+                                                <option value="1">เกียร์อัตโนมัติ</option>
+                                                <option value="2">เกียร์ธรรมดา</option>
+                                            </select>
+                                        </td>
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <select class="form-control CarSubType" id="CarSubType" name="CarSubType" style="width: auto;">
+                                                <option value="">ไม่ระบุ</option>
+                                                <option value="1">กระบะบรรทุก</option>
+                                                <option value="2">เก๋งสองตอน</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>เลขตัวรถ<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>เลขเครื่องยนต์<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>ยี่ห้อ</label><label style="color:red;">*</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="text" class="form-control ChassisNo" placeholder="เลขตัวรถ" name="ChassisNo" value="" id="ChassisNo" style="width: auto" oninvalid="this.setCustomValidity('กรอกเลขตัวรถ')"
+                                                   oninput="setCustomValidity('')" required>
+                                        </td>
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <input type="text" class="form-control EngineNo" placeholder="เลขเครื่องยนต์" name="EngineNo" value="" id="EngineNo" style="width: auto" oninvalid="this.setCustomValidity('กรอกเลขเครื่องยนต์')"
+                                                   oninput="setCustomValidity('')" required>
+                                        </td>
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <select class="form-control Brand" id="Brand" name="Brand" style="width: auto;" oninvalid="this.setCustomValidity('กรอกยี่ห้อรถ')"
+                                                    oninput="setCustomValidity('')" required>
+                                                <option value="">ไม่ระบุ</option>
+                                                <option value="1">Toyota</option>
+                                                <option value="2">Honda</option>
+                                                <option value="3">Nissan</option>
+                                                <option value="4">Mitsubishi</option>
+                                                <option value="5">Mazda</option>
+                                                <option value="6">Isuzu</option>
+                                                <option value="7">Suzuki</option>
+                                                <option value="8">Subaru</option>
+                                                <option value="9">Hino</option>
+                                                <option value="10">MG</option>
+                                                <option value="11">Lexus</option>
+                                            </select>
+                                            @*<input type="text" class="form-control Brand" placeholder="ยี่ห้อ" name="Brand" value="" id="Brand" style="width: auto" required>*@
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><label>วันที่สิ้นอายุภาษี<label style="color:red;">*</label></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="text" class="form-control bootstrap-datepicker ExpireDate" placeholder="คลิกเพื่อใส่วันที่สิ้นอายุภาษี" name="ExpireDate" value="" id="ExpireDate" style="width: 100%" readonly oninvalid="this.setCustomValidity('กรอกวันที่หมดอายุภาษี')"
+                                                   oninput="setCustomValidity('')" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><a style="color: red;">* กรุณากรอกข้อมูลทะเบียนรถตรงตามเอกสารเล่มทะเบียนรถ</a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>&nbsp
+                    <button type="submit" class="btn btn-lg btn-success" data-action="save" role="button"><i class="glyph-icon icon-save"></i>&nbsp บันทึก</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editVehicle" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title" id="lineModalLabel"><i class="glyph-icon tooltip-button  icon-car icon-size20"></i> แก้ไขข้อมูลรถฝึกหัดขับ</h3>
+            </div>
+            @using (Html.BeginForm("EditVehicle", "Vehicle", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="table-responsive">
+                                <table border="0" id="table-responsive">
+                                    <input class="form-control ind" id="ind" name="ind" type="hidden" />
+                                    <tr>
+                                        <td><label>เลขทะเบียน<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>จังหวัด<label style="color:red;">*</label></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="form-inline"><input type="text" class="form-control edit_Carno1" placeholder="หมวด" name="edit_Carno1" value="" id="edit_Carno1" style="width: 75px" required>&emsp;<input type="number" class="form-control edit_Carno2" placeholder="เลขทะเบียน" name="edit_Carno2" value="" id="edit_Carno2" style="width: 100px" required></div"></td>
+
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <input type="text" class="form-control edit_CarChangWat" placeholder="กรุณาพิมพ์ชื่อจังหวัด" name="edit_CarChangWat" id="edit_CarChangWat" value="" list="province" style="width: 100%" required />
+                                            <datalist id="province">
+                                                <option value="กระบี่"></option>
+                                                <option value="กรุงเทพมหานคร"></option>
+                                                <option value="กาญจนบุรี"></option>
+                                                <option value="กาฬสินธุ์"></option>
+                                                <option value="กำแพงเพชร"></option>
+                                                <option value="ขอนแก่น"></option>
+                                                <option value="จันทบุรี"></option>
+                                                <option value="ฉะเชิงเทรา"></option>
+                                                <option value="เชียงใหม่"></option>
+                                                <option value="เชียงราย"></option>
+                                                <option value="ชลบุรี"></option>
+                                                <option value="ชัยนาท"></option>
+                                                <option value="ชัยภูมิ"></option>
+                                                <option value="ชุมพร"></option>
+                                                <option value="ตรัง"></option>
+                                                <option value="ตราด"></option>
+                                                <option value="ตาก"></option>
+                                                <option value="นครนายก"></option>
+                                                <option value="นครปฐม"></option>
+                                                <option value="นครพนม"></option>
+                                                <option value="นครราชสีมา"></option>
+                                                <option value="นครศรีธรรมราช"></option>
+                                                <option value="นครสวรรค์"></option>
+                                                <option value="นนทบุรี"></option>
+                                                <option value="นราธิวาส"></option>
+                                                <option value="น่าน"></option>
+                                                <option value="บึงกาฬ"></option>
+                                                <option value="บุรีรัมย์"></option>
+                                                <option value="ปทุมธานี"></option>
+                                                <option value="ประจวบคีรีขันธ์"></option>
+                                                <option value="ปราจีนบุรี"></option>
+                                                <option value="ปัตตานี"></option>
+                                                <option value="เพชรบุรี"></option>
+                                                <option value="เพชรบูรณ์"></option>
+                                                <option value="แพร่"></option>
+                                                <option value="พระนครศรีอยุธยา"></option>
+                                                <option value="พะเยา"></option>
+                                                <option value="พังงา"></option>
+                                                <option value="พัทลุง"></option>
+                                                <option value="พิจิตร"></option>
+                                                <option value="พิษณุโลก"></option>
+                                                <option value="ภูเก็ต"></option>
+                                                <option value="แม่ฮ่องสอน"></option>
+                                                <option value="มหาสารคาม"></option>
+                                                <option value="มุกดาหาร"></option>
+                                                <option value="ยโสธร"></option>
+                                                <option value="ยะลา"></option>
+                                                <option value="ร้อยเอ็ด"></option>
+                                                <option value="ระนอง"></option>
+                                                <option value="ระยอง"></option>
+                                                <option value="ราชบุรี"></option>
+                                                <option value="เลย"></option>
+                                                <option value="ลพบุรี"></option>
+                                                <option value="ลำปาง"></option>
+                                                <option value="ลำพูน"></option>
+                                                <option value="ศรีสะเกษ"></option>
+                                                <option value="สกลนคร"></option>
+                                                <option value="สงขลา"></option>
+                                                <option value="สมุทรปราการ"></option>
+                                                <option value="สมุทรสงคราม"></option>
+                                                <option value="สมุทรสาคร"></option>
+                                                <option value="สระแก้ว"></option>
+                                                <option value="สระบุรี"></option>
+                                                <option value="สิงห์บุรี"></option>
+                                                <option value="สุโขทัย"></option>
+                                                <option value="สุพรรณบุรี"></option>
+                                                <option value="สุราษฎร์ธานี"></option>
+                                                <option value="สุรินทร์"></option>
+                                                <option value="หนองคาย"></option>
+                                                <option value="หนองบัวลำภู"></option>
+                                                <option value="อ่างทอง"></option>
+                                                <option value="อำนาจเจริญ"></option>
+                                                <option value="อุดรธานี"></option>
+                                                <option value="อุตรดิตถ์"></option>
+                                                <option value="อุทัยธานี"></option>
+                                                <option value="อุบลราชธานี"></option>
+                                            </datalist>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>ประเภทรถ<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>ประเภทเกียร์<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>ลักษณะ/มาตรฐานรถ</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-control edit_CarType" id="edit_CarType" name="edit_CarType" style="width: auto;" required>
+                                                <option value="">ไม่ระบุ</option>
+                                                <option value="1">รถยนต์บรรทุกส่วนบุคคล</option>
+                                                <option value="2">รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน</option>
+                                            </select>
+                                        </td>
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <select class="form-control edit_GearID" id="edit_GearID" name="edit_GearID" style="width: auto;" required>
+                                                <option value="">ไม่ระบุ</option>
+                                                <option value="1">เกียร์อัตโนมัติ</option>
+                                                <option value="2">เกียร์ธรรมดา</option>
+                                            </select>
+                                        </td>
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <select class="form-control edit_CarSubType" id="edit_CarSubType" name="edit_CarSubType" style="width: auto;">
+                                                <option value="">ไม่ระบุ</option>
+                                                <option value="1">กระบะบรรทุก</option>
+                                                <option value="2">เก๋งสองตอน</option>
+                                            </select>
+                                            @*<input type="text" class="form-control edit_CarSubType" placeholder="ลักษณะ/มาตรฐานรถ" name="edit_CarSubType" value="" id="edit_CarSubType" style="width: auto">*@
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>เลขตัวรถ<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>เลขเครื่องยนต์<label style="color:red;">*</label></label></td>
+                                        <td>&emsp;</td>
+                                        <td><label>ยี่ห้อ</label><label style="color:red;">*</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control edit_ChassisNo" placeholder="เลขตัวรถ" name="edit_ChassisNo" value="" id="edit_ChassisNo" style="width: auto" required></td>
+                                        <td>&emsp;</td>
+                                        <td><input type="text" class="form-control edit_EngineNo" placeholder="เลขเครื่องยนต์" name="edit_EngineNo" value="" id="edit_EngineNo" style="width: auto" required></td>
+                                        <td>&emsp;</td>
+                                        <td>
+                                            <select class="form-control edit_Brand" id="edit_Brand" name="edit_Brand" style="width: auto;" required>
+                                                <option value="">ไม่ระบุ</option>
+                                                <option value="1">Toyota</option>
+                                                <option value="2">Honda</option>
+                                                <option value="3">Nissan</option>
+                                                <option value="4">Mitsubishi</option>
+                                                <option value="5">Mazda</option>
+                                                <option value="6">Isuzu</option>
+                                                <option value="7">Suzuki</option>
+                                                <option value="8">Subaru</option>
+                                                <option value="9">Hino</option>
+                                                <option value="10">MG</option>
+                                                <option value="11">Lexus</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><label>วันที่สิ้นอายุภาษี<label style="color:red;">*</label></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control edit_ExpireDate" placeholder="กรุณาใส่วันที่สิ้นอายุภาษี" name="edit_ExpireDate" value="" id="edit_ExpireDate" style="width: 100%" onchange="cal();" readonly required></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><a style="color: red;">* กรุณากรอกข้อมูลทะเบียนรถตรงตามเอกสารเล่มทะเบียนรถ</a></td>
+                                    </tr>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>&nbsp
+                    <button type="submit" class="btn btn-lg btn-success" data-action="save" role="button"><i class="glyph-icon icon-save"></i>&nbsp แก้ไข</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel">ยืนยันการลบข้อมูล</h3>
+            </div>
+            @using (Html.BeginForm("DeleteVehicle", "Vehicle", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <!-- content goes here -->
+                    <span>คุณต้องการลบข้อมูล </span><span id="delTag" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                    <input type="hidden" name="frmId" id="frmId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success" data-action="save" role="button">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="redeleteModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel">ยืนยันการคืนสถานะข้อมูล</h3>
+            </div>
+            @using (Html.BeginForm("ReDeleteVehicle", "Vehicle", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <!-- content goes here -->
+                    <span>คุณต้องการคืนสถานะให้ </span><span id="redelTag" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                    <input type="hidden" name="frmreId" id="frmreId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success" data-action="save" role="button">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @* /datepicker_buddhist_year *@
+    <script src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+
+    <script src="~/Content/Jquery/jquery-ui.js"></script>
+    <script src="~/Content/identify/NatID.js"></script>
+
+    @* ติดตั้ง Dependencies *@
+    <script src="~/Content/plugins/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+    <script src="~/Content/plugins/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+
+    @*ติดตั้ง jquery.Thailand.js*@
+    <link href="~/Content/plugins/jquery.Thailand.js/dist/jquery.Thailand.min.css" rel="stylesheet" />
+    <script src="~/Content/plugins/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
+
+    <!-- Data tables -->
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script type="text/javascript">
+        /* Datatables responsive */
+
+        $(document).ready(function () {
+
+        $('#datatable-responsive').DataTable({
+            "responsive": true,
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "order": [],
+            "language": {
+                "search": "",
+                "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                "emptyTable": "ไม่มีข้อมูล",
+                "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                "lengthMenu": "แสดง  _MENU_  รายการ",
+                "paginate": {
+                    "first": "หน้าแรก",
+                    "previous": "ก่อนหน้า",
+                    "next": "ถัดไป",
+                    "last": "หน้าสุดท้าย"
+                }
+            },
+
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('offersDataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('offersDataTables'));
+            }
+        });
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+        });
+        $(document).ready(function () {
+            $('#editVehicle').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var carno1 = button.data('carno1');
+                var carno2 = button.data('carno2');
+                var carchangwat = button.data('changwat');
+                var cartype = button.data('cartype');
+                var gearid = button.data('gearid');
+                var carsubtype = button.data('carsubtype');
+                var brand = button.data('brand');
+                var chassisno = button.data('chassisno');
+                var engineno = button.data('engineno');
+                var expiredate = button.data('expiredate');
+                var modal = $(this);
+                modal.find('#ind').val(id);
+                modal.find('#edit_Carno1').val(carno1);
+                modal.find('#edit_Carno2').val(carno2);
+                modal.find('#edit_CarChangWat').val(carchangwat);
+                modal.find('#edit_CarType').val(cartype);
+                modal.find('#edit_GearID').val(gearid);
+                modal.find('#edit_CarSubType').val(carsubtype);
+                modal.find('#edit_Brand').val(brand);
+                modal.find('#edit_ChassisNo').val(chassisno);
+                modal.find('#edit_EngineNo').val(engineno);
+                modal.find('#edit_ExpireDate').val(expiredate);
+            });
+        });
+
+        $(document).ready(function () {
+            $('#deleteModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var carno1 = button.data('carno1');
+                var carno2 = button.data('carno2');
+                var str = carno1 + carno2;
+                var modal = $(this);
+                modal.find('#frmId').val(id);
+                document.getElementById("delTag").innerHTML = str;
+            });
+        });
+
+        $(document).ready(function () {
+            $('#redeleteModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var carno1 = button.data('carno1');
+                var carno2 = button.data('carno2');
+                var str = carno1 + carno2;
+                var modal = $(this);
+                modal.find('#frmreId').val(id);
+                document.getElementById("redelTag").innerHTML = str;
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#ExpireDate").datepicker({
+                autoclose: true,
+                dateFormat: 'yy-mm-dd',
+                isBuddhist: true,
+                orientation: "bottom left",
+                yearRange: "-100:+0",
+                dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+                dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                changeMonth: true,
+                changeYear: true,
+                beforeShow: function () {
+                    if ($(this).val() != "") {
+                        var arrayDate = $(this).val().split("-");
+                        arrayDate[0] = parseInt(arrayDate[0]) - 543;
+                        $(this).val(arrayDate[0] + "-" + arrayDate[1] + "-" + arrayDate[2]);
+                    }
+                    setTimeout(function () {
+                        $.each($(".ui-datepicker-year option"), function (j, k) {
+                            var textYear = parseInt($(".ui-datepicker-year option").eq(j).val());
+                            $(".ui-datepicker-year option").eq(j).text(textYear);
+                        });
+                    }, 50);
+                },
+                onChangeMonthYear: function () {
+                    setTimeout(function () {
+                        $.each($(".ui-datepicker-year option"), function (j, k) {
+                            var textYear = parseInt($(".ui-datepicker-year option").eq(j).val());
+                            $(".ui-datepicker-year option").eq(j).text(textYear);
+                        });
+                    }, 50);
+                },
+                onClose: function () {
+                    if ($(this).val() != "" && $(this).val() == dateBefore) {
+                        var arrayDate = dateBefore.split("-");
+                        arrayDate[0] = parseInt(arrayDate[0]);
+                        $(this).val(arrayDate[0] + "-" + arrayDate[1] + "-" + arrayDate[2]);
+                    }
+                },
+                onSelect: function (dateText, inst) {
+                    dateBefore = $(this).val();
+                    var arrayDate = dateText.split("-");
+                    arrayDate[0] = parseInt(arrayDate[0]);
+                    $(this).val(arrayDate[0] + "-" + arrayDate[1] + "-" + arrayDate[2]);
+                }
+            }).keydown(function (e) {
+                return false;
+            });
+        });
+
+        $(document).ready(function () {
+            var d = new Date();
+            var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+            $("#edit_ExpireDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                defaultDate: toDay,
+                autoclose: true,
+                dateFormat: 'yy-mm-dd',
+                isBuddhist: true,
+                orientation: "bottom left",
+                yearRange: "-100:+0",
+                dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+                dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+            }).keydown(function (e) {
+                return false;
+            });
+        //    $("#edit_ExpireDate").datepicker({
+        //        autoclose: true,
+        //        dateFormat: 'yy-mm-dd',
+        //        isBuddhist: true,
+        //        orientation: "bottom left",
+        //        yearRange: "-100:+0",
+        //        dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+        //        dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+        //        monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+        //        monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        //        changeMonth: true,
+        //        changeYear: true,
+        //        beforeShow: function () {
+        //            if ($(this).val() != "") {
+        //                var arrayDate = $(this).val().split("-");
+        //                arrayDate[0] = parseInt(arrayDate[0]) - 543;
+        //                $(this).val(arrayDate[0] + "-" + arrayDate[1] + "-" + arrayDate[2]);
+        //            }
+        //            setTimeout(function () {
+        //                $.each($(".ui-datepicker-year option"), function (j, k) {
+        //                    var textYear = parseInt($(".ui-datepicker-year option").eq(j).val());
+        //                    $(".ui-datepicker-year option").eq(j).text(textYear);
+        //                });
+        //            }, 50);
+        //        },
+        //        onChangeMonthYear: function () {
+        //            setTimeout(function () {
+        //                $.each($(".ui-datepicker-year option"), function (j, k) {
+        //                    var textYear = parseInt($(".ui-datepicker-year option").eq(j).val());
+        //                    $(".ui-datepicker-year option").eq(j).text(textYear);
+        //                });
+        //            }, 50);
+        //        },
+        //        onClose: function () {
+        //            if ($(this).val() != "" && $(this).val() == dateBefore) {
+        //                var arrayDate = dateBefore.split("-");
+        //                arrayDate[0] = parseInt(arrayDate[0]);
+        //                $(this).val(arrayDate[0] + "-" + arrayDate[1] + "-" + arrayDate[2]);
+        //            }
+        //        },
+        //        onSelect: function (dateText, inst) {
+        //            dateBefore = $(this).val();
+        //            var arrayDate = dateText.split("-");
+        //            arrayDate[0] = parseInt(arrayDate[0]);
+        //            $(this).val(arrayDate[0] + "-" + arrayDate[1] + "-" + arrayDate[2]);
+        //        }
+        //    }).keydown(function (e) {
+        //        return false;
+        //    });
+        });
+    </script>
+
+    <script>
+        function cal() {
+            var input = document.getElementById("ExpireDate").value;
+            var pieces = input.split("-");
+            var yearborn = pieces[pieces.length - 3]
+            var monthborn = pieces[pieces.length - 2]
+            var dayborn = pieces[pieces.length - 1]
+
+
+            var currentyear = (new Date()).getFullYear();
+            var currentmonth = (new Date()).getMonth() + 1;
+            var currentday = (new Date()).getDate();
+            var age = currentyear - yearborn;
+
+            if (currentmonth < monthborn) {
+                var age = age - 1;
+                console.log("month", age);
+            } else if (currentday < dayborn && currentmonth <= monthborn) {
+                var age = age - 1;
+                console.log("year", age);
+
+            }
+        }
+
+        function cal2() {
+            var input = document.getElementById("edit_ExpireDate").value;
+            var pieces = input.split("-");
+            var yearborn = pieces[pieces.length - 3]
+            var monthborn = pieces[pieces.length - 2]
+            var dayborn = pieces[pieces.length - 1]
+
+
+            var currentyear = (new Date()).getFullYear();
+            var currentmonth = (new Date()).getMonth() + 1;
+            var currentday = (new Date()).getDate();
+            var age = currentyear - yearborn;
+
+            if (currentmonth < monthborn) {
+                var age = age - 1;
+                console.log("month", age);
+            } else if (currentday < dayborn && currentmonth <= monthborn) {
+                var age = age - 1;
+                console.log("year", age);
+
+            }
+        }
+    </script>
+
+}

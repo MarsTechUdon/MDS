@@ -1,0 +1,26 @@
+Account Nickname,"",Ledger Balance,"9,784.80",
+Account No.,"060-0-47971-1",Available Balance,"9,784.80",
+
+Trans Date,Effect Date,Description,Debit,Credit,Balance,Channel,
+"12 Oct 2018 15:50","12 Oct 2018","Transfer to/from C/A","3,000.00","","9,784.80","BR0060"
+"12 Oct 2018 15:44","12 Oct 2018","Transfer to/from C/A","24,496.08","","12,784.80","BR0060"
+"12 Oct 2018 15:39","12 Oct 2018","Transfer to/from C/A","4,410.00","","37,280.88","BR0060"
+"12 Oct 2018 15:39","12 Oct 2018","Fee for Bulk File Processing","30.00","","41,690.88","BR0060"
+"11 Oct 2018 23:59","11 Oct 2018","Fee for Bulk File Processing","30.00","","41,720.88","AUTO"
+"11 Oct 2018 23:59","11 Oct 2018","Transfer to/from C/A","2,493.92","","41,750.88","AUTO"
+"10 Oct 2018 16:09","10 Oct 2018","Payment for Goods /Services","13,900.00","","44,244.80","IB"
+"","","","","","",""
+"10 Oct 2018 16:09","10 Oct 2018","Payment for Goods /Services","13,900.00","","44,244.80","IB"
+"08 Oct 2018 13:14","08 Oct 2018","Transfer to/from C/A","176,550.00","","58,144.80","BR0060"
+"08 Oct 2018 13:14","08 Oct 2018","Fee for Bulk File Processing","30.00","","234,694.80","BR0060"
+"12 Oct 2018 15:39","12 Oct 2018","Fee for Bulk File Processing","30.00","","41,690.88","BR0060"
+"11 Oct 2018 23:59","11 Oct 2018","Fee for Bulk File Processing","30.00","","41,720.88","AUTO"
+"11 Oct 2018 23:59","11 Oct 2018","Transfer to/from C/A","2,493.92","","41,750.88","AUTO"
+"10 Oct 2018 16:09","10 Oct 2018","Payment for Goods /Services","13,900.00","","44,244.80","IB"
+"08 Oct 2018 13:14","08 Oct 2018","Transfer to/from C/A","176,550.00","","58,144.80","BR0060"
+"08 Oct 2018 13:14","08 Oct 2018","Fee for Bulk File Processing","30.00","","234,694.80","BR0060"
+"","","Total","224,940.00","0.00","","",
+
+Notes:
+ The Balance column reflects the balance at the time the transaction was made.
+ The Transfer Reference is provided by the sender. The bank is not responsible for its content or appropriateness.

@@ -1,0 +1,1319 @@
+﻿@using MDS.Models
+@model MDS.Models.StudentModel
+@{
+    Layout = "~/Views/Shared/_LayoutPublic.cshtml";
+    ViewBag.Title = "รายละเอียดนักเรียน";
+   
+}
+<style>
+    .icon-size20 {
+        font-size: 20px;
+    }
+
+    .icon-size23 {
+        font-size: 23px;
+    }
+
+    /*Studenttype*/
+    .none {
+        display: none;
+    }
+
+    .block {
+        display: block;
+    }
+
+    input[type="radio"]:checked + label {
+        color: #bbb;
+    }
+
+    table, th, td {
+        border: 1px solid #ededed !important;
+    }
+
+    /*CSS Tooltip*/
+    /*[data-toggle="tooltip"] {
+        margin: 20px 60px;
+        position: relative;
+        display: inline-block;
+    }*/
+
+    [data-toggle="tooltip"]::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 4px 6px 0 6px;
+        border-style: solid;
+        border-color: #181919 transparent transparent transparent;
+        z-index: 99;
+        opacity: 0;
+    }
+
+    [data-placement='left']::before {
+        left: 0%;
+        top: 50%;
+        margin-left: -12px;
+        transform: translateY(-50%) rotate(-90deg)
+    }
+
+    [data-placement='top']::before {
+        left: 50%;
+    }
+
+    [data-placement='bottom']::before {
+        top: 100%;
+        margin-top: 8px;
+        transform: translateX(-50%) translatey(-100%) rotate(-180deg)
+    }
+
+    [data-placement='right']::before {
+        left: 100%;
+        top: 50%;
+        margin-left: 1px;
+        transform: translateY(-50%) rotate(90deg)
+    }
+
+    [data-toggle="tooltip"]::after {
+        content: attr(tooltip-title);
+        position: absolute;
+        left: 50%;
+        top: -6px;
+        transform: translateX(-65%) translateY(-100%);
+        background: #181919;
+        text-align: center;
+        color: #fff;
+        padding: 4px 2px;
+        font-size: 16px;
+        min-width: 150px;
+        border-radius: 5px;
+        pointer-events: none;
+        padding: 4px 4px;
+        z-index: 99;
+        opacity: 0;
+    }
+
+    [data-placement='left']::after {
+        left: 0%;
+        top: 50%;
+        margin-left: -7px;
+        transform: translateX(-100%) translateY(-50%);
+    }
+
+    [data-placement='top']::after {
+        left: 50%;
+    }
+
+    [data-placement='bottom']::after {
+        top: 100%;
+        margin-top: 8px;
+        transform: translateX(-50%) translateY(0%);
+    }
+
+    [data-placement='right']::after {
+        left: 100%;
+        top: 50%;
+        margin-left: 8px;
+        transform: translateX(0%) translateY(-50%);
+    }
+
+    [data-toggle="tooltip"]:hover::after, [data-toggle="tooltip"]:hover::before {
+        opacity: 1
+    }
+</style>
+<style>
+    .card {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        border-radius: 3px;
+        color: rgba(0,0,0, 0.87);
+        background: #fff;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    }
+
+        .card .card-image {
+            height: 60%;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card .card-image img {
+                width: 100%;
+                height: 100%;
+                border-top-left-radius: 2px;
+                border-top-right-radius: 2px;
+                pointer-events: none;
+            }
+
+            .card .card-image .card-image-headline {
+                position: absolute;
+                bottom: 16px;
+                left: 18px;
+                color: #fff;
+                font-size: 2em;
+            }
+
+        .card .content {
+            padding: 15px;
+        }
+
+    .loader {
+        z-index: 1;
+        border: 10px solid #fbfbfb;
+        border-top: 10px solid #5ba4d8;
+        border-radius: 50%;
+        width: 75px;
+        height: 75px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        position: absolute;
+        top: 105px;
+        left: 50%;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cnotice {
+        position: absolute;
+        z-index: 1;
+        top: 100px;
+        right: 10px;
+        display: block;
+        border-radius: 5px;
+        background-color: #FFF;
+        padding: 15px;
+        box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.42), 0 3px 20px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -ms-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .custom-file-upload {
+        position: absolute;
+        display: inline-block;
+        cursor: pointer;
+        font-size: 26px;
+        left: 40%;
+        top: 35%;
+    }
+
+    .pic-btn {
+        font-size: 20px;
+        position: absolute;
+        top: 50%;
+        color: #000;
+        background-color: #fff;
+        padding: 10px 10px;
+        border-radius: 50%;
+    }
+
+    .pic-hov i {
+        transition-duration: .5s;
+        transform: scale(0);
+        transition: transform 300ms 0ms cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    }
+
+    .pic-hov:hover i {
+        transform: scale(0.8);
+        transition: transform 300ms 100ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: rgba(0, 0, 0, 0) 0px 14px 26px -12px, rgba(0, 0, 0, 0.30) 0px 4px 23px 0px;
+    }
+
+    .pic-hov:hover img {
+        opacity: .5;
+        background-color: #fff;
+    }
+
+    /* CSS3 basic */
+    .loading-spinner {
+        position: absolute;
+        width: 85px;
+        height: 85px;
+        margin: 0 auto;
+        display: none;
+        z-index: 1;
+        top: 10%;
+        left: 55%;
+    }
+
+        .loading-spinner i {
+            position: absolute;
+            top: 25px;
+            left: 52px;
+            display: block;
+            -webkit-transform-origin: -20px;
+            border-radius: 50%;
+        }
+
+            .loading-spinner i:nth-child(1) {
+                width: 14px;
+                height: 14px;
+                -webkit-animation: spin 1.8s .1s infinite;
+            }
+
+            .loading-spinner i:nth-child(2) {
+                width: 12px;
+                height: 12px;
+                -webkit-animation: spin 1.8s .2s infinite;
+            }
+
+            .loading-spinner i:nth-child(3) {
+                width: 10px;
+                height: 10px;
+                -webkit-animation: spin 1.8s .3s infinite;
+            }
+
+            .loading-spinner i:nth-child(4) {
+                width: 8px;
+                height: 8px;
+                -webkit-animation: spin 1.8s .4s infinite;
+            }
+
+            .loading-spinner i:nth-child(5) {
+                width: 6px;
+                height: 6px;
+                -webkit-animation: spin 1.8s .5s infinite;
+            }
+
+            .loading-spinner i:nth-child(6) {
+                width: 4px;
+                height: 4px;
+                -webkit-animation: spin 1.8s .6s infinite;
+            }
+</style>
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.customByKarin.css" rel="stylesheet" />
+<style type="text/css">
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none;
+        line-height: 30px;
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+
+    @@media screen and (max-width: 1920px) {
+        .LangExam {
+            width: 27%;
+        }
+    }
+
+    @@media screen and (max-width: 1400px) {
+        .LangExam {
+            width: 25%;
+        }
+    }
+
+    @@media screen and (max-width: 1280px) {
+        .LangExam {
+            width: 36%;
+        }
+    }
+
+    @@media screen and (max-width: 800px) {
+        .LangExam {
+            width: 100%;
+        }
+
+        .msgLabel {
+            padding: 10% 0 70% 0;
+        }
+
+        .tabtext_p {
+            font-size: 14px !important;
+        }
+
+        .img-responsive {
+            width: 150px;
+            margin-top: 0px;
+        }
+    }
+</style>
+<link href="~/assets/widgets/datatable/datatable.css" rel="stylesheet" />
+<style type="text/css">
+    /* === Mobile devices - Portrait (320px wide) === */
+
+    @@media only screen and (min-width: 20em) {
+        .hero-box,
+        .hero-box-smaller {
+            padding: 3em 0;
+        }
+
+        .hero-heading {
+            font-size: 15px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 11.5px;
+            padding: 0 !important;
+        }
+
+        .hero-btn {
+            height: 40px;
+            line-height: 36px;
+            min-width: 200px;
+            font-size: 16px;
+            padding: 0 20px;
+            margin: 20px auto 0;
+        }
+
+        .container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .bg-holder {
+            display: none;
+        }
+
+        .features-tour-box .bg-holder {
+            display: none;
+        }
+        /*.description {
+            display: none;
+        }*/
+    }
+    /* === Mobile devices - Landscape (480px wide) === */
+
+    @@media only screen and (min-width: 30em) {
+        .hero-box {
+            padding: 3em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 2em 0;
+        }
+
+        .hero-heading {
+            font-size: 22px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 16px;
+            padding: 0 !important;
+        }
+
+        .hero-btn {
+            margin-bottom: 5px;
+        }
+    }
+    /* === Tablet devices - Portrait (768px wide) === */
+
+    @@media only screen and (min-width: 48em) {
+        .hero-box {
+            padding: 6em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 4em 0;
+        }
+
+        .hero-heading {
+            font-size: 23px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 16px;
+            padding: 0 !important;
+        }
+
+        .hero-btn {
+            font-size: 23px;
+            height: 80px;
+            line-height: 77px;
+            padding: 0 30px;
+            min-width: 300px;
+            margin: 20px auto 0;
+        }
+
+        body .top-bar .user-account-btn {
+            display: block;
+        }
+    }
+    /* === Tablet devices - Landscape (900px wide) === */
+
+    @@media only screen and (min-width: 56.25em) {
+        .hero-box {
+            padding: 9em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 6em 0;
+        }
+
+        .hero-heading {
+            font-size: 30px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 21px;
+            padding: 0 !important;
+        }
+
+        .container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        body .main-header .header-nav.collapse {
+            display: block;
+        }
+
+        body .right-header-btn .search-btn {
+            display: block;
+        }
+
+        body #mobile-navigation {
+            display: none;
+        }
+
+        .bg-holder {
+            display: block;
+        }
+    }
+    /* === Netbook devices (1100px wide) === */
+
+    @@media only screen and (min-width: 68.75em) {
+        .hero-box {
+            padding: 13em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 2em 0;
+        }
+
+        .hero-heading {
+            font-size: 30px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 21px;
+            padding: 0 !important;
+        }
+
+        body .main-header .header-logo {
+            width: 258px;
+        }
+
+        .features-tour-box .bg-holder {
+            display: block;
+        }
+    }
+    /* === Desktop devices (1300px wide) === */
+
+    @@media only screen and (min-width: 81.25em) {
+        .hero-box {
+            padding: 14em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 2em 0;
+        }
+
+        .hero-heading {
+            font-size: 30px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 21px;
+            padding: 0 !important;
+        }
+    }
+    /* === Desktop devices (1600px wide) === */
+
+    @@media only screen and (min-width: 81.25em) {
+        .hero-box {
+            padding: 14em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 6em 0;
+        }
+
+        .hero-heading {
+            font-size: 30px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 21px;
+            padding: 0 !important;
+        }
+    }
+
+    @@media only screen and (max-width: 460px) {
+
+        .box-sm {
+            width: auto;
+        }
+
+        #page-content {
+            padding: 10px;
+        }
+
+        #page-title {
+            padding: 10px 0 15px;
+            text-align: center;
+        }
+
+        .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+            margin-bottom: 20px;
+        }
+
+        .content-box {
+            margin-top: 0 !important;
+        }
+
+        .row.mrg20B {
+            margin-bottom: 0 !important;
+        }
+
+        .timeline-box .popover {
+            width: auto;
+        }
+
+        .header-buttons-separator,
+        #progress-btn,
+        #page-title p,
+        .dashboard-box .list-grade,
+        .tooltip .tooltip-arrow,
+        .todo-box .btn,
+        .todo-box .bs-label {
+            display: none;
+        }
+
+        .cta-box-btn a {
+            display: block;
+        }
+
+            .cta-box-btn a span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        .testimonial-box-big .testimonial-content {
+            margin: 0;
+            padding: 10px;
+        }
+
+            .testimonial-box-big .testimonial-content p {
+                font-size: 14px;
+            }
+
+            .testimonial-box-big .testimonial-content .glyph-icon {
+                font-size: 25px;
+            }
+
+        .feature-box .feature-img {
+            display: none;
+        }
+
+        .feature-box .feature-content {
+            padding: 0;
+        }
+
+        .features-tour-box,
+        .xlarge-padding,
+        .large-padding {
+            padding: 25px 0;
+        }
+
+        .clients-title {
+            font-size: 25px;
+            padding: 0 10px;
+        }
+
+        .clients-desc {
+            font-size: 22px;
+            padding: 10px;
+        }
+
+        .tick-feature {
+            display: block;
+            text-align: left;
+        }
+
+        .tabs-nav li {
+            display: block;
+            margin: 5px;
+        }
+    }
+
+    .bg-gradient-10 {
+        background: radial-gradient(circle at 8.75% 8.45%, #dd7e00, transparent 100%),radial-gradient(circle at 94.06% 82.83%, #ffffff, transparent 100%),radial-gradient(circle at 50% 50%, #e19501, #dd7f01 100%)
+    }
+
+    table, th, td {
+        border: 1px solid LightGray !important;
+        color: black;
+    }
+</style>
+
+<div id="page-content" class="center-margin frontend-components">
+
+
+    @if (Model.Result != null && Model.Result == "Y")
+    {
+        <div class="main-header wow animated animated bg-red font-inverse" style="visibility: visible; background-color: #3598db;">
+            <div class="container">
+                <h2>รายละเอียดนักเรียน</h2>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-body">
+                @*<h3 class="title-hero">
+                        รายละเอียดนักเรียน
+                    </h3>*@
+                <div class="example-box-wrapper">
+                    <div class="row">
+                        <div class="col-md-12" style="margin-bottom:0px !important;">
+                            <label class="font-size-20" style="color:darkorange;">
+                                ชื่อ @Model.Header1
+                            </label>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom:0px !important;">
+                            <label class="font-size-20" style="color:black;">
+                                หลักสูตร @Model.Header2
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-box tabs">
+            <h3 class="content-box-header bg-blue-alt" style="background-color: #3598db;">
+                <span id="tabtext_p" class="font-size-18 tabtext_p">title</span>
+                <ul>
+                    @*<li data-toggle="tooltip" data-placement="top" tooltip-title="ข้อมูลนักเรียน">
+                            <a href="#tabs-1" id="tebclick_1" value="1">
+                                <i class="glyph-icon tooltip-button icon-user icon-size23"></i>
+                            </a>
+                            <input type="hidden" id="textSet_1" value="ข้อมูลนักเรียน" />
+                        </li>*@
+                    <li data-toggle="tooltip" data-placement="top" tooltip-title="ตารางเรียน">
+                        <a href="#tabs-2" id="tebclick_2" value="2">
+                            <i class="glyph-icon tooltip-button icon-table icon-size23"></i>
+                        </a>
+                        <input type="hidden" id="textSet_2" value="ตารางเรียน" />
+                    </li>
+                    <li data-toggle="tooltip" data-placement="top" tooltip-title="รายละเอียดการชำระ">
+                        <a href="#tabs-3" id="tebclick_3" value="3">
+                            <i class="glyph-icon tooltip-button icon-linecons-money icon-size23"></i>
+                        </a>
+                        <input type="hidden" id="textSet_3" value="รายละเอียดการชำระ" />
+                    </li>
+                    <li data-toggle="tooltip" data-placement="top" tooltip-title="Pretest">
+                        <a href="#tabs-4" id="tebclick_4" value="4">
+                            <i class="glyph-icon tooltip-button icon-smile-o icon-size23"></i>
+                        </a>
+                        <input type="hidden" id="textSet_4" value="Pretest" />
+                    </li>
+                </ul>
+            </h3>
+            @* set TabActive *@
+            <input type="hidden" id="tabActive" value="@ViewBag.tabActive" />
+            @* set Studenttype *@
+            <input type="hidden" id="studenttypeChecked" value="@Model.studenttype" />
+          
+            <div id="tabs-2">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom:0px !important; text-align:center;">
+                        <label class="font-size-50" style="color:darkorange;">
+                            ตารางเรียน
+                        </label>
+                    </div>
+                </div>
+                <div class="row table-responsive">
+                    <table id="datatable-TableBooking" class="table table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th style="width: 150px!important;">วันที่</th>
+                                <th style="width: 150px!important;">เวลา</th>
+                                <th>ภาค</th>
+                                <th>วิชา</th>
+                                <th>ครูสอน</th>
+                            </tr>
+                        </thead>
+                        <tbody class="options">
+                            @if (Model.ListOfTableStudent != null)
+                            {
+                                foreach (var ListTableStudent in Model.ListOfTableStudent as List<TableStudentModel>)
+                                {
+                                    if (ListTableStudent.style != "")
+                                    {
+                                        <tr style="@ListTableStudent.style">
+                                            <td>@ListTableStudent.studydate</td>
+                                            <td>@ListTableStudent.studystime - @ListTableStudent.studyetime</td>
+                                            <td>@ListTableStudent.subjecttypedesc</td>
+                                            <td>@ListTableStudent.subjectnickname</td>
+                                            <td><a href="#" style="color: black!important;" onclick="pushImage('@ListTableStudent.cardimg','@ListTableStudent.teachername')">@ListTableStudent.nickname <i class="glyph-icon icon-camera "></i></a></td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@ListTableStudent.studydate</td>
+                                            <td>@ListTableStudent.studystime - @ListTableStudent.studyetime</td>
+                                            <td>@ListTableStudent.subjecttypedesc</td>
+                                            <td>@ListTableStudent.subjectnickname</td>
+                                            <td><a href="#" style="color: black!important;" onclick="pushImage('@ListTableStudent.cardimg','@ListTableStudent.teachername')">@ListTableStudent.nickname <i class="glyph-icon icon-camera "></i></a></td>
+                                        </tr>
+                                    }
+
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div id="tabs-3">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom:0px !important; text-align:center;">
+                        <label class="font-size-50" style="color:darkorange;">
+                            รายละเอียดการชำระ
+                        </label>
+                    </div>
+                </div>
+
+                @if (Convert.ToInt32(Convert.ToDecimal(Model.ListOfReceipt.remain)) > 0)
+                {
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                <span style="font-size:1.6em; margin-right:5px;">คงเหลือ :</span>
+                                <button class="btn btn-md btn-info float-right" style="width:150px;">
+                                    <span>@Convert.ToDecimal(Convert.ToInt32(Convert.ToDecimal(Model.ListOfReceipt.remain))).ToString("#,###.00")</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                <span style="font-size:1.6em; margin-right:5px;">คงเหลือ :</span>
+                                <button class="btn btn-md btn-info float-right" style="width:150px;">
+                                    <span>0.00</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <table id="datatable-responsive" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            @*<th style="width: 100px!important;">เลขที่</th>*@
+                            <th>วันที่ทำรายการ</th>
+                            <th>วันที่บันทึก</th>
+                            <th>รายละเอียด</th>
+                            <th>จำนวนเงิน</th>
+                            @*<th>หมายเหตุ</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListPayment != null)
+                        {
+                            foreach (var ListPayment in Model.ListPayment as IList<PaymentModel>)
+                            {
+                                if (ListPayment.rno != "99")
+                                {
+                                    <tr>
+                                        @*<td>@ListPayment.rno</td>*@
+                                        <td>@ListPayment.paydate</td>
+                                        <td>@ListPayment.keydate</td>
+                                        <td>@ListPayment.detail</td>
+                                        <td>
+                                            @if (Convert.ToInt32(Convert.ToDecimal(ListPayment.amount)) < 0)
+                                            {
+                                                <label style="color:red;">(@Convert.ToDecimal(Convert.ToInt32(Convert.ToDecimal(ListPayment.amount)) * (-1)).ToString("#,###.00"))</label>
+                                            }
+                                            else
+                                            {
+                                                @Convert.ToDecimal(ListPayment.amount).ToString("#,###.00")
+                                            }
+
+                                        </td>
+                                        @*<td>@ListPayment.remark</td>*@
+                                    </tr>
+                                }
+                            }
+
+                        }
+
+                    </tbody>
+                    @{
+                        var sumData = Model.ListPayment as IList<PaymentModel>;
+                    }
+                    @if (sumData.Count != 0)
+                    {
+                        <tfoot>
+                            <tr>
+                                @*<td></td>*@
+                                <td></td>
+                                <td></td>
+                                <td>@sumData.FirstOrDefault(x => x.rno == "99").detail</td>
+                                <td>@Convert.ToDecimal(Convert.ToInt32(Convert.ToDecimal(sumData.FirstOrDefault(x => x.rno == "99").amount))).ToString("#,###.00")</td>
+                                @*<td>@sumData.FirstOrDefault(x => x.rno == "99").remark</td>*@
+                                @*<td style="text-align:center;"></td>*@
+                            </tr>
+                        </tfoot>
+                    }
+
+                </table>
+
+            </div>
+
+
+            <div id="tabs-4">
+                <div class="row">
+                    <div class="col-sm-12" style="margin-bottom:0px !important; text-align:center;">
+                        <label class="font-size-50" style="color:darkorange;">
+                            MDS Pretest
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    @using (Html.BeginForm("GetExam", "public", FormMethod.Post, new { @id = "LageForm" }))
+                    {
+                        <input type="hidden" name="studentind" value="@Model.studentind" />
+                        <input type="hidden" name="LangValue" id="LangValue" value="TH" />
+                    }
+                    <div class="col-xs-12 col-sm-3 LangExam float-right" style="padding-right:0px!important;">
+                        <div class="col-sm-12 float-left" style="margin-bottom:5px!important;">
+                            <div class="input-group custom-search-form">
+                                @Html.DropDownList("LangList", new SelectList(ViewData["Lang"] as List<SelectListItem>, "Value", "Text"), new { @class = "form-control", style = "font-size: 0.8em;", @onchange = @"getLang();" })
+                                <span class="input-group-btn">
+                                    <a class="btn btn-info tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="คลิกทำข้อสอบ" id="btnSubmitExam">
+                                        <i class="glyph-icon icon-file icon-size20"></i> ทำแบบทดสอบ
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <table id="datatable-PreTest" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>เริ่มต้นสอบ</th>
+                                <th>สิ้นสุดการสอบ</th>
+                                <th>คะแนน</th>
+                                <th>ผลสอบ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="options">
+                            @if (Model.ListOfPretest != null)
+                            {
+                                foreach (var ListPretest in Model.ListOfPretest as List<PretestModel>)
+                                {
+                                    <tr>
+                                        <td>@ListPretest.examdate</td>
+                                        <td>@ListPretest.finishdate</td>
+                                        <td>@ListPretest.examscore</td>
+                                        <td><span class="font-size-20" style="@ListPretest.style font-weight:bold;">@ListPretest.result</span></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 msgLabel" style="padding: 10% 0 48% 0; text-align: center;">
+                <label class="font-size-35" style="color:black; ">
+                    @Model.Message
+                </label>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="ImageModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel"> <i class="glyph-icon icon-camera font-size-20"></i> ครูผู้สอน</h3>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom:0px !important;">
+                        <label class="font-size-20" style="color:black;" id="nicknameTeacher"></label>
+                    </div>
+                </div>
+                <div class="row" style="text-align:center;">
+                    <img src="" id="ImgTeacher" width="60%" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    @*/* datepicker_buddhist_year */*@
+    <script src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+
+    @*/* jQuery UI Tabs */*@
+    <script src="~/assets/widgets/tabs/tabs.js"></script>
+    <script src="~/assets/widgets/tabs-ui/tabs.js"></script>
+
+    @*/*CreateStudent*/*@
+    <script src="~/Content/Jquery/jquery-ui.js"></script>
+    <script src="~/Content/identify/NatID-Teacher.js"></script>
+
+
+
+    @*/******************* StudentDetail *******************/*@
+    <script>
+        $(document).ready(function () {
+            $("#success-alert").hide();
+            $("#success-alert").fadeTo(3000, 1000).slideUp(700, function () {
+                $("#success-alert").slideUp(1000);
+            });
+        });
+        $(document).ready(function () {
+            $('input[type=radio]').change(function (event) {
+                var id = $(this).data('id');
+                if (id == 'dividcard') {
+                    $('#' + id).addClass('block');
+                    $('#' + id).removeClass('none');
+                    $('#divpassport').removeClass('block');
+                    $('#divpassport').addClass('none');
+                    $('#divnonidcard').removeClass('block');
+                    $('#divnonidcard').addClass('none');
+                    $('#studenttype').val('1');
+                }
+                else if (id == 'divpassport') {
+                    $('#' + id).addClass('block');
+                    $('#' + id).removeClass('none');
+                    $('#dividcard').removeClass('block');
+                    $('#dividcard').addClass('none');
+                    $('#divnonidcard').removeClass('block');
+                    $('#divnonidcard').addClass('none');
+                    $('#studenttype').val('2');
+                    $('.setstudentType').val('2');
+                }
+                else if (id == 'divnonidcard') {
+                    $('#dividcard').addClass('block');
+                    $('#dividcard').removeClass('none');
+                    $('#divpassport').removeClass('block');
+                    $('#divpassport').addClass('none');
+                    $('#divnonidcard').removeClass('block');
+                    $('#divnonidcard').addClass('none');
+                    $('#studenttype').val('3');
+                }
+            });
+
+
+
+        });
+
+    </script>
+    @* open title tab Student *@
+    <script type="text/javascript">
+        /* jQuery UI Tabs */
+        $(function () {
+            "use strict";
+            $(".tabs").tabs();
+        });
+        $(function () {
+            "use strict";
+            $(".tabs-hover").tabs({
+                event: "mouseover"
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#tebclick_1").click(function () {
+                $("#tabtext_p").fadeOut(function () {
+                    $("#tabtext_p").text($('#textSet_1').val()).fadeIn();
+                })
+                if ($('#studenttypeChecked').val() == '1') {
+                    $('input[data-id="dividcard"]').prop("checked", true);
+                    $('#dividcard').addClass('block');
+                    $('#dividcard').removeClass('none');
+                }
+                else if ($('#studenttypeChecked').val() == '2') {
+                    $('input[data-id="divpassport"]').prop("checked", true);
+                    $('#divpassport').addClass('block');
+                    $('#divpassport').removeClass('none');
+                }
+                else if ($('#studenttypeChecked').val() == '3') {
+                    $('input[data-id="divnonidcard"]').prop("checked", true);
+                    $('#dividcard').addClass('block');
+                    $('#dividcard').removeClass('none');
+                }
+            })
+            $("#tebclick_2").click(function () {
+                $("#tabtext_p").fadeOut(function () {
+                    $("#tabtext_p").text($('#textSet_2').val()).fadeIn();
+                })
+            })
+            $("#tebclick_3").click(function () {
+                $("#tabtext_p").fadeOut(function () {
+                    $("#tabtext_p").text($('#textSet_3').val()).fadeIn();
+                })
+            })
+            $("#tebclick_4").click(function () {
+                $("#tabtext_p").fadeOut(function () {
+                    $("#tabtext_p").text($('#textSet_4').val()).fadeIn();
+                })
+            })
+
+            if ($('#tabActive').val() == '1') {
+                $('#tebclick_1').trigger('click');
+            }
+            else if ($('#tabActive').val() == '2') {
+                $('#tebclick_2').trigger('click');
+            }
+            else if ($('#tabActive').val() == '3') {
+                $('#tebclick_3').trigger('click');
+            }
+            else if ($('#tabActive').val() == '4') {
+                $('#tebclick_4').trigger('click');
+            }
+        });
+    </script>
+
+
+
+    @******************* Money *******************@
+    <script src="~/assets/widgets/datatable/datatable.js"></script>
+    <script src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script src="~/assets/jQuery/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+
+        /* Datatables responsive */
+        $(document).ready(function () {
+            $('#datatable-PreTest').DataTable({
+                "responsive": true,
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [],
+                "language": {
+                    "search": "ค้นหา :",
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                }
+            });
+
+            $('#datatable-TableBooking').DataTable({
+                "responsive": true,
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [],
+                "language": {
+                    "search": "ค้นหา :",
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                }
+            });
+            $('#datatable-Tempbooking').DataTable({
+                "responsive": true,
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [],
+                "language": {
+                    "search": "ค้นหา :",
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                }
+            });
+            $('#datatable-responsive').DataTable({
+                "responsive": true,
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [],
+                "language": {
+                    "search": "ค้นหา :",
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                },
+
+                //"bStateSave": true,
+                //"fnStateSave": function (oSettings, oData) {
+                //    localStorage.setItem('offersDataTables', JSON.stringify(oData));
+                //},
+                //"fnStateLoad": function (oSettings) {
+                //    return JSON.parse(localStorage.getItem('offersDataTables'));
+                //}
+            });
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+        });
+
+    </script>
+
+    @******************* tableTempBooking *************************@
+    <script>
+        $(document).ready(function () {
+            $('.TempBooking-options').each(function () {
+                $('input[type=radio]:first', this).attr('checked', true);
+            });
+            //string selectedType = Request.Form["group1"].ToString();
+            $("#btnSubmitisSelect").click(function () {
+
+                alert($('input:radio[name=TempBooking_variation]:checked').val());
+
+            });
+        });
+    </script>
+    @******************* Pretest *************************@
+    <script>
+        function getLang() {
+            $('#LangValue').val($("#LangList").val());
+        }
+        $("#btnSubmitExam").click(function () {
+            $("#LageForm").submit();
+        });
+        function pushImage(_src, nicknameTeacher) {
+            var modal = $('#ImageModal');
+            $('#ImgTeacher').attr('src', "data:image/png;base64," + _src);
+            $('#nicknameTeacher').text('ครู: ' + nicknameTeacher);
+            modal.modal("show");
+        }
+        $('#btntest').click(function () {
+            $('#ImageModal').modal();
+        });
+    </script>
+}

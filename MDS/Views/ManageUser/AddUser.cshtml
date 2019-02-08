@@ -1,0 +1,298 @@
+﻿@using MDS.Models;
+@model MDS.Models.UserDataModel
+@{
+    ViewBag.Title = "เพิ่มข้อมูลผู้ใช้งาน";
+    var item = ViewBag.addData as UserModel;
+}
+
+<style>
+    .kv-avatar .krajee-default.file-preview-frame, .kv-avatar .krajee-default.file-preview-frame:hover {
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        text-align: center;
+    }
+
+    .kv-avatar {
+        display: inline-block;
+    }
+
+        .kv-avatar .file-input {
+            display: table-cell;
+            width: 100px;
+        }
+    .krajee-default.file-preview-frame .kv-file-content {
+        width: 200px !important;
+    }
+    .kv-reqd {
+        color: red;
+        font-family: monospace;
+        font-weight: normal;
+    }
+</style>
+<!-- Parsley -->
+<script type="text/javascript" src="~/assets/widgets/parsley/parsley.js"></script>
+<link href="~/assets/fileInput/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+<link href="~/assets/widgets/select2/select2.min.css" rel="stylesheet" />
+<link href="~/assets/widgets/select2/select2-bootstrap.min.css" rel="stylesheet" />
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+<div id="page-title">
+    <h2>เพิ่มข้อมูลผู้ใช้งาน</h2>
+</div>
+@{Html.BeginForm("InsertUser", "ManageUser", FormMethod.Post, new { id = "addUserForm", data_parsley_validate = "", enctype = "multipart/form-data" });}
+
+
+<div class="content-box">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="glyph-icon icon-cog"></i>
+        ข้อมูลผู้ใช้งาน
+    </h3>
+    <div class="content-box-wrapper">
+        <div class="row">
+             @if (@item.UserImage != "")
+            {
+                <div class="col-md-2">
+                    <div align="center">
+                        @if (@item.UserImage != "")
+                        {
+                            <img src="~/MDSMiddleFile/UserIMG/@item.UserImage" alt="รูปผู้ใช้งาน" style="max-height:200px;max-width:180px" />
+                        }
+                        else
+                        {
+                            <img src="~/MDSMiddleFile/UserIMG/noImg.png" alt="รูปผู้ใช้งาน" style="max-height:200px" />
+                        }
+                        <br />
+                        <br />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div align="center">
+                        <div class="text-center kv-avatar">
+                            <input id="newsImg" name="UserImageFile" type="file" accept=".jpg, .png, .gif">
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            }
+            else
+            {
+                <div class="col-md-4">
+                    <div align="center">
+                        <div class="text-center kv-avatar">
+                            <input id="newsImg" name="UserImageFile" type="file" accept=".jpg, .png, .gif">
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            }
+
+            <div class="col-md-8">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>ชื่อผู้ใช้งาน</label>
+                        <input type="text" class="form-control" name="Username" required value="@item.Username">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>รหัสผ่าน</label>
+                        <input type="password" class="form-control" name="Password" required>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>รหัสพนักงาน</label>
+                        <input type="text" class="form-control" name="EmpCode" value="@item.EmpCode">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content-box">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="glyph-icon icon-cog"></i>
+        ข้อมูลรายละเอียด
+    </h3>
+    <div class="content-box-wrapper">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>คำนำหน้าชื่อ</label>
+                    <select class="form-control select2" name="PrefixId" required>
+                        <option value="" disabled selected>กรุณาเลือกคำนำหน้าชื่อ</option>
+                        @foreach (var prefixData in Model.PrefixDataList)
+                        {
+                            <option value="@prefixData.PrefixCode" @(item.PrefixId == prefixData.PrefixCode ? "selected" : "")>@prefixData.PrefixName</option>
+
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>กลุ่มผู้ใช้งาน</label>
+                    <select class="form-control" name="UserGId" required>
+                        <option value="" disabled selected>กรุณาเลือกกลุ่มผู้ใช้งาน</option>
+                        @foreach (var userGData in Model.UserGroupDataList)
+                        {
+                            <option value="@userGData.UserGId" @(item.UserGId == userGData.UserGId ? "selected" : "")>@userGData.UserGName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>ชื่อ</label>
+                    <input type="text" class="form-control" name="FirstNameTH" required value="@item.FirstNameTH">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>นามสกุล</label>
+                    <input type="text" class="form-control" name="LastNameTH" value="@item.LastNameTH">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>ชื่อ(ภาษาอังกฤษ)</label>
+                    <input type="text" class="form-control" name="FirstNameEN" value="@item.FirstNameEN">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>นามสกุล(ภาษาอังกฤษ)</label>
+                    <input type="text" class="form-control" name="LastNameEN" value="@item.LastNameEN">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>อีเมลล์</label>
+                    <input type="email" class="form-control" name="Email" required value="@item.Email">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>เบอร์ติดต่อ</label>
+                    <input type="text" class="form-control" name="Tel" value="@item.Tel">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>เบอร์มือถือ</label>
+                    <input type="text" class="form-control" name="Mobile" value="@item.Mobile">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>เบอร์แฟก</label>
+                    <input type="text" class="form-control" name="Fax" value="@item.Fax">
+                </div>
+            </div>
+            @*<div class="col-md-6">
+                <div class="form-group">
+                    <label>หน่วยงาน</label>
+                    <select class="form-control" name="DepartId">
+                        <option value="" disabled selected>กรุณาเลือกหน่วยงาน</option>
+                        @foreach (var departData in Model.DepartmentDataList)
+                        {
+                            <option value="@departData.DepartId" @(item.DepartId == departData.DepartId ? "selected" : "")>@departData.DepartNameTh</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>สถานะ</label>
+                    <input type="text" class="form-control" placeholder="สถานะ" name="Status" readonly value="@item.Status">
+                </div>
+            </div>*@
+        </div>
+        <div class="row">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-3">
+                        <a href="@Url.Action("ManageUser", "ManageUser")" class="btn btn-block btn-danger btnCancel">กลับ</a>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-block btn-success" id="SubmitButton">บันทึก</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{Html.EndForm();}
+@section scripts{
+    <!-- Select 2 -->
+    <script type="text/javascript" src="~/assets/widgets/select2/select2.min.js"></script>
+    <script src="~/assets/fileInput/fileinput.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datepicker/datepicker.js"></script>
+    <script src="~/assets/ckeditor/ckeditor.js"></script>
+    <script src="~/assets/ckfinder/ckfinder.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#newsImg").fileinput({
+                overwriteInitial: true,
+                maxFileSize: 10240,
+                showClose: false,
+                showCaption: false,
+                showBrowse: false,
+                browseOnZoneClick: true,
+                removeLabel: 'ยกเลิกภาพที่เลือก',
+                removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+                removeTitle: '',
+                elErrorContainer: '#kv-avatar-errors-2',
+                msgErrorClass: 'alert alert-block alert-danger',
+                defaultPreviewContent: '<img src="@Url.Content("~/MDSMiddleFile/UserIMG/cloud-computing.png")" alt=""><h6 class="text-muted">คลิกเพื่อเลือกรูปผู้ใช้</h6>',
+                layoutTemplates: { main2: '{preview} {remove}' },
+                allowedFileExtensions: ["jpg", "png", "gif"]
+            });
+
+            $('.select2').select2({
+                width: '100%',
+                theme: "bootstrap"
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#success-alert").hide();
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+        });
+    </script>
+}
+

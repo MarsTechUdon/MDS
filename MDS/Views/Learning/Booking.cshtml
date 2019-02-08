@@ -1,0 +1,491 @@
+﻿@using MDS.Models;
+@model MDS.Models.lcourseModel
+@{
+    ViewBag.Title = "ตารางเรียน";
+}
+<style>
+    .fc-event {
+        font-size: 10px !important;
+    }
+    .ui-tabs-nav > li, .ui-tabs-nav > li > a {
+        float: left !important;
+    }
+
+    .content-box-header > .ui-tabs-nav {
+        left: 0 !important;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+<link rel="stylesheet" type="text/css" href="~/Content/Other/fullcalendar-3.9.0/fullcalendar.css">
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="content-box tabs">
+        <div class="content-box-header bg-blue-alt" style="background-color: #3598db;">
+            <span style="float:right;margin:10px;"></span>
+            <ul>
+                <li>
+                    <a data-toggle="tab" href="#tabs-1" id="tebclick_1" value="1" class="tooltip-button" data-placement="top" title="Booking">
+                        Booking
+                        <i class="glyph-icon icon-align-justify icon-size23"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#tabs-2" id="tebclick_2" value="2" class="tooltip-button" data-placement="top" title="ตารางเรียน">
+                        ตารางเรียน
+                        <i class="glyph-icon icon-table icon-size23"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="tabs-1">
+            <div class="table-responsive">
+                <table id="datatable-responsive" class="table table-striped " cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;" width="15%">
+                                <p>หมายเลขการจอง</p>
+                                <p>สาขาที่จอง</p>
+                            </th>
+                            <th style="text-align:left;" width="10%">
+                                <p>ชื่อการจอง</p>
+                                <p>วันที่จอง</p>
+                            </th>
+                            <th style="text-align:left;" width="15%">
+                                หลักสูตร
+                            </th>
+                            <th style="text-align:left;" width="10%">
+                                นักเรียน
+                            </th>
+                            <th style="text-align:left;" width="15%">
+                                จองโดย
+                            </th>
+                            <th style="text-align:left;" width="15%">
+                                สถานะ
+                            </th>
+                            <th style="text-align:left;" width="10%">
+                                เวลาที่จองแล้ว(ชม.)
+                            </th>
+                            <th style="text-align:left;" width="10%">
+                                ดำเนินการ
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.ListBooking as List<BookingModel>)
+                        {
+                            <tr>
+                                <td>
+                                    @item.branchname
+                                </td>
+                                <td>
+                                    <p>@item.bookingname</p>
+                                    <p> @item.bookingdate</p>
+                                </td>
+                                <td>
+                                    @item.coursenickname
+                                </td>
+                                <td>
+                                    @item.studentname
+                                </td>
+                                <td>@item.fullname</td>
+                                <td>@item.statusdesc</td>
+                                <td class="text-center">@item.totaltime</td>
+                                <td style="text-align:center">
+                                    <a href="@Url.Action("Timetable", "Learning", new {value1= @item.courseid,value2="",value3=@item.bookingid})" class="btn btn-success editBtn tooltip-button" data-placement="top" title="แก้ไข Booking">
+                                        <i class="glyph-icon icon-pencil-square-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="tabs-2">
+            <div class="content-box">
+                <div class="content-box-header bg-blue" style="text-align:left;">
+                    <i class="glyph-icon icon-calendar"></i> ตารางเรียน
+                    <div class="btn-group float-right">
+                        <button type="button" class="btn btn-default tooltip-button" data-toggle="modal" data-target="#SearchCourseModal" data-backdrop="static" data-keyboard="false" data-placement="top" title="เพิ่มตารางเรียน">
+                            <i class="glyph-icon icon-calendar"></i> เพิ่มตารางเรียน
+                        </button>
+                    </div>
+                </div>
+                <div class="content-box-wrapper">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="SearchCourseModal" class="modal fade" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            @using (Html.BeginForm("CreateLearning", "Learning",
+                  FormMethod.Post, new { @class = "form-horizontal bordered-row", @id = "SearchCourse" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><span id="eventTitle">หลักสูตร</span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="text-align:center;">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">หลักสูตรนักเรียน</label>
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(x => x.courseid, new SelectList(ViewBag.course as List<lcourseModel>, "courseid_time", "coursename", "coursegroup", 0), "-- กรุณาระบุหลักสูตรนักเรียน --", new { @id = "course", @class = "form-control course", style = "width:100%", required = "required" })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">ครูผู้สอน</label>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <span class="col-sm-6 text-center">ไม่เลือก</span>
+                                    <span class="col-sm-6 text-center">เลือก</span>
+                                </div>
+                                <div class="row">
+                                    <select multiple class="multi-select" id="teacher" name="arrteacher[]"></select>
+                                </div>
+                                <div class="row">
+                                    <span style="color:red;text-align:left !important">*กรณีไม่เลือกครูจะ Default เป็น ทั้งหมด</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">ชื่อนักเรียน/ชื่อจอง *</label>
+                            <div class="col-md-6">
+                                <input type="text" name="bookingname" id="bookingname" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">รายละเอียดเพิ่มเติม</label>
+                            <div class="col-md-6">
+                                <input type="text" name="remark" id="remark" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">ระบุเกียร์</label>
+                            <div class="col-md-6">
+                                <select class="form-control" id="gear" name="gear" required>
+                                    <option value="">--เลือกเกียร์--</option>
+                                    <option value="A">ออโต้</option>
+                                    <option value="M">กระปุก</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer  text-center">
+                    <button class="btn btn-success" type="submit"><i class="glyph-icon fa fa-plus-square"></i>&nbsp;เพิ่ม</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div id="ShowEventModal" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ShowEventind">
+                <input type="hidden" id="Showsubjectid">
+                <input type="hidden" id="Showbookingid">
+                <input type="hidden" id="Showteacherind">
+                <input type="hidden" id="Showstudytime">
+                <input type="hidden" id="Showstudydate">
+                <input type="hidden" id="Showstudystime">
+                <input type="hidden" id="Showstudyetime">
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btnShowclose" data-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/lib/moment.min.js"></script>
+<script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/fullcalendar.js"></script>
+<script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/locale/th.js"></script>
+<script>
+    $(document).ready(function () {
+          $.ajax({
+                url: '@Url.Action("GetCalendarBooking", "Learning")',
+                dataType: "json",
+                type: "POST",
+                success: function (item) {
+                    $('#calendar').fullCalendar({
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            //right: 'month,agendaWeek,agendaDay'
+                            right: 'month'
+                        },
+                        defaultView: 'month',
+                        //lang: 'th',
+                        allDaySlot: false,
+                        slotDuration: '00:30:00',
+                        slotLabelInterval: 5,
+                        slotLabelFormat: 'HH(:mm)',
+                        slotEventOverlap: true,
+                        titleFormat: 'DD MMMM YYYY',
+                        columnFormat: 'dddd',
+                        slotDuration: '00:30:00',
+                        minTime: '08:00:00',
+                        maxTime: '22:00:00',
+                        dragOpacity: {
+                            agenda: .5
+                        },
+                        businessHours: true,
+                        editable: false,
+                        droppable: true,
+                        handleWindowResize: true,
+                        buttonIcons: false, // show the prev/next text
+                        navLinks: true, // can click day/week names to navigate views
+                        eventLimit: true, // allow "more" link when too many events
+                        displayEventTime: false,
+                        events: item, //ข้อมูล                      
+                        listDayAltFormat: false,
+                        eventClick: function (event, jsEvent, view) {
+                            OpenEvent(event);
+                        },
+                        eventRender: function (eventObj, $el) {
+                            var strtitle = eventObj.title.split('-');
+                            var $content = $('<div/>');
+                          
+                            $.each(strtitle, function (i, item) {
+                                if (i%2==0) {
+                                    $content.append($('<p/>').html('<span style="color:blue">' + item +'</span>'));
+                                } else {
+                                    $content.append($('<p/>').html('<span style="color:green">' + item + '</span>'));
+                                }
+                               
+                            })
+                            $el.popover({
+                                html: true, 
+                                title: 'ข้อมูล',
+                                content: $content                                   ,
+                                trigger: 'hover',
+                                placement: 'top',
+                                container: 'body'
+                            });
+                        },
+                    });
+                },
+                error: function (a, b, c) {
+                    alert("error" + a);
+              }
+                
+            });
+    });
+
+
+</script>
+<script type="text/javascript" src="~/assets/widgets/tabs-ui/tabs.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/validate.js"></script>
+<script type="text/javascript">
+    /* jQuery UI Tabs */
+
+    $(function () {
+        "use strict";
+        $(".tabs").tabs();
+    });
+
+    $(function () {
+        "use strict";
+        $(".tabs-hover").tabs({
+            event: "mouseover"
+        });
+    });
+
+</script>
+<!-- Boostrap Tabs -->
+
+<script type="text/javascript" src="~/assets/widgets/tabs/tabs.js"></script>
+
+<!-- Tabdrop Responsive -->
+
+<script type="text/javascript" src="~/assets/widgets/tabs/tabs-responsive.js"></script>
+<script type="text/javascript">
+    /* Responsive tabs */
+    $(function () {
+        "use strict";
+        $('.nav-responsive').tabdrop();
+    });
+
+</script>
+<!-- Multi select -->
+<!--<link rel="stylesheet" type="text/css" href="../../assets/widgets/multi-select/multiselect.css">-->
+<script type="text/javascript" src="~/assets/widgets/multi-select/multiselect.js"></script>
+<script type="text/javascript">
+    /* Multiselect inputs */
+
+    $(function () {
+        "use strict";
+        $(".multi-select").multiSelect();
+        $(".ms-container").append('<i class="glyph-icon icon-exchange"></i>');
+    });
+</script>
+
+<!-- Uniform -->
+<!--<link rel="stylesheet" type="text/css" href="~/assets/widgets/uniform/uniform.css">-->
+<script type="text/javascript" src="~/assets/widgets/uniform/uniform.js"></script>
+<script type="text/javascript" src="~/assets/widgets/uniform/uniform-demo.js"></script>
+
+<!-- Chosen -->
+<!--<link rel="stylesheet" type="text/css" href="~/assets/widgets/chosen/chosen.css">-->
+<script type="text/javascript" src="~/assets/widgets/chosen/chosen.js"></script>
+<script type="text/javascript" src="~/assets/widgets/chosen/chosen-demo.js"></script>
+
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on("click", "#tebclick_2", function () {
+            $('#calendar').fullCalendar('render');
+        });
+        $('#datatable-responsive').DataTable({
+            "responsive": true,
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "order": [],
+            "language": {
+                "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                "emptyTable": "ไม่มีข้อมูล",
+                "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                "infoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+                "infoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+                "lengthMenu": "แสดง  _MENU_  รายการ",
+                "paginate": {
+                    "first": "หน้าแรก",
+                    "previous": "ก่อนหน้า",
+                    "next": "ถัดไป",
+                    "last": "หน้าสุดท้าย"
+                }
+            }
+        });
+         
+    });
+      function OpenEvent(calEvent) {
+                $('#ShowEventind').val(calEvent.eventID);
+                    $.ajax({
+                        data: { ind: calEvent.eventID, bookingid: calEvent.description },
+                    url: '@Url.Action("GetByBookinginddetail", "Learning")',
+                    dataType: "json",
+                     type: "POST",
+                        success: function (result) {
+                            var studentname = '';
+                            if (result.studentname == null) {
+                                studentname = '';
+                            }
+                            else {
+                                studentname = result.studentname;
+                            }
+                            var studyhr = parseFloat(result.studytime)/60 ;
+                            $('#ShowEventModal #eventTitle').text("วิชา " + result.subjectnickname);
+                            $('#ShowEventind').val(result.ind);
+                            $('#Showsubjectid').val(result.subjectid);
+                            $('#Showbookingid').val(result.bookingid);
+                            $('#Showteacherind').val(result.teacherind);
+                            $('#Showstudytime').val(result.studytime);
+                            $('#Showstudydate').val(result.studydate);
+                            $('#Showstudystime').val(result.studystime);
+                            $('#Showstudyetime').val(result.studyetime);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>หลักสูตร : </b><span style="color:blue">' + result.coursenickname + '</span>'));
+                            $description.append($('<p/>').html('<b>วิชา : </b><span style="color:blue">' + result.subjectname + '</span>'));                            
+                            $description.append($('<p/>').html('<b>ภาค : </b>' + result.subjecttypedesc)); 
+                            $description.append($('<p/>').html('<b>ครูผู้สอน : </b><span style="color:blue">' + result.nickname + '</span>'));
+                            $description.append($('<p/>').html('<b>นักเรียน : </b><span style="color:blue">' + studentname + '</span>'));
+                            $description.append($('<p/>').html('<b>วันที่ : </b>' + result.studydate));
+                            $description.append($('<p/>').html('<b>เวลา : </b>' + result.studystime + " น." + " - " + result.studyetime + " น."));
+                            $description.append($('<p/>').html('<b>จำนวน : </b>' + studyhr + " ชม."));
+
+                            $('#ShowEventModal #pDetails').empty().html($description);
+                            $('#ShowEventModal').modal({ backdrop: 'static', keyboard: false });
+                        },
+                        error: function (a, b, c) {
+                            alert("error" + a);
+                        }
+                });
+
+            }
+    $(document).ready(function () {
+        $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+    });
+    $("[data-dismiss=modal]").click(function () {
+        $("#course").val("");
+        $("#teacher").val("");
+        $(".subteach").hide();
+        $("#bookingname").val("");
+        $("#remark").val("");
+    });
+    $("#course").change(function () {
+        var grantAppend = '';
+        var course = this.value;
+        var str = course.split(' ');
+        var serviceURL = "GetTeacher";
+        $("#teacher").empty();
+        //$("#teacher").append('<option value="">ทั้งหมด</option>');
+        $.ajax({
+            url: serviceURL,
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'Json',
+            data: JSON.stringify({ coursegroupid: str[1] }),
+            success: successFunction,
+            error: errorFunction
+        });
+        function successFunction(result) {
+            $.each(result, function (i, res) {
+                grantAppend += '<option value="' + res.ind + '">' + res.nickname + '</option>';
+
+            });
+
+            $("#teacher").append(grantAppend);
+            $("#teacher").multiSelect('refresh');
+        }
+        function errorFunction(result) {
+
+        }
+    });
+</script>

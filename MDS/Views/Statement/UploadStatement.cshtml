@@ -1,0 +1,119 @@
+﻿@using System.Data;
+@using MDS.Models;
+
+@{
+    ViewBag.Title = "Statement ธนาคาร";
+}
+
+<!--<![endif]-->
+@using (Html.BeginForm("UploadStatement", "Statement", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+<div class="table-responsive">
+    <table id="datatable-responsive" class="table table-striped table-bordered no-wrap" cellspacing="0" width="100%">
+        <tr>
+            <td>เลขบัญชี</td>
+            <td>
+                @*<input type="text" id="accountno" name="accountno" value="060-0-508659" class="form-control accountno" />*@
+                <select class="form-control" id="accountno" name="accountno" oninvalid="this.setCustomValidity('กรูณาเลือกเลขบัญชี')" oninput="setCustomValidity('')" required>
+                    <option value="" disabled selected>กรุณาเลือกเลขบัญชี</option>
+                    @foreach (var data in ViewBag.accountno as List<ComBankAccountModel>)
+                    {
+                        <option value="@data.AccountNo">@data.AccountNo</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr><td>ไฟล์ Excel(.csv)</td><td><input type="file" id="postedFile" name="postedFile" class="form-control" accept=".csv" oninvalid="this.setCustomValidity('โปรดเลือกไฟล์ที่ต้องการอัพโหลด (ตรงกับเลขบัญชีที่เลือก)')" oninput="setCustomValidity('')" required /></td></tr>
+        <tr>
+            <td></td>
+            <td>
+                <div style="width:50%">
+                    <input class="form-control" type="submit" id="Submit" name="Submit" value="อัพโหลด" />
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+}
+<hr />
+
+@if (ViewBag.Status != null)
+{
+    foreach (var chk_status in ViewBag.Status)
+    {
+        if (chk_status == 'Y')
+        {
+            <div class="alert alert-success" id="success-alert">
+                <div class="bg-green alert-icon">
+                    <i class="glyph-icon icon-check"></i>
+                </div>
+                <div class="alert-content">
+                    <h4 class="alert-title">แจ้งเตือน!</h4>
+                    <p>อัพโหลดไฟล์เข้าฐานข้อมูลสำเร็จ</p>
+                </div>
+            </div>
+        }
+        else if (chk_status == 'N')
+        {
+            <div class="alert alert-danger" id="success-alert">
+                <div class="bg-red alert-icon">
+                    <i class="glyph-icon icon-times"></i>
+                </div>
+                <div class="alert-content">
+                    <h4 class="alert-title">แจ้งเตือน!</h4>
+                    <p>อัพโหลดไฟล์ไม่สำเร็จ กรุณาตรวจสอบเลขบัญชีที่เลือกให้ตรงกับไฟล์</p>
+                </div>
+            </div>
+        }
+    }
+}
+
+
+<div class="table-responsive">
+    <table id="datatable-responsive" class="table table-striped table-bordered no-wrap" cellspacing="0">
+
+        <thead>
+            <tr>
+                <th>วันที่โอน</th>
+                <th>มีผลวันที่</th>
+                <th>รายละเอียด</th>
+                <th>เดบิท</th>
+                <th>เครดิต</th>
+                <th>คงเหลือ</th>
+                <th>ช่องทาง</th>
+            </tr>
+            <tr>เลขบัญชี : </tr>
+        </thead>
+
+        @foreach (StatementModel ListStatement in Model)
+        {
+            <tr>
+                <td>@ListStatement.transdate</td>
+                <td>@ListStatement.effectdate</td>
+                <td>@ListStatement.description</td>
+                <td>@ListStatement.debit</td>
+                <td>@ListStatement.credit</td>
+                <td>@ListStatement.balance</td>
+                <td>@ListStatement.channel</td>
+            </tr>
+        }
+        @if (ViewBag.TempAccountNo != null)
+        {
+            foreach (var item in ViewBag.TempAccountNo)
+            {
+                <tr>@item</tr>
+            }
+        }
+    </table>
+</div>
+
+<script type="text/javascript">
+    //alert
+    $(document).ready(function () {
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(2000, function () {
+            $("#success-alert").slideUp(2000);
+        });
+    });
+
+</script>

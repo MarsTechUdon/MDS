@@ -1,0 +1,379 @@
+﻿
+@model MDS.Models.CourseModel
+
+@{
+    ViewBag.Title = "ข้อมูลหลักสูตร";
+}
+
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+
+
+@if (ViewBag.boolResult == "Y" && ViewBag.msg != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.msg</p>
+        </div>
+    </div>
+}
+else if (ViewBag.boolResult == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.msg</p>
+        </div>
+    </div>
+}
+else if (ViewBag.boolResult < 0)
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.msg</p>
+        </div>
+    </div>
+}
+
+<!---add--->
+<div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">เพิ่มข้อมูล</h4>
+            </div>
+            <div class="modal-body">
+
+                @using (Html.BeginForm("AddCourse", "Course", FormMethod.Post))
+                {
+                    @*<div class="form-group">*@
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">กลุ่มหลักสูตร <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+
+                            <select class="form-control" name="CgID" required>
+                                <option value="" disabled selected>กรุณาเลือกกลุ่มผู้ใช้งาน</option>
+                                @foreach (var CrouseGroup in Model.CourseGroupDataList)
+                                {
+                                    <option value="@CrouseGroup.CgID">@CrouseGroup.CgName</option>
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">ชื่อหลักสูตร <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="ชื่อหลักสูตร..." name="CName" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">ราคา <b style="color:red;">*</b></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-1 col-xs-1"></label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" placeholder="ราคา..." name="CPrice" required>
+                            <p style="color:red;font-size:12px;">กรอกข้อมูล "ราคา" เป็นตัวเลข</p>
+                        </div>
+                    </div>
+
+                    <br>
+                    @*</div>*@
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">เพิ่มข้อมูล</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!---end add--->
+<!---edit--->
+<div class="modal fade" id="editCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">แก้ไขข้อมูล</h4>
+            </div>
+            <div class="modal-body">
+
+                @using (Html.BeginForm("EditCourse", "Course", FormMethod.Post))
+                {
+                    <div class="form-group">
+
+                        @*<div class="form-group">*@
+                        <div class="row">
+                            <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">กลุ่มหลักสูตร <b style="color:red;">*</b></label>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-1 col-xs-1"></label>
+                            <div class="col-sm-10">
+
+                                <select class="form-control" name="CgID" id="e_Course_CgID" required>
+                                    <option value="" disabled selected>กรุณาเลือกกลุ่มผู้ใช้งาน</option>
+                                    @foreach (var CrouseGroup in Model.CourseGroupDataList)
+                                    {
+                                        <option value="@CrouseGroup.CgID">@CrouseGroup.CgName</option>
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">ชื่อหลักสูตร <b style="color:red;">*</b></label>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-1 col-xs-1"></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="ชื่อหลักสูตร..." name="CName" id="e_Course_CName" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-1"></label> <label class="col-sm-11 control-label text-left">ราคา <b style="color:red;">*</b></label>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-1 col-xs-1"></label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" placeholder="ราคา..." name="CPrice" id="e_Course_CPrice" required>
+                                <p style="color:red;font-size:12px;">กรอกข้อมูล "ราคา" เป็นตัวเลข</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="Cid" id="e_Course_id" />
+                        <button type="submit" class="btn btn-success">แก้ไข</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!---end edit--->
+<!---cancle--->
+<div class="modal fade" id="cancleCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">ยืนยันการลบข้อมูล</h4>
+            </div>
+            @using (Html.BeginForm("CancelCourse", "Course", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <span>คุณต้องการลบข้อมูล </span><span id="ca_Course_Coursename" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="Cid" id="ca_Course_id" />
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!---end cancle--->
+<!---recancle--->
+<div class="modal fade" id="recancleCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">ยืนยันการคืนสถานะข้อมูล</h4>
+            </div>
+
+            @using (Html.BeginForm("ReCancelCourse", "Course", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <span>คุณต้องการคืนสถานะข้อมูล </span><span id="re_ca_Course_Coursename" style="color:red;font-weight:bold"></span><span> หรือไม่ !!!</span>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="Cid" id="re_ca_Course_id" />
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!---end recancle--->
+
+<h2>จัดการข้อมูลหลักสูตร</h2><br />
+<div class="panel">
+    <h3 class="content-box-header bg-blue-alt">
+        <i class="glyph-icon icon-map-marker"></i>
+        รายการข้อมูลหลักสูตร
+        <div class="header-buttons">
+            <button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#addCourse">
+                <i class="glyphicon glyphicon-plus"></i> เพิ่มข้อมูล</a>
+            </button>
+        </div>
+    </h3><br />
+    <div class="panel-body">
+        <div class="example-box-wrapper">
+            <table id="datatable-responsive22" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="text-center">ลำดับ</th>
+                        <th class="text-center">ชื่อหลักสูตร</th>
+                        <th class="text-center">ราคา</th>
+                        <th class="text-center">กลุ่มหลักสูตร</th>
+                        <th class="text-center">สถานะ</th>
+                        <th class="text-center">การจัดการ</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @{ int i = 0; }
+                    @foreach (var Course in Model.CourseDataList)
+                    {
+                        <tr>
+                            <td>@{ i = i + 1; } @i</td>
+                            <td>@Course.CName</td>
+                            <td>@Course.CPrice</td>
+                            <td>@Course.CGroupName</td>
+                            <td class="text-center">
+                                @if (@Course.Status.Equals("A"))
+                                {
+                                    <b style="color:green;">ได้รับการอนุญาต</b>
+                                }
+                                else if (@Course.Status.Equals("C"))
+                                {
+                                    <b style="color:red;">ไม้ได้รับการอนุญาต</b>
+                                }
+                            </td>
+
+                            <td class="text-center">
+                                @if (Course.Status.Equals("A"))
+                                {
+
+                                    <button class="btn btn-warning btn-md" data-toggle="modal" data-target="#editCourse" data-id="@Course.Cid"
+                                            data-cname="@Course.CName" data-cprice="@Course.CPrice" data-cgid="@Course.CgID">
+                                        <i class="glyph-icon icon-pencil-square-o"></i>
+                                    </button>
+
+                                    <button class="btn btn-danger btn-md" data-toggle="modal" data-target="#cancleCourse" data-id="@Course.Cid" data-cname="@Course.CName">
+                                        <i class="glyph-icon icon-trash"></i>
+                                    </button>
+                                }
+                                else if (Course.Status.Equals("C"))
+                                {
+
+                                    <button class="btn btn-purple btn-md" data-toggle="modal" data-target="#recancleCourse" data-id="@Course.Cid" data-cname="@Course.CName">
+                                        <i class="glyph-icon icon-elusive-arrows-cw"></i>
+                                    </button>
+                                }
+
+
+
+
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<!-- Data tables -->
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+<script>
+    /* Datatables responsive */
+    $(document).ready(function () {
+        $('#datatable-responsive22').DataTable({
+            responsive: true
+        });
+    });
+
+    $(document).ready(function () {
+        $('.dataTables_filter input').attr("placeholder", "Search...");
+    });
+</script>
+
+<script type="text/javascript">
+    //aleat
+    $(document).ready(function () {
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
+        });
+    });
+    //modal edit Course
+    $(document).ready(function () {
+        $('#editCourse').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+
+            var id = button.data('id');
+            var CName = button.data('cname');
+            var CPrice = button.data('cprice');
+            var CgID = button.data('cgid');
+
+            var modal = $(this);
+            modal.find('#e_Course_id').val(id);
+            modal.find('#e_Course_CName').val(CName);
+            modal.find('#e_Course_CPrice').val(CPrice);
+            modal.find('#e_Course_CgID').val(CgID);
+
+
+        });
+    });
+    //modal cancle Course
+    $(document).ready(function () {
+        $('#cancleCourse').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+
+            var id = button.data('id');
+            var CName = button.data('cname');
+
+            var modal = $(this);
+            modal.find('#ca_Course_id').val(id);
+            document.getElementById("ca_Course_Coursename").innerHTML = CName;
+
+        });
+    });
+
+    //modal re-cancle Course
+    $(document).ready(function () {
+        $('#recancleCourse').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+
+            var id = button.data('id');
+            var CName = button.data('cname');
+
+            var modal = $(this);
+            modal.find('#re_ca_Course_id').val(id);
+            document.getElementById("re_ca_Course_Coursename").innerHTML = CName;
+
+        });
+    });
+
+</script>
+
+
+
+
+

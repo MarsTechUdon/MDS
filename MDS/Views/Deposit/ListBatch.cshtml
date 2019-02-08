@@ -1,0 +1,381 @@
+﻿@*@model IEnumerable<MDS.Models.ComBankModel>*@
+@model MDS.Models.ListBatchModel
+@{
+    ViewBag.Title = "นำฝาก";
+}
+
+<link href="~/assets/widgets/chosen/chosen.css" rel="stylesheet" />
+
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+<style type="text/css">
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none;
+        line-height: 30px;
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+
+    /*CSS Tooltip*/
+    /*[data-toggle="tooltip"] {
+        margin: 20px 60px;
+        position: relative;
+        display: inline-block;
+    }*/
+
+    [data-toggle="tooltip"]::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 4px 6px 0 6px;
+        border-style: solid;
+        border-color: #181919 transparent transparent transparent;
+        z-index: 99;
+        opacity: 0;
+    }
+
+    [data-placement='left']::before {
+        left: 0%;
+        top: 50%;
+        margin-left: -12px;
+        transform: translateY(-50%) rotate(-90deg)
+    }
+
+    [data-placement='top']::before {
+        left: 50%;
+    }
+
+    [data-placement='bottom']::before {
+        top: 100%;
+        margin-top: 8px;
+        transform: translateX(-50%) translatey(-100%) rotate(-180deg)
+    }
+
+    [data-placement='right']::before {
+        left: 100%;
+        top: 50%;
+        margin-left: 1px;
+        transform: translateY(-50%) rotate(90deg)
+    }
+
+    [data-toggle="tooltip"]::after {
+        content: attr(tooltip-title);
+        position: absolute;
+        left: 50%;
+        top: -6px;
+        transform: translateX(-65%) translateY(-100%);
+        background: #181919;
+        text-align: center;
+        color: #fff;
+        padding: 4px 2px;
+        font-size: 16px;
+        min-width: 150px;
+        border-radius: 5px;
+        pointer-events: none;
+        padding: 4px 4px;
+        z-index: 99;
+        opacity: 0;
+    }
+
+    [data-placement='left']::after {
+        left: 0%;
+        top: 50%;
+        margin-left: -7px;
+        transform: translateX(-100%) translateY(-50%);
+    }
+
+    [data-placement='top']::after {
+        left: 50%;
+    }
+
+    [data-placement='bottom']::after {
+        top: 100%;
+        margin-top: 8px;
+        transform: translateX(-50%) translateY(0%);
+    }
+
+    [data-placement='right']::after {
+        left: 100%;
+        top: 50%;
+        margin-left: 8px;
+        transform: translateX(0%) translateY(-50%);
+    }
+
+    [data-toggle="tooltip"]:hover::after, [data-toggle="tooltip"]:hover::before {
+        opacity: 1
+    }
+</style>
+
+
+<div class="content-box-header bg-blue" style="text-align:left;">
+    <div class="form-inline">
+        <i class="glyph-icon icon-money">&nbsp;รายการนำฝาก</i>
+        <div class="header-buttons" style="padding-top:8px">
+            <a href="@Url.Action("DepositDetail","Deposit")" class="btn btn-md btn-success pull-right" style="color:white;margin-left:20px;"><i class="glyphicon glyphicon-piggy-bank"></i> นำฝาก</a>
+        </div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+        <div class="example-box-wrapper">
+            <table id="datatable-responsive" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("เลขใบนำฝาก")
+                        </th>
+                        <th>
+                            @Html.DisplayName("สาขา")
+                        </th>
+                        <th>
+                            @Html.DisplayName("วันที่ทำใบนำฝาก")
+                        </th>
+                        <th>
+                            @Html.DisplayName("รายละเอียด")
+                        </th>
+                        <th>
+                            @Html.DisplayName("จำนวนเงิน")
+                        </th>
+                        <th>
+                            @Html.DisplayName("สร้างโดย")
+                        </th>
+                        <th style="width: 130px!important;">
+                            @Html.DisplayName("สถานะ")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var batch in Model.BatchList)
+                    {
+                        string amountComma = "";
+                        try
+                        {
+                            amountComma = decimal.Parse(batch.amount).ToString("N2");
+                        }
+                        catch (Exception)
+                        {
+                            amountComma = "0.00";
+                        }
+
+                        <tr>
+                            <td>
+                                @batch.Batchno
+                            </td>
+                            <td>
+                                @{
+                                    foreach (var branch in Model.BranchList)
+                                    {
+                                        if (batch.branchid == branch.branchid)
+                                        {
+                                            <p>@branch.branchid @branch.branchname</p>
+                                        }
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @batch.BatchDate
+                            </td>
+                            <td>
+                                <p>จำนวน @batch.item รายการ</p>
+                                <p>เข้าบัญชี : @batch.accountno</p>
+                                <p>หมายเหตุ : @batch.remark</p>
+                            </td>
+                            <td>
+                                @amountComma
+                            </td>
+                            <td>
+                                @batch.insertby
+                            </td>
+                            <td>
+                                
+                                <a href="@Url.Action("DepositEdit","Deposit", new { batchno = batch.Batchno , batchdate = batch.BatchDate.ToString() , accountno = batch.accountno , depositdate = batch.depositdate , remark = batch.remark , amount = batch.amount})" 
+                                   class="btn btn-yellow tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="แก้ไข">
+                                    <i class="glyphicon glyphicon-edit" title="แก้ไข"></i>
+                                </a>
+                                <a href="@Url.Action("DepositReport","Report", new { batchno = batch.Batchno , batchdate = batch.BatchDate})" class="btn btn-success tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="พิมพ์ใบสรุป">
+                                    <i class="glyphicon glyphicon-print" title="พิมพ์ใบสรุป"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("เลขใบนำฝาก")
+                        </th>
+                        <th>
+                            @Html.DisplayName("สาขา")
+                        </th>
+                        <th>
+                            @Html.DisplayName("วันที่ทำใบนำฝาก")
+                        </th>
+                        <th>
+                            @Html.DisplayName("รายละเอียด")
+                        </th>
+                        <th>
+                            @Html.DisplayName("จำนวนเงิน")
+                        </th>
+                        <th>
+                            @Html.DisplayName("สร้างโดย")
+                        </th>
+                        <th>
+                            @Html.DisplayName("สถานะ")
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @*/* datepicker_buddhist_year */*@
+    <script src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+    <script src="~/Content/Jquery/jquery-ui.js"></script>
+
+    <!-- Data tables -->
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script type="text/javascript">
+        /* Datatables responsive */
+
+        $(document).ready(function () {
+            $('#datatable-responsive').DataTable({
+                "responsive": true,
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [],
+                "language": {
+                    "search": "",
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                },
+
+                "bStateSave": true,
+                "fnStateSave": function (oSettings, oData) {
+                    localStorage.setItem('offersDataTables', JSON.stringify(oData));
+                },
+                "fnStateLoad": function (oSettings) {
+                    return JSON.parse(localStorage.getItem('offersDataTables'));
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+        });
+
+        $(document).ready(function () {
+            $('#editComBank').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var batchno = button.data('batchno');
+                var depositdate = button.data('depositdate');
+                var accountno = button.data('accountno');
+                var remark = button.data('remark');
+                var modal = $(this);
+                modal.find('#Batchno').val(batchno);
+                modal.find('#depositdate').val(depositdate);
+                modal.find('#accountno').val(accountno);
+                modal.find('#remark').val(remark);
+            });
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var d = new Date();
+            var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+            $("#depositdate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                defaultDate: toDay,
+                autoclose: true,
+                dateFormat: 'yy-mm-dd',
+                isBuddhist: true,
+                orientation: "bottom left",
+                yearRange: "-100:+0",
+                dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+                dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+            }).keydown(function (e) {
+                return false;
+            });
+        });
+    </script>
+
+    <script>
+        //alert
+        $(document).ready(function () {
+            $("#success-alert").hide();
+            $("#success-alert").fadeTo(2000, 500).slideUp(2000, function () {
+                $("#success-alert").slideUp(2000);
+            });
+        });
+
+    </script>
+
+}

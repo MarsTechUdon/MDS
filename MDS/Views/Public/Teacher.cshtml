@@ -1,0 +1,762 @@
+﻿@using MDS.Models
+@model MDS.Models.TeacherModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutPublic.cshtml";
+    ViewBag.Title = "ตารางอาจารย์";
+
+
+}
+    
+
+<link href="~/assets/widgets/chosen/chosen.css" rel="stylesheet" />
+
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+<style type="text/css">
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 15px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: 1px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none;
+        line-height: 30px;
+    }
+
+    .ui-datepicker .ui-datepicker-prev {
+        left: 2px;
+        top: 20;
+    }
+
+    .ui-datepicker .ui-datepicker-prev-hover {
+        left: 1px;
+        top: 20;
+    }
+
+    .ui-datepicker .ui-datepicker-next {
+        right: 2px;
+        top: 20;
+    }
+
+    .ui-datepicker .ui-datepicker-next-hover {
+        right: 1px;
+        top: 20;
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+</style>
+
+<style type="text/css">
+    /* === Mobile devices - Portrait (320px wide) === */
+
+    @@media only screen and (min-width: 20em) {
+        .hero-box,
+        .hero-box-smaller {
+            padding: 3em 0;
+        }
+
+        .hero-heading {
+            font-size: 14px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 10px;
+            padding: 0 !important;
+        }
+
+        .hero-btn {
+            height: 40px;
+            line-height: 36px;
+            min-width: 200px;
+            font-size: 16px;
+            padding: 0 20px;
+            margin: 20px auto 0;
+        }
+
+        .container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .bg-holder {
+            display: none;
+        }
+
+        .features-tour-box .bg-holder {
+            display: none;
+        }
+        /*.description {
+            display: none;
+        }*/
+    }
+    /* === Mobile devices - Landscape (480px wide) === */
+
+    @@media only screen and (min-width: 30em) {
+        .hero-box {
+            padding: 3em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 2em 0;
+        }
+
+        .hero-heading {
+            font-size: 22px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 16px;
+            padding: 0 !important;
+        }
+
+        .hero-btn {
+            margin-bottom: 5px;
+        }
+    }
+    /* === Tablet devices - Portrait (768px wide) === */
+
+    @@media only screen and (min-width: 48em) {
+        .hero-box {
+            padding: 6em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 4em 0;
+        }
+
+        .hero-heading {
+            font-size: 23px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 16px;
+            padding: 0 !important;
+        }
+
+        .hero-btn {
+            font-size: 23px;
+            height: 80px;
+            line-height: 77px;
+            padding: 0 30px;
+            min-width: 300px;
+            margin: 20px auto 0;
+        }
+
+        body .top-bar .user-account-btn {
+            display: block;
+        }
+    }
+    /* === Tablet devices - Landscape (900px wide) === */
+
+    @@media only screen and (min-width: 56.25em) {
+        .hero-box {
+            padding: 9em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 6em 0;
+        }
+
+        .hero-heading {
+            font-size: 30px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 21px;
+            padding: 0 !important;
+        }
+
+        .container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        body .main-header .header-nav.collapse {
+            display: block;
+        }
+
+        body .right-header-btn .search-btn {
+            display: block;
+        }
+
+        body #mobile-navigation {
+            display: none;
+        }
+
+        .bg-holder {
+            display: block;
+        }
+    }
+    /* === Netbook devices (1100px wide) === */
+
+    @@media only screen and (min-width: 68.75em) {
+        .hero-box {
+            padding: 13em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 2em 0;
+        }
+
+        .hero-heading {
+            font-size: 30px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 21px;
+            padding: 0 !important;
+        }
+
+        body .main-header .header-logo {
+            width: 258px;
+        }
+
+        .features-tour-box .bg-holder {
+            display: block;
+        }
+    }
+    /* === Desktop devices (1300px wide) === */
+
+    @@media only screen and (min-width: 81.25em) {
+        .hero-box {
+            padding: 14em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 2em 0;
+        }
+
+        .hero-heading {
+            font-size: 30px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 21px;
+            padding: 0 !important;
+        }
+    }
+    /* === Desktop devices (1600px wide) === */
+
+    @@media only screen and (min-width: 81.25em) {
+        .hero-box {
+            padding: 14em 0;
+        }
+
+        .hero-box-smaller {
+            padding: 6em 0;
+        }
+
+        .hero-heading {
+            font-size: 30px;
+            padding: 0 !important;
+        }
+
+        .hero-text {
+            font-size: 21px;
+            padding: 0 !important;
+        }
+    }
+
+    @@media only screen and (max-width: 460px) {
+
+        .box-sm {
+            width: auto;
+        }
+
+        #page-content {
+            padding: 10px;
+        }
+
+        #page-title {
+            padding: 10px 0 15px;
+            text-align: center;
+        }
+
+        .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+            margin-bottom: 20px;
+        }
+
+        .content-box {
+            margin-top: 0 !important;
+        }
+
+        .row.mrg20B {
+            margin-bottom: 0 !important;
+        }
+
+        .timeline-box .popover {
+            width: auto;
+        }
+
+        .header-buttons-separator,
+        #progress-btn,
+        #page-title p,
+        .dashboard-box .list-grade,
+        .tooltip .tooltip-arrow,
+        .todo-box .btn,
+        .todo-box .bs-label {
+            display: none;
+        }
+
+        .cta-box-btn a {
+            display: block;
+        }
+
+            .cta-box-btn a span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        .testimonial-box-big .testimonial-content {
+            margin: 0;
+            padding: 10px;
+        }
+
+            .testimonial-box-big .testimonial-content p {
+                font-size: 14px;
+            }
+
+            .testimonial-box-big .testimonial-content .glyph-icon {
+                font-size: 25px;
+            }
+
+        .feature-box .feature-img {
+            display: none;
+        }
+
+        .feature-box .feature-content {
+            padding: 0;
+        }
+
+        .features-tour-box,
+        .xlarge-padding,
+        .large-padding {
+            padding: 25px 0;
+        }
+
+        .clients-title {
+            font-size: 25px;
+            padding: 0 10px;
+        }
+
+        .clients-desc {
+            font-size: 22px;
+            padding: 10px;
+        }
+
+        .tick-feature {
+            display: block;
+            text-align: left;
+        }
+
+        .tabs-nav li {
+            display: block;
+            margin: 5px;
+        }
+    }
+
+    .bg-gradient-10 {
+        background: radial-gradient(circle at 8.75% 8.45%, #dd7e00, transparent 100%),radial-gradient(circle at 94.06% 82.83%, #ffffff, transparent 100%),radial-gradient(circle at 50% 50%, #e19501, #dd7f01 100%)
+    }
+
+    table, th, td {
+        border: 1px solid LightGray !important;
+        color: black;
+    }
+
+    .img-valign {
+        vertical-align: middle;
+        margin-bottom: 0.75em;
+    }
+</style>
+
+
+<div id="page-content" class="center-margin frontend-components">
+    @if (Model.result != null && Model.result == "Y")
+    {
+        <div class="content-box-header bg-blue" style="text-align:left;">
+            <div class="form-inline">
+                <i class="glyph-icon icon-calendar">&nbsp;ตารางสอน</i>
+                <br />
+                <div style="text-align:right;">
+                    <img class="img-valign" src="data:image/png;base64,@ViewBag.cardimg" height="75" width="75">
+                    <span>@ViewBag.Fulltname (@ViewBag.nickname)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-body">
+                <div class="col-md-2"></div>
+                <div class="row">
+                    @using (Html.BeginForm("TeacherDetailsDate", "Public", FormMethod.Post))
+                    {
+                        <div class="col-md-1 text-right">
+                            <b>
+                                ตั้งแต่วันที่
+                            </b>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <input type="text" class="form-control bootstrap-datepicker ugmData" placeholder="ตั้งแต่วันที่" name="ugmData" id="ugmData" value="@ViewBag.fdate" readonly required>
+                        </div>
+                        <div class="col-md-1 text-right">
+                            <b>
+                                ถึงวันที่
+                            </b>
+                        </div>
+                        <div class="col-md-2 ">
+                            <input type="text" class="form-control bootstrap-datepicker" placeholder="ถึงวันที่" name="ugmData2" id="ugmData2" value="@ViewBag.tdate" readonly required>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-success"> <i class="glyphicon glyphicon-search"></i>ค้นหา</button>
+                        </div>
+                        <input type="hidden" name="teacherind" id="teacherind" value="@ViewBag.tid" />
+                    }
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-responsive" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("วันที่เรียน")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("เวลาที่เรียน")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("ประเภทหลักสูตร")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("ชื่อวิชา")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("ชื่อหลักสูตร")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("ชื่อนักเรียน")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("เบอร์")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (ViewBag.TableOfTeacher != null)
+                                {
+                                    var data = ViewBag.TableOfTeacher as List<TableTeacherModel>;
+                                    if (data != null)
+                                    {
+                                        foreach (var tableTeacher in data)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @tableTeacher.studydate
+                                                </td>
+                                                <td>
+                                                    @tableTeacher.studystime - @tableTeacher.studyetime
+                                                </td>
+                                                <td style="text-align:center;">
+                                                    @tableTeacher.subjecttypedesc
+                                                </td>
+                                                <td>
+                                                    @tableTeacher.subjectnickname
+                                                </td>
+                                                <td>
+                                                    @tableTeacher.coursenickname
+                                                </td>
+                                                <td>
+                                                    <a href="#" style="color: black!important;" onclick="pushImage('@tableTeacher.cardimg','@tableTeacher.studentname')">@tableTeacher.studentname <i class="glyph-icon icon-camera "></i></a>
+                                                </td>
+                                                <td>
+                                                    @tableTeacher.mobileno
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+
+
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("ชื่อหลักสูตร")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("ชื่อนักเรียน")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("เบอร์")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("วันที่เรียน")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("เวลาที่เรียน")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("ประเภทหลักสูตร")
+                                </th>
+                                <th style="text-align:center;">
+                                    @Html.DisplayName("ชื่อวิชา")
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 msgLabel" style="padding: 10% 0 48% 0; text-align: center;">
+                <label class="font-size-35" style="color:black; ">
+                    @Model.msg
+                </label>
+            </div>
+        </div>
+    }
+
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="ImageModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel"> <i class="glyph-icon icon-camera font-size-20"></i> รูปนักเรียน</h3>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom:0px !important;">
+                        <label class="font-size-20" style="color:black;" id="nicknameTeacher"></label>
+                    </div>
+                </div>
+                <div class="row" style="text-align:center;">
+                    <img src="" id="ImgTeacher" width="60%" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @*/* datepicker_buddhist_year */*@
+    <script src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+    <script src="~/Content/Jquery/jquery-ui.js"></script>
+
+    <!-- Data tables -->
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script type="text/javascript">
+        /* Datatables responsive */
+
+        $(document).ready(function () {
+            $('#datatable-responsive').DataTable({
+                "responsive": true,
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "order": [],
+                "language": {
+                    "search": "",
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                },
+
+                "bStateSave": true,
+                "fnStateSave": function (oSettings, oData) {
+                    localStorage.setItem('offersDataTables', JSON.stringify(oData));
+                },
+                "fnStateLoad": function (oSettings) {
+                    return JSON.parse(localStorage.getItem('offersDataTables'));
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+        });
+
+    </script>
+
+    <script>
+        var d = new Date();
+        var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        $("#ugmData").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: toDay,
+            autoclose: true,
+            dateFormat: 'yy-mm-dd',
+            isBuddhist: true,
+            orientation: "bottom left",
+            yearRange: "-100:+0",
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        }).keydown(function (e) {
+            return false;
+        });
+
+    </script>
+    <script>
+        var d = new Date();
+        var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        $("#ugmData2").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: toDay,
+            autoclose: true,
+            dateFormat: 'yy-mm-dd',
+            isBuddhist: true,
+            orientation: "bottom left",
+            yearRange: "-100:+0",
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        }).keydown(function (e) {
+            return false;
+        });
+
+    </script>
+    <script>
+        var d = new Date();
+        var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        $("#c_statement_subDay").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: toDay,
+            autoclose: true,
+            dateFormat: 'yy-mm-dd',
+            isBuddhist: true,
+            orientation: "bottom left",
+            yearRange: "-100:+0",
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        }).keydown(function (e) {
+            return false;
+        });
+
+    </script>
+    <script>
+        var d = new Date();
+        var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+        $("#e_statement_subDay").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate: toDay,
+            autoclose: true,
+            dateFormat: 'yy-mm-dd',
+            isBuddhist: true,
+            orientation: "bottom left",
+            yearRange: "-100:+0",
+            dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+            monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        }).keydown(function (e) {
+            return false;
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            document.getElementById("teacherind").value = @ViewBag.tid;
+            $('#ImgTeacher2').attr('src', "data:image/png;base64," + @ViewBag.timg);
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var x = document.getElementById("depositdate");
+            var date = new Date();
+            var today = date.getDate();
+            var thirdday = date.getDate() + 3;
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var fulldate = year + "-" + month + "-" + today;
+            var third_date = year + "-" + month + "-" + thirdday;
+            //document.getElementById("ugmData").value = fulldate;
+            //document.getElementById("ugmData2").value = third_date;
+        });
+    </script>
+
+    <script>
+        function pushImage(_src, nicknameTeacher) {
+            var modal = $('#ImageModal');
+            $('#ImgTeacher').attr('src', "data:image/png;base64," + _src);
+            $('#nicknameTeacher').text('นักเรียน : ' + nicknameTeacher);
+            modal.modal("show");
+        }
+        $('#btntest').click(function () {
+            $('#ImageModal').modal();
+        });
+    </script>
+}
