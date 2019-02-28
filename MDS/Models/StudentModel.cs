@@ -56,6 +56,8 @@ namespace MDS.Models
         public string Header2 { get; set; }
         public string qrurl { get; set; }
         public string remark { get; set; }
+        public string channelid { get; set; }
+        public string channelname { get; set; }
 
         public string Result { get; set; }
         public string Message { get; set; }

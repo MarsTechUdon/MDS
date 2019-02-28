@@ -28,5 +28,6 @@ namespace MDS.Models
         public string other { get; set; }
         public string othercount { get; set; }
         public string otherdesc { get; set; }
+        public string remainreceipt { get; set; }
     }
 }

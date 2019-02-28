@@ -157,6 +157,7 @@ namespace MDS.DBExec
                 //cm.Parameters.AddWithValue("@examdate", Examdate);
                 //cm.Parameters.AddWithValue("@BirthDate", date);
                 cm.Parameters.AddWithValue("@examdate", modelData.examdate);
+                cm.Parameters.AddWithValue("@channelid", modelData.channelid);
                 cm.Parameters.AddWithValue("@BirthDate", modelData.birthdate);
 
                 cm.Parameters.AddWithValue("@Age", modelData.age);
@@ -221,7 +222,7 @@ namespace MDS.DBExec
                 cm.Parameters.AddWithValue("@SurNameE", modelData.surnameE);
                 cm.Parameters.AddWithValue("@examdate", modelData.examdate);
                 cm.Parameters.AddWithValue("@BirthDate", modelData.birthdate);
-
+                cm.Parameters.AddWithValue("@channelid", modelData.channelid); 
                 //string date = string.Empty;
                 //string Examdate = string.Empty;
                 //try
@@ -332,6 +333,8 @@ namespace MDS.DBExec
                         model.Header2 = dr["Header2"].ToString();
                         model.qrurl = dr["qrurl"].ToString();
                         model.remark = dr["remark"].ToString();
+                        model.channelid = dr["channelid"].ToString();
+                        model.channelname = dr["channelname"].ToString();
                     }
                     dr.NextResult();
                     while (dr.Read())
@@ -802,6 +805,31 @@ namespace MDS.DBExec
                 }
             }
             return coursetime;
+        }
+        #endregion
+
+        #region "List ช่องทาง"
+        public static List<SelectListItem> GetIChannelList()
+        {
+            List<SelectListItem> SectionList = new List<SelectListItem>();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("[sp_SCLookup]", db);
+                cm.CommandType = CommandType.StoredProcedure;
+                cm.Parameters.AddWithValue("@flag", "lchannel");
+
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                while (dr.Read())
+                {
+                    SectionList.Add(new SelectListItem()
+                    {
+                        Text = dr["channelname"].ToString(),
+                        Value = dr["channelid"].ToString()
+                    });
+                }
+            }
+            return SectionList;
         }
         #endregion
     }

@@ -24,6 +24,11 @@ namespace MDS.Controllers
 
         public ActionResult Explanation(string studentind, string examid ,string LangValue)
         {
+            SessionCompanyModel SessionCompany = new SessionCompanyModel();
+            SessionCompany.ind = "1";
+            SessionCompany.langid = "TH";
+            SessionCompany = PublicManagement.GetCompany(SessionCompany);
+            Session["SessionCompany"] = SessionCompany;
             string sid = ENDEtxtManagement.Decrypt(studentind);
             string eid = ENDEtxtManagement.Decrypt(examid);
             ViewBag.temp_examid = eid;

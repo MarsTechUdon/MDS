@@ -2,6 +2,7 @@
 @model MDS.Models.ManageStudentModel
 @{
     ViewBag.Title = "StudentList";
+    var company = Session["Company"] as CompanyModel;
 }
 <link href="~/assets/widgets/datatable/datatable.css" rel="stylesheet" />
 <style>
@@ -507,7 +508,7 @@ else if (ViewBag.Result == "N")
         $(document).ready(function () {
             $("#success-alert").hide();
             $("#success-alert").fadeTo(3000, 1000).slideUp(700, function () {
-                $("#success-alert").slideUp(1000);
+                $("#success-alert").slideUp(3000);
             });
         });
         $(document).ready(function () {
@@ -540,7 +541,7 @@ else if (ViewBag.Result == "N")
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'Json',
-                data: JSON.stringify({ Url: url }),
+                data: JSON.stringify({ Url: url, Logo: '@company.SchoolLogo' }),
                 success: successFunction,
                 error: errorFunction
             });

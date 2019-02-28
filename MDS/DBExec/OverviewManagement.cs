@@ -32,6 +32,7 @@ namespace MDS.DBExec
                     {
                         list.Main.btw = dr["btw"].ToString();
                         list.Main.debt = dr["debt"].ToString();
+                        list.Main.remainreceipt = dr["remainreceipt"].ToString();
                         list.Main.total = string.Format("{0:n}", Convert.ToDecimal(dr["total"].ToString()));
                         list.Main.wait = string.Format("{0:n}", Convert.ToDecimal(dr["wait"].ToString()));
                         list.Main.deposit = string.Format("{0:n}", Convert.ToDecimal(dr["deposit"].ToString()));

@@ -28,14 +28,18 @@ namespace MDS.DBExec
                 {
                     while (dr.Read())
                     {
+                        var emailpass= "";
+                        if (dr["sendemailpass"].ToString() != "") {
+                            emailpass = ENDEtxtManagement.Decrypt(dr["sendemailpass"].ToString());
+                        }
                         model.ind = dr["ind"].ToString();
-                        model.SchoolLogo = dr["SchoolLogo"].ToString();
+                        model.SchoolLogo = dr["logopath"].ToString()+dr["SchoolLogo"].ToString();
                         model.SchoolName = dr["SchoolName"].ToString();
                         model.schoolAddr1 = dr["schoolAddr1"].ToString();
                         model.schoolAddr2 = dr["schoolAddr2"].ToString();
                         model.schoolAddr3 = dr["schoolAddr3"].ToString();
                         model.CompanyName = dr["CompanyName"].ToString();
-                        model.CompanyLogo = dr["CompanyLogo"].ToString();
+                        model.CompanyLogo = dr["logopath"].ToString()+dr["CompanyLogo"].ToString();
                         model.CompanyAddr1 = dr["CompanyAddr1"].ToString();
                         model.CompanyAddr2 = dr["CompanyAddr2"].ToString();
                         model.CompanyAddr3 = dr["CompanyAddr3"].ToString();
@@ -47,10 +51,49 @@ namespace MDS.DBExec
                         model.CompanyAddrE1 = dr["CompanyAddrE1"].ToString();
                         model.CompanyAddrE2 = dr["CompanyAddrE2"].ToString();
                         model.CompanyAddrE3 = dr["CompanyAddrE3"].ToString();
+                        model.schoolfavicon = dr["logopath"].ToString()+dr["schoolfavicon"].ToString();
+                        model.sendemailuser = dr["sendemailuser"].ToString();
+                        model.sendemailpass = emailpass;
                         model.ParaMClosePerUser = dr["ParaMClosePerUser"].ToString();
                         model.Lastupdate = dr["Lastupdate"].ToString();
                         model.IP = dr["IP"].ToString();
                         model.updateby = dr["updateby"].ToString();
+                        model.CompanyLogoName = dr["CompanyLogo"].ToString();
+                        model.SchoolLogoName = dr["SchoolLogo"].ToString();
+                        model.faviconName = dr["schoolfavicon"].ToString();
+                    }
+
+                    dr.Close();
+                }
+            }
+            return model;
+        }
+        #endregion
+        #region "ดึงข้อมูล GetCompanyView"
+        public CompanyModel GetCompanyView()
+        {
+            var model = new CompanyModel();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("sp_SetCompany", db);
+                cm.Parameters.AddWithValue("@flag", "getCompanyInfoById");
+                cm.Parameters.AddWithValue("@ind", "1");
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        model.SchoolName = dr["SchoolName"].ToString();
+                        model.SchoolNameE = dr["SchoolNameE"].ToString();
+                        model.schoolAddr1 = dr["schoolAddr1"].ToString();
+                        model.schoolAddr2 = dr["schoolAddr2"].ToString();
+                        model.schoolAddr3 = dr["schoolAddr3"].ToString();
+                        model.CompanyLogo = dr["logopath"].ToString() + dr["CompanyLogo"].ToString();
+                        model.SchoolLogo = dr["logopath"].ToString() + dr["SchoolLogo"].ToString();
+                        model.schoolfavicon = dr["logopath"].ToString() + dr["schoolfavicon"].ToString();
+                        model.logopath = dr["logopath"].ToString();
                     }
 
                     dr.Close();
@@ -63,6 +106,11 @@ namespace MDS.DBExec
         public ResultBookingModel EditCompany(CompanyModel value)
         {
             var model = new ResultBookingModel();
+            var emailpass = "";
+            if (value.sendemailpass != "")
+            {
+                emailpass = ENDEtxtManagement.Encrypt(value.sendemailpass);
+            }
             using (SqlConnection db = new SqlConnection(_CON_STR))
             {
                 SqlCommand cm = new SqlCommand("sp_SetCompany", db);
@@ -86,6 +134,9 @@ namespace MDS.DBExec
                 cm.Parameters.AddWithValue("@companyaddrE1", value.CompanyAddrE1);
                 cm.Parameters.AddWithValue("@companyaddrE2", value.CompanyAddrE2);
                 cm.Parameters.AddWithValue("@companyaddrE3", value.CompanyAddrE3);
+                cm.Parameters.AddWithValue("@schoolfavicon", value.schoolfavicon);
+                cm.Parameters.AddWithValue("@sendemailuser", value.sendemailuser);
+                cm.Parameters.AddWithValue("@sendemailpass", emailpass);
                 cm.Parameters.AddWithValue("@ip", HttpContext.Current.Request.UserHostAddress);
                 cm.Parameters.AddWithValue("@user", value.updateby);
                 cm.CommandType = CommandType.StoredProcedure;
@@ -171,6 +222,54 @@ namespace MDS.DBExec
             return model;
         }
         #endregion
-        
+        #region "getParamInfoEditDay"
+        public static string getParamInfoEditDay()
+        {
+            string result = "";
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("sp_SetCompany", db);
+                cm.Parameters.AddWithValue("@flag", "getParamInfoEditDay");
+                cm.Parameters.AddWithValue("@ind", "4");
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        result = dr["ParaMEditStDay"].ToString();
+                    }
+
+                    dr.Close();
+                }
+            }
+            return result;
+        }
+        #endregion
+        #region "getLogoPath"
+        public  string getLogoPath()
+        {
+            string result = "";
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("sp_SetCompany", db);
+                cm.Parameters.AddWithValue("@flag", "getLogoPath");
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        result = dr["logopath"].ToString();
+                    }
+
+                    dr.Close();
+                }
+            }
+            return result;
+        }
+        #endregion
     }
 }

@@ -67,10 +67,25 @@ namespace MDS.Controllers
         public JsonResult GetCalendarBooking()
         {
             var currentdate = DateTime.Now.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
-            List<CalendarModel> listCalendar = new List<CalendarModel>();
-            listCalendar = LearningManagement.ListBookingByDate(currentdate);
+            //List<CalendarModel> listCalendar = new List<CalendarModel>();
+            ListCalendarModel model = new ListCalendarModel();
+            model.TeacherList = LearningManagement.GetteacherCalendar();
+            model.CalendarList = LearningManagement.ListBookingByDate(currentdate);
 
-            return Json(listCalendar, JsonRequestBehavior.AllowGet);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        #region "GetCalendarCar"
+        [HttpPost]
+        public JsonResult GetCalendarCar()
+        {
+            var currentdate = DateTime.Now.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            //List<CalendarModel> listCalendar = new List<CalendarModel>();
+            ListCalendarModel model = new ListCalendarModel();
+            model.GearList = LearningManagement.GetGearCalendar();
+            model.CalendarList = LearningManagement.ListBookingByDateGear(currentdate);
+
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
         #endregion
         #region "GetTeacher"
@@ -142,7 +157,7 @@ namespace MDS.Controllers
             {
                 var arrteacherStr = arrteacher.Split(',');
                 foreach (string item in arrteacherStr) {
-                    listteachContact1 = listteach.Where(s => s.ind.Contains(item)).ToList();
+                    listteachContact1 = listteach.Where(s => s.ind == item).ToList();
                     listteachselect = listteachselect.Concat(listteachContact1).ToList();
                    
                 }
@@ -151,6 +166,10 @@ namespace MDS.Controllers
             else {
                 ViewBag.teach = listteach;
             }
+            string dateprevious = SchoolManagement.getParamInfoEditDay(); //วันย้อนหลัง
+            DateTime dateForButton = DateTime.Now.AddDays((Convert.ToInt32(dateprevious)*-1));
+            ViewBag.previous = dateForButton.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB")) ;
+            ViewBag.dateprevious = (Convert.ToInt32(dateprevious) * -1);
             //End ครูผู้สอน by courseid
             ViewBag.coursename = coursename;
             ViewBag.courseid = courseid;
@@ -377,7 +396,9 @@ namespace MDS.Controllers
             //DateTime EndDate = DateTime.Parse(now);
             DateTime EndDate = DateTime.ParseExact(now, "dd/MM/yyyy", new System.Globalization.CultureInfo("en-US"));
             TimeSpan result = StartDate-EndDate;
-            if (result.Days >= 0)
+            string previous = SchoolManagement.getParamInfoEditDay();
+            int sumdate = result.Days + Convert.ToInt32(previous);
+            if (sumdate >= 0)
             {
                
                 var strsubject = LearningManagement.Getsubject(courseid);//วิชา
@@ -439,7 +460,9 @@ namespace MDS.Controllers
             //DateTime EndDate = DateTime.Parse(now);
             DateTime EndDate = DateTime.ParseExact(now, "dd/MM/yyyy", new System.Globalization.CultureInfo("en-US"));
             TimeSpan result = StartDate - EndDate;
-            if (result.Days >= 0)
+            string previous = SchoolManagement.getParamInfoEditDay();
+            int sumdate = result.Days + Convert.ToInt32(previous);
+            if (sumdate >= 0)
             {
 
                 var strsubject = LearningManagement.Getsubject(courseid);//วิชา

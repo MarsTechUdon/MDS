@@ -15,12 +15,12 @@ namespace MDS.DBExec
         public static string _CON_STR = ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
 
         #region "List exam"
-        public List<ManageExamModel> GetListExam(string ugmData, string ugmData2)
+        public List<ManageExamModel> GetListExam(string ugmData, string ugmData2,string dltno)
         {
             List<ManageExamModel> model = new List<ManageExamModel>();
             using (SqlConnection db = new SqlConnection(_CON_STR))
             {
-                string langue = ""; string group = ""; 
+                string langue = ""; string group = ""; string dlt = "";
                 if (string.IsNullOrEmpty(ugmData2))
                 {
                      langue = "TH";
@@ -37,11 +37,20 @@ namespace MDS.DBExec
                 {
                     group = ugmData;
                 }
+                if (string.IsNullOrEmpty(dltno))
+                {
+                    dlt = "0";
+                }
+                else
+                {
+                    dlt = dltno;
+                }
                 SqlCommand cm = new SqlCommand("[sp_Pretest]", db);
                 cm.CommandType = CommandType.StoredProcedure;
                 cm.Parameters.AddWithValue("@flag", "ListExam");
                 cm.Parameters.AddWithValue("@langid", langue);
                 cm.Parameters.AddWithValue("@subjectgroupid", group);
+                cm.Parameters.AddWithValue("@dltno", dlt);
 
                 SqlDataAdapter da = new SqlDataAdapter();
                 da.SelectCommand = cm;

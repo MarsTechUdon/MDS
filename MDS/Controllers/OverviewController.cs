@@ -14,6 +14,7 @@ namespace MDS.Controllers
 {
     public class OverviewController : Controller
     {
+        SchoolManagement school = new SchoolManagement();
         OverviewManagement OverviewMN = new OverviewManagement();
         // GET: Overview
         [NeedLogin]
@@ -155,6 +156,7 @@ namespace MDS.Controllers
       
         public ActionResult Error()
         {
+            ViewBag.GetCompany = school.GetCompanyView();
             return View("Error");
         }
     }

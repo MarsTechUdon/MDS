@@ -1,20 +1,19 @@
-﻿@{
+﻿@using MDS.Models
+@{
     Layout = null;
+    var Company = Session["SessionCompany"] as SessionCompanyModel;
 }
 <!DOCTYPE html>
 <html>
 <head>
-    <title>@ViewBag.Title - Mars Driving Center</title>
+    <title>@ViewBag.Title - @(Company.schoolnameE == "" ? Company.schoolname : Company.schoolnameE)</title>
     <meta charset="UTF-8">
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center114.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center72.png">
-    <link rel="apple-touch-icon-precomposed" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center57.png">
-    <link rel="shortcut icon" href="~/MDSMiddleFile/DefaultMediaIMG/icon/favicon.png">
+    <link rel="shortcut icon" href="~/@Company.schoolfavicon?@DateTime.Now.Ticks.ToString()">
 
     <!-- HELPERS -->
     <link rel="stylesheet" type="text/css" href="~/assets/helpers/animate.css">
@@ -216,31 +215,27 @@
 
     </style>
 </head>
-<body >
+<body>
     <!-- Site wrapper -->
     <div class="wrapper">
-           <div id="loading" >
+        <div id="loading">
             <div class="spinner">
                 <div class="bounce1"></div>
                 <div class="bounce2"></div>
                 <div class="bounce3"></div>
             </div>
         </div>
-        <header class="main-header">
-
-        </header>
+        <header class="main-header"></header>
 
         <!-- =============================================== -->
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper" style="background-color:#DCDCDC;" >
+        <div class="content-wrapper" style="background-color:#DCDCDC;">
             <!-- Main content -->
             @RenderBody()
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <footer class="main-footer" style="width:0px;">
-
-        </footer>
+        <footer class="main-footer" style="width:0px;"></footer>
 
         <!-- Add the sidebar's background. This div must be placed
         immediately after the control sidebar -->
@@ -308,9 +303,8 @@
     <script type="text/javascript" src="~/assets/themes/admin/layout.js"></script>
 
     <!-- Theme switcher -->
-
     @*<script type="text/javascript" src="~/assets/widgets/theme-switcher/themeswitcher.js"></script>
 
-    <script type="text/javascript" src="~/Content/Other/jquery.ui.touch-punch.js"></script>*@
+        <script type="text/javascript" src="~/Content/Other/jquery.ui.touch-punch.js"></script>*@
 </body>
 </html>

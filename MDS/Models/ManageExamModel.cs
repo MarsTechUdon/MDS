@@ -54,6 +54,8 @@ namespace MDS.Models
         public string studentname { get; set; }
         public string coursenickname { get; set; }
         public string dltNo { get; set; }
+
+        public string array_id { get; set; }
         
         public List<ManageExamModel> QuestionList { get; internal set; }
         public List<ManageExamModel> ChoiceList { get; internal set; }

@@ -58,4 +58,35 @@ $(function () {
         return /[a-z]/.test(value) // has a lowercase letter
             && /[0-9]/.test(value)  // consists of only these
     });
+    $("#Schoolinfo").validate({
+        rules: {
+            sendemailuser: {
+                required: true
+
+            },
+            sendemailpass: {
+                required: true
+
+            },
+            CrmPassword: {
+                required: true,
+                equalTo: '#sendemailpass'
+            }
+        },
+        messages: {
+            sendemailuser: {
+                required: 'กรุณาอีเมล'
+
+            },
+            sendemailpass: {
+                required: 'กรุณากรอกรหัสผ่านใหม่'
+
+            },
+            CrmPassword: {
+                required: 'กรุณากรอกรหัสผ่านอีกครั้ง',
+                equalTo: 'รหัสผ่านต้องเหมือนกัน'
+            }
+
+        }
+    });
 });

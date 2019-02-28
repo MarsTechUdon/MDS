@@ -129,9 +129,9 @@ namespace MDS.Controllers
 
         [NeedLogin]
         [HttpPost]
-        public JsonResult GenQR(string Url)
+        public JsonResult GenQR(string Url, string Logo)
         {
-            string imgBase64 = PublicManagement.Image(Url);
+            string imgBase64 = PublicManagement.Image(Url, Logo);
             return Json(imgBase64);
         }
 

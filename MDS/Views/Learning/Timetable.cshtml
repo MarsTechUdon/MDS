@@ -19,7 +19,7 @@
 @*<link rel="stylesheet" type="text/css" href="~/Content/Other/fullcalendar-2.7.0/fullcalendar.css">*@
 
 <link rel="stylesheet" type="text/css" href="~/Content/Other/fullcalendar-3.9.0/fullcalendar.css">
-
+<link rel="stylesheet" type="text/css" href="~/Content/Other/scheduler.css">
 @*<link rel="stylesheet" type="text/css" href="~/assets/widgets/calendar/calendar.css">*@
 @*<link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker/datepicker.css">
     <link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker-ui/datepicker.css">
@@ -28,6 +28,7 @@
 <style type="text/css">
     .fc-event {
         font-size: 10px !important;
+        cursor: pointer;
     }
     .ui-datepicker {
     z-index:1051 !important;
@@ -198,7 +199,21 @@ else if (ViewBag.Result == "N")
                     </label>
                 </div>
                 <div class="col-md-10" style="margin-bottom:0px !important;">
-                    <label class="font-size-18" style="color:black;">@(gear == "A" ? "ออโต้" : "กระปุก")</label>
+
+                    @if (gear == "A")
+                    {
+                        <label class="font-size-18" style="color:black;">ออโต้</label>
+
+                    }
+                    else if (gear == "M")
+                    {
+                        <label class="font-size-18" style="color:black;">ออโต้</label>
+                    }
+                    else
+                    { 
+                        <label class="font-size-18" style="color:black;">ไม่ระบุ</label>
+                    }
+
                 </div>
             </div>
             <div class="row">
@@ -283,7 +298,6 @@ else if (ViewBag.Result == "N")
     </div>
 
     <div class="content-box-wrapper">
-
         <div class="col-md-12 center-margin">
             <div class="row">
                 <div class="col-md-7">
@@ -509,10 +523,79 @@ else if (ViewBag.Result == "N")
             </div>
             <br>
             <div class="row">
-                <div class="table-responsive">
-                    <div id="calendar"></div>
+                <div class="content-box tabs">
+                    <div class="content-box-header bg-blue-alt" style="background-color: #3598db;">
+                        <span style="float:right;margin:10px;"></span>
+                        <ul>
+                            <li>
+                                <a data-toggle="tab" href="#tabs-1" id="tebclick_21" value="1">
+                                    ตารางเรียน
+                                    <i class="glyph-icon icon-align-justify icon-size23"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#tabs-2" id="tebclick_22" value="2">
+                                    ตารางครู
+                                    <i class="glyph-icon icon-table icon-size23"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#tabs-3" id="tebclick_23" value="2">
+                                    ตารางรถ
+                                    <i class="glyph-icon icon-table icon-size23"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="tabs-1">
+                        <div class="content-box">
+                            <div class="content-box-header bg-blue" style="text-align:left;">
+                                <i class="glyph-icon icon-calendar"></i> ตารางเรียน
+                            </div>
+                            <div class="content-box-wrapper">
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <div id="calendar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tabs-2">
+                        <div class="content-box">
+                            <div class="content-box-header bg-blue" style="text-align:left;">
+                                <i class="glyph-icon icon-calendar"></i> ตารางครู
+                            </div>
+                            <div class="content-box-wrapper">
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <div id="calendar2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tabs-3">
+                        <div class="content-box">
+                            <div class="content-box-header bg-blue" style="text-align:left;">
+                                <i class="glyph-icon icon-calendar"></i> ตารางรถ
+                            </div>
+                            <div class="content-box-wrapper">
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <div id="calendar3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            @*<div class="row">
+            <div class="table-responsive">
+                <div id="calendar"></div>
+            </div>
+        </div>*@
         </div>
     </div>
 </div>
@@ -694,8 +777,8 @@ else if (ViewBag.Result == "N")
                         </div>
                     </div>
                 </div>
-
-                <div class="modal-footer">
+                <div class="modal-footer">                   
+                    <span style="float:left;color:red">*สามารถเลือกวันได้ตั้งแต่ วันที่ @ViewBag.previous</span>
                     <button type="button" class="btn btn-success btnSaveDrop">บันทึก</button>
                     <button type="button" class="btn btn-danger cancel" data-dismiss="modal">ยกเลิก</button>
                 </div>
@@ -863,6 +946,7 @@ else if (ViewBag.Result == "N")
             </div>
 
             <div class="modal-footer">
+                <span style="float:left;color:red">*สามารถเลือกวันได้ตั้งแต่ วันที่ @ViewBag.previous</span>
                 <button type="button" class="btn btn-success btnSaveAdd">บันทึก</button>
                 <button type="button" class="btn btn-danger cancel" data-dismiss="modal">ยกเลิก</button>
             </div>
@@ -1022,6 +1106,7 @@ else if (ViewBag.Result == "N")
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <span style="float:left;color:red">*สามารถเลือกวันได้ตั้งแต่ วันที่ @ViewBag.previous</span>
                     <button type="button" class="btn btn-success btnSaveEdit">บันทึก</button>
                     <button type="button" class="btn btn-danger closeEdit cancel" data-dismiss="modal">ยกเลิก</button>
                 </div>
@@ -1059,7 +1144,7 @@ else if (ViewBag.Result == "N")
                     <label>ระบุเกียร์</label>
                     <div class="input-prepend input-group">
                         <select class="form-control" id="gear" name="gear" required>
-                            <option value="" disabled>--เลือกเกียร์--</option>
+                            <option value="" disabled selected>--เลือกเกียร์--</option>
                             <option value="A" @(gear == "A" ? "selected" : "")>ออโต้</option>
                             <option value="M" @(gear == "M" ? "selected" : "")>กระปุก</option>
                         </select>
@@ -1260,6 +1345,8 @@ else if (ViewBag.Result == "N")
     <script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/lib/moment.min.js"></script>
     <script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/fullcalendar.js"></script>
     <script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/locale/th.js"></script>
+    <script type="text/javascript" src="~/Content/Other/scheduler.js"></script>
+
 
     @*<script type="text/javascript" src="~/assets/widgets/daterangepicker/moment.js"></script>
         <script type="text/javascript" src="~/assets/widgets/calendar/calendar.js"></script>
@@ -1285,6 +1372,7 @@ else if (ViewBag.Result == "N")
                 changeYear: true,
                 //defaultDate: toDay,
                 autoclose: true,
+                minDate: @ViewBag.dateprevious,
                 dateFormat: 'dd/mm/yy',
                 isBuddhist: true,
                 orientation: "bottom left",
@@ -1375,7 +1463,7 @@ else if (ViewBag.Result == "N")
                 $('#divEndtimeDroptxt').show();
                 //$('#divEndtimeAdd').attr("disabled", "disabled");
             });
-
+           
         //datepicker
         $('.timepicker').timepicker({
             showhour: true,
@@ -1415,7 +1503,17 @@ else if (ViewBag.Result == "N")
           ///Enddraggable
         var events = [];
         var selectedEvent = null;
-        FetchEventAndRenderCalendar();
+            FetchEventAndRenderCalendar(); 
+            $(document).on("click", "#tebclick_21", function () {
+                FetchEventAndRenderCalendar();
+            });
+            $(document).on("click", "#tebclick_22", function () {
+                CalendarTeacher();
+            });
+            $(document).on("click", "#tebclick_23", function () {
+                CalendarCar();
+            });
+          
         function FetchEventAndRenderCalendar() {
             var teacher = $('#arrteacher').val();
             var courseid = $('#courseid').val();
@@ -1432,6 +1530,34 @@ else if (ViewBag.Result == "N")
                 error: function (a, b, c) {
                     alert("error" + a);
                 }
+            });
+            };
+            function CalendarTeacher() {
+             $.ajax({
+                url: '@Url.Action("GetCalendarBooking", "Learning")',
+                dataType: "json",
+                type: "POST",
+                 success: function (item2) {
+                     calendarEvenTeach(item2);
+                },
+                error: function (a, b, c) {
+                    alert("error" + a);
+              }
+                
+            });
+            };
+            function CalendarCar() {
+             $.ajax({
+                url: '@Url.Action("GetCalendarCar", "Learning")',
+                dataType: "json",
+                type: "POST",
+                 success: function (item3) {
+                     calendarEvenCar(item3);
+                },
+                error: function (a, b, c) {
+                    alert("error" + a);
+              }
+                
             });
         };
             $('#btnEdit').click(function () {
@@ -1571,7 +1697,7 @@ else if (ViewBag.Result == "N")
                 $('#AddEventModal').modal({ backdrop: 'static', keyboard: false });
                 $('#AddEventModal').appendTo('body');
             }
-          function addEventDrop() {
+            function addEventDrop() {
               $(".RepeatCheckGroup").hide();
                 var bookingidDrop = $('#bookingidDrop').val();
                 var courseidDrop = $('#courseidDrop').val();
@@ -2196,7 +2322,7 @@ else if (ViewBag.Result == "N")
                                 if ($('#txtStartEdittext').val() >= 0) {
                                     if ($('#subTimeEdit').val() > 0) {
                                         if ($('#remainingTimeEdit').val() >= 0) {
-                                   
+                                            form.submit();
                                             $(".RepeatCheck tbody").empty();
                                         }
                                     }
@@ -2226,13 +2352,14 @@ else if (ViewBag.Result == "N")
             });
         function calendar(item) {
             $('#calendar').fullCalendar({
+                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
+                    right: 'agendaDay,agendaWeek,month'
                     //right: 'month,agendaWeek'
                 },
-                defaultView: 'agendaWeek',
+                defaultView: 'agendaDay',
                 //lang: 'th',
                 allDaySlot: false,
                 slotDuration: '00:30:00',
@@ -2325,6 +2452,185 @@ else if (ViewBag.Result == "N")
                 //    $('#calendar').fullCalendar('unselect');
                 //},
             });
+            }
+        function calendarEvenTeach(item2){
+                $('#calendar2').fullCalendar({
+                    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                    //now: '2016-12-07',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        //right: 'month,agendaWeek,agendaDay'
+                        right: 'timelineDay,timelineThreeDays,agendaWeek,month'
+                    },
+                    defaultView: 'timelineDay',
+                    views: {
+                        timelineThreeDays: {
+                            type: 'timeline',
+                            duration: { days: 3 }
+                        }
+                    },
+                    //render:true,
+                    //lang: 'th',
+                    allDaySlot: false,
+                    slotLabelInterval: 5,
+                    //slotLabelInterval: '00:30',
+                    resourceAreaWidth: '20%',
+                    slotLabelFormat: 'HH:mm',
+                    slotEventOverlap: true,
+                    titleFormat: 'DD MMMM YYYY',
+                    columnFormat: 'dddd',
+                    slotDuration: '00:30:00',
+                    minTime: '08:00:00',
+                    maxTime: '22:00:00',
+                    dragOpacity: {
+                        agenda: .5
+                    },
+                    businessHours: true,
+                    editable: false,
+                    droppable: true,
+                    handleWindowResize: true,
+                    buttonIcons: false, // show the prev/next text
+                    navLinks: true, // can click day/week names to navigate views
+                    eventLimit: true, // allow "more" link when too many events
+                    displayEventTime: false,
+
+                    listDayAltFormat: false,
+                    resourceColumns: [
+                        {
+                            labelText: 'ชื่อครู',
+                            field: 'title',
+                            width: 150
+                        }
+                    ],
+                    resources: item2.TeacherList,
+                    //resourceRender: function (event, element) {
+                    //    element.find('.fc-event-title').append("<br/>" + event.description);
+                    //},
+                    resourceRender: function (resourceObj, $td, eventObj) {
+                        $td.eq(0).css({ 'cursor': 'pointer' });
+                        var $content = $('<div/>');
+                        $content.append($('<p/>').html('<span style="' + resourceObj.a2 + ';font-size:14px" class="glyph-icon ' + resourceObj.a1 + '">&nbsp;<span style="' + resourceObj.a2 + '">' + resourceObj.a3 + '</span>'));
+                        $content.append($('<p/>').html('<p style="' + resourceObj.a2 + '">ทฤษฎี ' + resourceObj.a4 + ' ชม. ปฏิบัติ ' + resourceObj.a5 + ' ชม.</p>'));
+                        $content.append($('<p/>').html('<span style="' + resourceObj.b2 + ';font-size:14px" class="glyph-icon ' + resourceObj.b1 + '">&nbsp;<span style="' + resourceObj.b2 + '">' + resourceObj.b3 + '</span>'));
+                        $content.append($('<p/>').html('<p style="' + resourceObj.b2 + '">ทฤษฎี ' + resourceObj.b4 + ' ชม. ปฏิบัติ ' + resourceObj.b5 + ' ชม.</p>'));
+                        $content.append($('<p/>').html('<span style="' + resourceObj.c2 + ';font-size:14px" class="glyph-icon ' + resourceObj.c1 + '">&nbsp;<span style="' + resourceObj.c2 + '">' + resourceObj.c3 + '</span>'));
+                        $content.append($('<p/>').html('<p style="' + resourceObj.c2 + '">ทฤษฎี ' + resourceObj.c4 + ' ชม. ปฏิบัติ ' + resourceObj.c5 + ' ชม.</p>'));
+                        $content.append($('<p/>').html('<span style="' + resourceObj.d2 + ';font-size:14px" class="glyph-icon ' + resourceObj.d1 + '">&nbsp;<span style="' + resourceObj.d2 + '">' + resourceObj.d3 + '</span>'));
+                        $content.append($('<p/>').html('<p style="' + resourceObj.d2 + '">ทฤษฎี ' + resourceObj.a4 + ' ชม. ปฏิบัติ ' + resourceObj.d5 + ' ชม.</p>'));
+                        $td.eq(0).popover({
+                            html: true,
+                            title: 'จำนวนชั่วโมง',
+                            content:$content,
+                            trigger: 'hover',
+                            placement: 'bottom',
+                            container: 'body'
+                        });
+                        $td.eq(0).find('.fc-cell-content').append("<p style='font-size:10px'>"
+                            + "<span style='" + resourceObj.a2 + ";font-size:14px' class='glyph-icon " + resourceObj.a1 + "'>&nbsp;</span><span  style='" + resourceObj.a2 + "'>" + resourceObj.a4 + "</span>/<span  style='" + resourceObj.a2 +"'>" + resourceObj.a5 + "</span>&nbsp;"
+                            + "<span style='" + resourceObj.b2 + ";font-size:14px' class='glyph-icon " + resourceObj.b1 + "'>&nbsp;</span><span  style='" + resourceObj.b2 + "'>" + resourceObj.b4 + "</span>/<span  style='" + resourceObj.b2 +"'>" + resourceObj.b5 + "</span>&nbsp;"
+                            + "<span style='" + resourceObj.c2 + ";font-size:14px' class='glyph-icon " + resourceObj.c1 + "'>&nbsp;</span><span  style='" + resourceObj.c2 + "'>" + resourceObj.c4 + "</span>/<span  style='" + resourceObj.c2 +"'>" + resourceObj.c5 + "</span>&nbsp;"
+                            + "<span style='" + resourceObj.d2 + ";font-size:14px' class='glyph-icon " + resourceObj.d1 + "'>&nbsp;</span><span  style='" + resourceObj.d2 + "'>" + resourceObj.d4 + "</span>/<span  style='" + resourceObj.d2 +"'>" + resourceObj.d5 + "</span>"
+                        );
+                    },
+                    events: item2.CalendarList,
+                    eventRender: function (eventObj, $el) {
+                        var strtitle = eventObj.title.split('-');
+                        var $content = $('<div/>');
+
+                        $.each(strtitle, function (i, item) {
+                            if (i % 2 == 0) {
+                                $content.append($('<p/>').html('<span style="color:blue">' + item + '</span>'));
+                            } else {
+                                $content.append($('<p/>').html('<span style="color:green">' + item + '</span>'));
+                            }
+
+                        })
+                        $el.popover({
+                            html: true,
+                            title: 'ข้อมูล',
+                            content: $content,
+                            trigger: 'hover',
+                            placement: 'top',
+                            container: 'body'
+                        });
+                    },
+                });
+            }
+        function calendarEvenCar(item3) {
+                $('#calendar3').fullCalendar({
+                    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                    //now: '2016-12-07',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        //right: 'month,agendaWeek,agendaDay'
+                        right: 'timelineDay,timelineThreeDays,agendaWeek,month'
+                    },
+                    defaultView: 'timelineDay',
+                    views: {
+                        timelineThreeDays: {
+                            type: 'timeline',
+                            duration: { days: 3 }
+                        }
+                    },
+                    //render:true,
+                    //lang: 'th',
+                    allDaySlot: false,
+                    slotLabelInterval: 5,
+                    //slotLabelInterval: '00:30',
+                    resourceAreaWidth: '20%',
+                    slotLabelFormat: 'HH:mm',
+                    slotEventOverlap: true,
+                    titleFormat: 'DD MMMM YYYY',
+                    columnFormat: 'dddd',
+                    slotDuration: '00:30:00',
+                    minTime: '08:00:00',
+                    maxTime: '22:00:00',
+                    dragOpacity: {
+                        agenda: .5
+                    },
+                    businessHours: true,
+                    editable: false,
+                    droppable: true,
+                    handleWindowResize: true,
+                    buttonIcons: false, // show the prev/next text
+                    navLinks: true, // can click day/week names to navigate views
+                    eventLimit: true, // allow "more" link when too many events
+                    displayEventTime: false,
+
+                    listDayAltFormat: false,
+                    resourceColumns: [
+                        {
+                            labelText: 'ชื่อครู',
+                            field: 'title',
+                            width: 150
+                        }
+                    ],
+                    resources: item3.GearList,
+                    events: item3.CalendarList,
+                    eventRender: function (eventObj, $el) {
+                        var strtitle = eventObj.title.split('-');
+                        var $content = $('<div/>');
+
+                        $.each(strtitle, function (i, item) {
+                            if (i % 2 == 0) {
+                                $content.append($('<p/>').html('<span style="color:blue">' + item + '</span>'));
+                            } else {
+                                $content.append($('<p/>').html('<span style="color:green">' + item + '</span>'));
+                            }
+
+                        })
+                        $el.popover({
+                            html: true,
+                            title: 'ข้อมูล',
+                            content: $content,
+                            trigger: 'hover',
+                            placement: 'top',
+                            container: 'body'
+                        });
+                    },
+                });
             }
             $(".btnEditbkdt").click(function () {
                 var calEvent = {

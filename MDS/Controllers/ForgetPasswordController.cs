@@ -12,20 +12,26 @@ using MDS.Fillter;
 using Microsoft.Ajax.Utilities;
 using RestSharp;
 using RestSharp.Authenticators;
+using MDS.Models;
 
 namespace MDS.Controllers
 {
     public class ForgetPasswordController : Controller
     {
+        SchoolManagement school = new SchoolManagement();
         [IsLoggedIn]
         public ActionResult Index()
         {
+            ViewBag.GetCompany = school.GetCompanyView();
+            ViewBag.Result = TempData["ResultMessage"];
+            ViewBag.Message = TempData["Message"];
             return View();
         }
 
         [IsLoggedIn]
         public ActionResult ResetPassword(string value)
         {
+            ViewBag.GetCompany = school.GetCompanyView();
             ViewData["UserID"] = value;
             ViewData["Message"] = TempData["FailLogin"];
             return View();
@@ -93,13 +99,14 @@ namespace MDS.Controllers
                     if (data.UserId != 0)
                     {
                         var model = userManage.SelectUserDataById(data.UserId.ToString());
-                        var email = model.UserData.Email.ToString();
-                      
+                        var email = model.UserData.Email.ToString();                     
                         try
                         {
+                            var GetCompany = new CompanyModel();
+                            GetCompany = school.GetCompany();
                             var idtemp = ENDEtxtManagement.Encrypt(model.UserData.UserID);
                             MailMessage mm = new MailMessage();
-                            mm.From = new System.Net.Mail.MailAddress("marstechnology2016@gmail.com");
+                            mm.From = new System.Net.Mail.MailAddress(GetCompany.sendemailuser);
                             mm.IsBodyHtml = true;
                             mm.To.Add(email.Trim());
                             mm.Subject = "Password Recovery";
@@ -112,10 +119,10 @@ namespace MDS.Controllers
                             NetworkCredential NetworkCred = new NetworkCredential();
                             //NetworkCred.UserName = "admin@marsdrivingcenter.com";
                             //NetworkCred.Password = "mars1234";
-                            //NetworkCred.UserName = "khuanchai27238@gmail.com";
-                            //NetworkCred.Password = "nop27238";
-                            NetworkCred.UserName = "marstechnology2016@gmail.com";
-                            NetworkCred.Password = "wysiwyg123#";
+                            //NetworkCred.UserName = "marstechnology2016@gmail.com";
+                            //NetworkCred.Password = "wysiwyg123#";
+                            NetworkCred.UserName = GetCompany.sendemailuser;
+                            NetworkCred.Password = GetCompany.sendemailpass;
                             System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient();
                             smtp.Host = "smtp.gmail.com";
                             smtp.Port = 587;
@@ -127,27 +134,27 @@ namespace MDS.Controllers
                             smtp.UseDefaultCredentials = false;
                             smtp.Credentials = NetworkCred;
                             smtp.Send(mm);
-                            ViewBag.Result = TempData["result"];
-                            ViewBag.Message = TempData["SuccessMessage"];
+                            TempData["ResultMessage"] = TempData["result"];
+                            TempData["Message"] = TempData["SuccessMessage"];
                         }
                         catch (Exception ex)
                         {
-                            ViewBag.Result = "N";
-                            ViewBag.Message = ex.Message;
-                            return View("Index");
+                            TempData["ResultMessage"] = "N";
+                            TempData["Message"] = ex.Message;
+                            return RedirectToAction("Index");
                         }
 
-                        return View("Index");
+                        return RedirectToAction("Index");
                     }
                     else
                     {
-                        ViewBag.Result = TempData["result"];
-                        ViewBag.Message = TempData["FailLogin"];
+                        TempData["ResultMessage"] = TempData["result"];
+                        TempData["Message"] = TempData["FailLogin"];
                     }
                 }
 
             }
-            return View("Index");
+            return RedirectToAction("Index");
         }  
     }
 }

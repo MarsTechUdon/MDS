@@ -30,5 +30,12 @@ namespace MDS.Models
         public string Lastupdate { get; set; }
         public string IP { get; set; }
         public string updateby { get; set; }
+        public string schoolfavicon { get; set; }
+        public string sendemailuser { get; set; }
+        public string sendemailpass { get; set; }
+        public string faviconName { get; set; }
+        public string CompanyLogoName { get; set; }
+        public string SchoolLogoName { get; set; }
+        public string logopath { get; set; }
     }
 }

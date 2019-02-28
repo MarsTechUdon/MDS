@@ -20,12 +20,11 @@ namespace MDS.Controllers
             return View();
         }
         [NeedLogin]
-        public ActionResult ManageExamList(string ugmData, string ugmData2)
+        public ActionResult ManageExamList(string ugmData, string ugmData2, string dltno)
         {
             var model = new ManageExamModel();
 
-            ViewData["ListExam"] = new ManageExamManagement().GetListExam(ugmData, ugmData2);
-
+            ViewData["ListExam"] = new ManageExamManagement().GetListExam(ugmData, ugmData2, dltno);
             ViewData["ListSubjectGroup"] = ManageExamManagement.GetSubjectGroup();
             ViewData["ListLanguage"] = ManageExamManagement.GetLanguage();
 
@@ -37,37 +36,36 @@ namespace MDS.Controllers
         public ActionResult CreateManageExam()
         {
             var model = new ManageExamModel();
-
             ViewData["ListSubjectGroup"] = ManageExamManagement.GetSubjectGroup();
             ViewData["ListLanguage"] = ManageExamManagement.GetLanguage();
             return View(model);
         }
         [NeedLogin]
-        public ActionResult ManageExamDetail(FormCollection Value, ManageExamModel modelManageExam)
+        public ActionResult ManageExamDetail( ManageExamModel modelManageExam)
         {
             ManageExamModel model = new ManageExamModel();
             model.ind = modelManageExam.ind;
             model = new ManageExamManagement().GetManageExamByID(model);
-
             ViewData["ListSubjectGroup"] = ManageExamManagement.GetSubjectGroup();
             ViewData["ListLanguage"] = ManageExamManagement.GetLanguage();
 
             var UserData = Session["UserProfile"] as UserSessionModel;
             model.User = UserData.Username;
-
             ViewBag.boolResult = TempData["boolResult"];
+            var temp_array_id = TempData["array_id"];
+            if (temp_array_id!=null)
+            {
+                ViewBag.array_id = TempData["array_id"];
+            }
+            else
+            {
+                ViewBag.array_id = modelManageExam.array_id;
+            }
             ViewBag.msg = TempData["msg"];
 
             return View(model);
         }
-        //[NeedLogin]
-        //public ActionResult GetManageExamByID(string ind)
-        //{
-        //    ManageExamModel model = new ManageExamModel();
-        //    model = new ManageExamManagement().GetManageExamByID(Convert.ToInt32(ind));
 
-        //    return Json(model);
-        //}
         [NeedLogin]
         public ActionResult AddManageExam(ManageExamModel ugm)
         {
@@ -96,7 +94,9 @@ namespace MDS.Controllers
             TempData["msg"] = result.msg;
             TempData["boolResult"] = result.result;
             model.ind = result.ind;
-            return RedirectToAction("ManageExamDetail", new { model.ind });
+            model.array_id = ugm.array_id;
+            TempData["array_id"] = model.array_id;
+            return RedirectToAction("ManageExamDetail", new { model.ind});
         }
         [NeedLogin]
         public ActionResult DeleteManageExam(ManageExamModel ugm)

@@ -59,7 +59,7 @@ namespace MDS.Controllers
         }
 
         [NeedLogin]
-        public ActionResult Createstudent(string Studenttype,string bid = null)
+        public ActionResult Createstudent(string Studenttype, string bid = null)
         {
             var model = new StudentModel();
             model.studenttype = Studenttype;
@@ -68,6 +68,7 @@ namespace MDS.Controllers
             ViewData["ListCourse"] = StudentManagement.GetCourseList();
             ViewData["ListTitleTH"] = StudentManagement.GetTitleTHList();
             ViewData["ListTitleEN"] = StudentManagement.GetTitleENList();
+            ViewData["ListIChannel"] = StudentManagement.GetIChannelList(); 
             return View(model);
         }
         [NeedLogin]
@@ -80,6 +81,7 @@ namespace MDS.Controllers
             ViewData["ListCourse"] = StudentManagement.GetCourseList();
             ViewData["ListTitleEN"] = StudentManagement.GetTitleENList();
             ViewData["ListCountry"] = StudentManagement.GetCountryList();
+            ViewData["ListIChannel"] = StudentManagement.GetIChannelList();
             return View(model);
         }
 
@@ -119,6 +121,7 @@ namespace MDS.Controllers
             model.disease = Value["medical_prob"];
             model.courseid = Value["courseid"];
             model.examdate = Value["examdate"];
+            model.channelid = Value["channelid"];
 
             if (attachment != null && attachment.ContentLength > 0)
             {
@@ -220,6 +223,8 @@ namespace MDS.Controllers
             var BranchData = Session["GetBranch"] as CurrentBranchModel;
             model.branchid = BranchData.branchid;
 
+            model.channelid = Value["channelid"];
+
             var res = StudentManagement.Edit(model);
             TempData["Result"] = res.Result;
             TempData["Message"] = res.Message;
@@ -316,6 +321,9 @@ namespace MDS.Controllers
             ViewData["ListTitleTH"] = StudentManagement.GetTitleTHList();
             ViewData["ListTitleEN"] = StudentManagement.GetTitleENList();
 
+            //ช่องทาง
+            ViewData["ListIChannel"] = StudentManagement.GetIChannelList();
+
             //ประเภทของค่า รับเงิน,บัตรเครดิต,บัญชีรับเงินโอน,ชื่อธนาคาร
             ViewData["ListReceive"] = StudentManagement.GetReceiveList();
             ViewData["ListReceiveCard"] = StudentManagement.GetReceiveCardList();
@@ -324,6 +332,12 @@ namespace MDS.Controllers
 
             //ViewBag.studentind = Value["studentind"].ToString();
             //ViewBag.studenttype = Value["studenttype"].ToString();
+
+            int Examdate = Int32.Parse(SchoolManagement.getParamInfoEditDay()) * (-1);
+            DateTime dateForButton = DateTime.Now.AddDays(Examdate);
+
+            ViewBag.Retroact = Examdate;
+            ViewBag.ShowRetroact = dateForButton.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
 
             ViewBag.DateToday = DateTime.Now.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
             ViewBag.Result = TempData["Result"];

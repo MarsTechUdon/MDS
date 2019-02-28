@@ -1,10 +1,14 @@
-﻿@{
+﻿@using MDS.Models
+@{
     Layout = null;
+    var Company = (CompanyModel)ViewBag.GetCompany;
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="~/@Company.schoolfavicon?@DateTime.Now.Ticks.ToString()">
     <title>Error</title>
     <style type="text/css">
         @@import url(https://fonts.googleapis.com/css?family=opensans:500);
@@ -263,7 +267,7 @@
     </div>
 
     <div class='c'>
-        <img src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png">
+        <img src="~/@Company.SchoolLogo?@DateTime.Now.Ticks.ToString()">
         <div class='_404'></div>
         <hr>
         <div class='_1'>พบข้อผิดพลาด</div>

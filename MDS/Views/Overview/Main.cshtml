@@ -73,7 +73,7 @@ else if (ViewBag.Result == "N")
 <div class="panel">
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 1,title="ระหว่างเรียน"})" title="ระหว่างเรียน" class="tile-box tile-box-shortcut btn-default">
                     <span class="bs-badge badge-absolute bs-badgeMDS">@temp.btw</span>
                     <div class="tile-header tile-headerBranch ">
@@ -84,7 +84,7 @@ else if (ViewBag.Result == "N")
                     </div>
                 </a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 2,title="ค้างชำระ"})" title="ค้างชำระ" class="tile-box tile-box-shortcut btn-default">
                     <span class="bs-badge badge-absolute bs-badgeMDS">@temp.debt</span>
                     <div class="tile-header tile-headerBranch ">
@@ -92,6 +92,17 @@ else if (ViewBag.Result == "N")
                     </div>
                     <div class="tile-content-wrapper">
                         <i class="glyph-icon fa fa-credit-card"></i>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="@Url.Action("Viewdata1", "Overview", new { ovid = 11,title="ค้างออกใบเสร็จ"})" title="ค้างออกใบเสร็จ" class="tile-box tile-box-shortcut btn-default">
+                    <span class="bs-badge badge-absolute bs-badgeMDS">@temp.remainreceipt</span>
+                    <div class="tile-header tile-headerBranch ">
+                        ค้างออกใบเสร็จ
+                    </div>
+                    <div class="tile-content-wrapper">
+                        <i class="glyph-icon fa fa-archive"></i>
                     </div>
                 </a>
             </div>

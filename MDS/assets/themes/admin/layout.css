@@ -12,23 +12,9 @@
     float: left;
     position: relative;
 }
-    #header-logo .logo-content-big
-    {
-        /*background: url('../../../MDCMiddleFile/DefaultMediaIMG/LogoMDC.png') left 50% no-repeat;*/
-        /*text-indent: -999em;*/
-        /*position: absolute;*/
-
-        /*margin:5px 0 0;
-        height: 70px;
-        width: 258px;
-        float:left;*/
-
-        /*left: 10px;
-        top: 50%;
-        margin-top: -17px;*/
-    }
+  
 .logo-content-small {
-    background: url('../../../MDCMiddleFile/DefaultMediaIMG/redmobile.png') left 50% no-repeat;
+    /*background: url('../../../MDSMiddleFile/DefaultMediaIMG/redmobile.png') left 50% no-repeat;*/
     /*width: 60px;*/
     text-indent: -999em;
     margin: 5px 0 0;

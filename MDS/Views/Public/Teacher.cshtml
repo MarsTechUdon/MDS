@@ -465,7 +465,7 @@
                                 <th style="text-align:center;">
                                     @Html.DisplayName("วันที่เรียน")
                                 </th>
-                                <th style="text-align:center;">
+                                <th style="text-align:center;width:15%">
                                     @Html.DisplayName("เวลาที่เรียน")
                                 </th>
                                 <th style="text-align:center;">
@@ -727,12 +727,12 @@
             return false;
         });
     </script>
-    <script>
+    @*<script>
         $(document).ready(function () {
             document.getElementById("teacherind").value = @ViewBag.tid;
             $('#ImgTeacher2').attr('src', "data:image/png;base64," + @ViewBag.timg);
         });
-    </script>
+    </script>*@
     <script>
         $(document).ready(function () {
             var x = document.getElementById("depositdate");

@@ -15,5 +15,7 @@ namespace MDS.Models
         public string schooladdr3 { get; set; }
         public string footer { get; set; }
         public string langid { get; set; }
+        public string schoolnameE { get; set; }
+        public string schoolfavicon { get; set; }
     }
 }

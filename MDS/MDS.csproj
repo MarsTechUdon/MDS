@@ -349,7 +349,9 @@
     <Compile Include="Models\DepositACModel.cs" />
     <Compile Include="Models\GrantMenuModel.cs" />
     <Compile Include="Models\lcourseModel.cs" />
+    <Compile Include="Models\lgearModel.cs" />
     <Compile Include="Models\ListBatchModel.cs" />
+    <Compile Include="Models\ListCalendarModel.cs" />
     <Compile Include="Models\ListstudyModel.cs" />
     <Compile Include="Models\lsubjectModel.cs" />
     <Compile Include="Models\lteacherModel.cs" />
@@ -384,6 +386,7 @@
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Models\TableStudentModel.cs" />
     <Compile Include="Models\TableTeacherModel.cs" />
+    <Compile Include="Models\TeacherCalendarModel.cs" />
     <Compile Include="Models\TeacherModel.cs" />
     <Compile Include="Models\UserDataModel.cs" />
     <Compile Include="Models\UserGroupModel.cs" />
@@ -2597,7 +2600,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\Background-12.jpg" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\board.png" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\car-learning.png" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\CompanyLogo.jpg" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\CompanyLogo.png" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\default-image.png" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\Favicon.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\head-bg.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\icon\favicon.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\icon\Mars Driving Center114.png" />
@@ -2607,8 +2616,10 @@
     <Content Include="MDSMiddleFile\DefaultMediaIMG\LogoMDC.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\LOGOsmall.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\QRUrl.png" />
-    <Content Include="MDSMiddleFile\DefaultMediaIMG\red1.png" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\QRUrl1.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\redmobile.png" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\SchoolLogo.jpg" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\SchoolLogo.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\Trash.png" />
     <Content Include="MDSMiddleFile\ForeignStudent\131843242671578147_1523431076042.jpg" />
     <Content Include="MDSMiddleFile\UserIMG\131842485629451596_GOPR2041.jpg" />
@@ -2644,7 +2655,6 @@
     <Content Include="DBEntity\MDS.edmx.diagram">
       <DependentUpon>MDS.edmx</DependentUpon>
     </Content>
-    <Content Include="MDSMiddleFile\MediaFile\131751702665433317_2.pdf" />
     <Content Include="assets\bootstrap\css\bootstrap-theme.css.map" />
     <Content Include="assets\bootstrap\css\bootstrap-theme.min.css.map" />
     <Content Include="assets\bootstrap\css\bootstrap.css.map" />
@@ -2757,6 +2767,7 @@
     <Content Include="fonts\kanit-regular.otf" />
     <Content Include="fonts\kanit-regular.ttf" />
     <Content Include="fonts\kanit-regular.woff" />
+    <Content Include="MDSMiddleFile\MediaFile\131751702665433317_2.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Reports\Appointment\AppointmentXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>

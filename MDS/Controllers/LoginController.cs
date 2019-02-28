@@ -15,11 +15,12 @@ namespace MDS.Controllers
 {
     public class LoginController : Controller
     {
+        SchoolManagement school = new SchoolManagement();
         [IsLoggedIn]
         public ActionResult Index(string username = null)
         {
             //ViewBag.AlertMessage = TempData["AlertMessage"];
-
+            ViewBag.GetCompany = school.GetCompanyView();
             ViewData["ErrorMessage"] = TempData["FailLogin"];
             ViewData["username"] = username;
             ViewData["SuccessMessage"] = TempData["IsChange"];
@@ -36,7 +37,7 @@ namespace MDS.Controllers
         //[CaptchaValidator(
         ////PrivateKey = "6LedW2AUAAAAAGIa-wzJMKh9W3lC5PqeK_R-8LTY",  /*localhost key*/
         ////PrivateKey = "6LeM83MUAAAAAL0n1Du9iCERmIIvrt2zi5z77qSw",  /*localhost key 192.168.1.17 */
-        ////PrivateKey = "6LcDwWAUAAAAABd3xzbUTUeZ2Qug2kFThwlpesuU",    /*163 key*/
+        //PrivateKey = "6LcDwWAUAAAAABd3xzbUTUeZ2Qug2kFThwlpesuU",    /*163 key*/
         ////PrivateKey = "6LehXHcUAAAAANAU69Qff3LgxAlBlBoeLpdwtzGz",   /*marsdrivingcenter*/
         //ErrorMessage = "Invalid input captcha.",
         //RequiredMessage = "The captcha field is required.")]
@@ -137,7 +138,7 @@ namespace MDS.Controllers
                             Session["GetBranch"] = null;
 
                         }
-
+                        Session["Company"] = school.GetCompanyView();
                         /*END*/
                         return RedirectToAction("Main", "Overview");
                     }
@@ -155,6 +156,7 @@ namespace MDS.Controllers
         [NeedLoginFirst]
         public ActionResult FirstLogin()
         {
+            ViewBag.GetCompany = school.GetCompanyView();
             ViewBag.Result = TempData["Result"];
             ViewBag.Message = TempData["Message"];
             return View();
@@ -241,6 +243,7 @@ namespace MDS.Controllers
                         }
                         TempData["Result"] = "Y";
                         TempData["Message"] = "บันทึกรหัสผ่านใหม่สำเร็จ";
+                        Session["Company"] = school.GetCompanyView();
                         /*END*/
                         return RedirectToAction("Main", "Overview");
                     }

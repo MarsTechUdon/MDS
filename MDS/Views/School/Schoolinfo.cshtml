@@ -203,7 +203,7 @@ else if (ViewBag.Result == "N")
         </div>
         <div id="tabs-1">
             <div class="content-box-wrapper">
-                @using (Html.BeginForm("EditCompany", "School", FormMethod.Post))
+                @using (Html.BeginForm("EditCompany", "School", FormMethod.Post ,new { enctype = "multipart/form-data", id = "Schoolinfo" }))
                 {
                     <input type="hidden" name="ind" id="ind" value="@data.ind" />
                     <div class="panel">
@@ -214,22 +214,21 @@ else if (ViewBag.Result == "N")
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-12">
                                     <div class="pic-hov">
-                                        @if (data.CompanyLogo != null)
+                                        @if (data.CompanyLogo != "")
                                         {
-                                            <img id="photo1" src="data:image/jpeg;base64,@data.CompanyLogo" class="img-responsive" />
-                                            <input type="hidden" name="CompanyLogo" id="photo_temp1" value="@data.CompanyLogo" />
+                                            <img id="photo1" src="~/@data.CompanyLogo?@DateTime.Now.Ticks.ToString()" class="img-responsive" />
+                                            @*<img id="photo1" src="data:image/jpeg;base64,@data.CompanyLogo" class="img-responsive" />*@
+                                            <input type="hidden" name="CompanyLogo" id="photo_temp1" value="@data.CompanyLogoName" />
                                         }
                                         else
                                         {
-                                            <img id="photo1" src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" class="img-responsive" />
-                                            <input type="hidden" name="CompanyLogo" id="photo_temp1" />
+                                            <img id="photo1" src="~/MDSMiddleFile/DefaultMediaIMG/default-image.png" class="img-responsive" />
+                                            @*<input type="hidden" name="CompanyLogo" id="photo_temp1" />*@
                                         }
-                                        @*<img id="photo" src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" class="img-responsive" />
-                                            <input type="hidden" name="photo_temp" id="photo_temp" />*@
                                         <label for="file1" class="custom-file-upload">
                                             <i class="glyph-icon icon-camera pic-btn"></i>
                                         </label>
-                                        <input id="file1" type="file" onchange="showimagepreview1(this)" name="file" style="display:none !important;" accept="image/x-png,image/jpg,image/jpeg" />
+                                        <input id="file1" type="file" onchange="showimagepreview1(this)" name="CompanyLogoFile" style="display:none !important;" accept="image/x-png,image/jpg,image/jpeg" />
                                     </div>
 
                                 </div>
@@ -248,7 +247,7 @@ else if (ViewBag.Result == "N")
                                         <input type="text" name="CompanyAddr2" id="CompanyAddr2" placeholder="กรุณากรอก ที่อยู่ 2" class="form-control" autocomplete="off" value="@data.CompanyAddr2" />
                                     </div>
                                     <div class="form-group">
-                                        <label>ที่อยู่ 3</label>
+                                        <label>เบอร์โทร</label>
                                         <input type="text" name="CompanyAddr3" id="CompanyAddr3" placeholder="กรุณากรอก ที่อยู่ 3" class="form-control" autocomplete="off" value="@data.CompanyAddr3" />
                                     </div>
                                 </div>
@@ -275,7 +274,7 @@ else if (ViewBag.Result == "N")
                                         <input type="text" name="CompanyAddrE2" id="CompanyAddrE2" placeholder="Please enter Address 2" class="form-control" autocomplete="off" value="@data.CompanyAddrE2" />
                                     </div>
                                     <div class="form-group">
-                                        <label>Address 3</label>
+                                        <label>Tel.</label>
                                         <input type="text" name="CompanyAddrE3" id="CompanyAddrE3" placeholder="Please enter Address 3" class="form-control" autocomplete="off" value="@data.CompanyAddrE3" />
 
                                     </div>
@@ -291,39 +290,40 @@ else if (ViewBag.Result == "N")
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-12">
                                     <div class="pic-hov">
-                                        @if (@data.SchoolLogo != null)
+                                        @if (data.SchoolLogo != "")
                                         {
-                                            <img id="photo2" src="data:image/jpeg;base64,@data.SchoolLogo" class="img-responsive" />
-                                            <input type="hidden" name="SchoolLogo" id="photo_temp2" value="@data.SchoolLogo" />
+                                            <img id="photo2" src="~/@data.SchoolLogo?@DateTime.Now.Ticks.ToString()" class="img-responsive">
+                                            @*<img id="photo2" src="data:image/jpeg;base64,@data.SchoolLogo" class="img-responsive" />*@
+                                            <input type="hidden" name="SchoolLogo" id="photo_temp2" value="@data.SchoolLogoName" />
                                         }
                                         else
                                         {
-                                            <img id="photo2" src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" class="img-responsive" />
+                                            <img id="photo2" src="~/MDSMiddleFile/DefaultMediaIMG/default-image.png" class="img-responsive" />
                                             <input type="hidden" name="SchoolLogo" id="photo_temp2" />
                                         }
                                         <label for="file2" class="custom-file-upload">
                                             <i class="glyph-icon icon-camera pic-btn"></i>
                                         </label>
-                                        <input id="file2" type="file" onchange="showimagepreview2(this)" name="file" style="display:none !important;" accept="image/x-png,image/jpg,image/jpeg" />
+                                        <input id="file2" type="file" onchange="showimagepreview2(this)" name="SchoolLogoFile" style="display:none !important;" accept="image/x-png,image/jpg,image/jpeg" />
                                     </div>
 
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-12">
                                     <div class="form-group">
                                         <label>ชื่อโรงเรียน</label>
-                                        <input type="text" name="SchoolName" id="SchoolName" placeholder="กรุณากรอก ชื่อบริษัท" class="form-control" autocomplete="off" value="@data.SchoolName" />
+                                        <input type="text" name="SchoolName" id="SchoolName" placeholder="กรุณากรอก ชื่อบริษัท" class="form-control" autocomplete="off" value="@data.SchoolName" required/>
                                     </div>
                                     <div class="form-group">
                                         <label>ที่อยู่ 1</label>
-                                        <input type="text" name="schoolAddr1" id="schoolAddr1" placeholder="Please enter Address 1" class="form-control" autocomplete="off" value="@data.schoolAddr1" />
+                                        <input type="text" name="schoolAddr1" id="schoolAddr1" placeholder="Please enter Address 1" class="form-control" autocomplete="off" value="@data.schoolAddr1" required/>
                                     </div>
                                     <div class="form-group">
                                         <label>ที่อยู่ 2</label>
-                                        <input type="text" name="schoolAddr2" id="schoolAddr2" placeholder="กรุณากรอก ที่อยู่ 2" class="form-control" autocomplete="off" value="@data.schoolAddr2" />
+                                        <input type="text" name="schoolAddr2" id="schoolAddr2" placeholder="กรุณากรอก ที่อยู่ 2" class="form-control" autocomplete="off" value="@data.schoolAddr2" required/>
                                     </div>
                                     <div class="form-group">
-                                        <label>ที่อยู่ 3</label>
-                                        <input type="text" name="schoolAddr3" id="schoolAddr3" placeholder="กรุณากรอก ที่อยู่ 3" class="form-control" autocomplete="off" value="@data.schoolAddr3" />
+                                        <label>เบอร์โทร</label>
+                                        <input type="text" name="schoolAddr3" id="schoolAddr3" placeholder="กรุณากรอก ที่อยู่ 3" class="form-control" autocomplete="off" value="@data.schoolAddr3" required/>
 
                                     </div>
                                 </div>
@@ -339,11 +339,11 @@ else if (ViewBag.Result == "N")
                                 <div class="col-lg-offset-4 col-lg-8 col-md-8 col-sm-12">
                                     <div class="form-group">
                                         <label>School Name</label>
-                                        <input type="text" name="SchoolNameE" id="SchoolNameE" placeholder="Please enter SchoolName" class="form-control" autocomplete="off" value="@data.SchoolNameE" />
+                                        <input type="text" name="SchoolNameE" id="SchoolNameE" placeholder="Please enter SchoolName" class="form-control" autocomplete="off" value="@data.SchoolNameE"/>
                                     </div>
                                     <div class="form-group">
                                         <label>Address 1</label>
-                                        <input type="text" name="schoolAddrE1" id="schoolAddrE1" placeholder="Please enter Address 1" class="form-control" autocomplete="off" value="@data.schoolAddrE1">
+                                        <input type="text" name="schoolAddrE1" id="schoolAddrE1" placeholder="Please enter Address 1" class="form-control" autocomplete="off" value="@data.schoolAddrE1" />
                                     </div>
                                     <div class="form-group">
                                         <label>Address 2</label>
@@ -351,12 +351,80 @@ else if (ViewBag.Result == "N")
 
                                     </div>
                                     <div class="form-group">
-                                        <label>Address 3</label>
+                                        <label>Tel.</label>
                                         <input type="text" name="schoolAddrE3" id="schoolAddrE3" placeholder="Please enter Address 3" class="form-control" autocomplete="off" value="@data.schoolAddrE3" />
 
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h3 class="title-hero">
+                                Favicon
+                            </h3>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <div class="pic-hov">
+                                        @if (data.schoolfavicon != "")
+                                        {
+                                            <img id="photo3" src="~/@data.schoolfavicon?@DateTime.Now.Ticks.ToString()" class="img-responsive" />
+                                            @*<img id="photo3" src="data:image/jpeg;base64,@data.schoolfavicon" class="img-responsive" />*@
+                                            <input type="hidden" name="schoolfavicon" id="photo_temp3" value="@data.faviconName" />
+                                        }
+                                        else
+                                        {
+                                            <img id="photo3" src="~/MDSMiddleFile/DefaultMediaIMG/default-image.png" class="img-responsive" />
+                                            <input type="hidden" name="schoolfavicon" id="photo_temp3" />
+                                        }
+                                        <label for="file3" class="custom-file-upload">
+                                            <i class="glyph-icon icon-camera pic-btn"></i>
+                                        </label>
+                                        <input id="file3" type="file" onchange="showimagepreview3(this)" name="schoolfaviconFile" style="display:none !important;" accept="image/x-png,image/x-icon" />
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-12">
+                                    <h3> การทำไอคอน Favorites</h3>
+                                    <ul>
+                                        <li>เป็นไฟล์ในฟอร์แมต *.ico หรือ png</li>
+                                        <li>ขนาดของไอคอน 16 x 16 pixel หรือ 32 x 32 pixel</li>
+                                        <li>เว็บไซต์สร้าง Icon <a href="https://www.favicon.cc/">favicon.cc</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h3 class="title-hero">
+                                Email อัตโนมัติ
+                            </h3>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>อีเมล (Email)</label>
+                                    <input type="text" name="sendemailuser" id="sendemailuser" placeholder="Please enter Email" class="form-control" autocomplete="off" value="@data.sendemailuser" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label>รหัสผ่านอีเมล (Email Password)</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="sendemailpass" name="sendemailpass" placeholder="กรุณากรอกรหัสผ่านอีเมล" autocomplete="off" value="@data.sendemailpass">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label>ยืนยันรหัสผ่านอีเมล (Confirm Email Password)</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="CrmPassword" name="CrmPassword" placeholder="กรุณายืนยันรหัสผ่านอีเมล" autocomplete="off" value="@data.sendemailpass">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="row">
@@ -405,7 +473,7 @@ else if (ViewBag.Result == "N")
                                                 </label>
                                             </div>
                                             <div class="col-lg-6 col-md-6">
-                                                <button style="" class="btn btn-sm btn-success tooltip-button btnsaveconfigCheck" id="btnsaveconfigCheck_@item.paraid" value="@item.paraid" data-placement="top" title=""  @(ViewBag.CFtype == "N"&&ViewBag.paraid == item.paraid ? "" : "disabled")  >
+                                                <button style="" class="btn btn-sm btn-success tooltip-button btnsaveconfigCheck" id="btnsaveconfigCheck_@item.paraid" value="@item.paraid" data-placement="top" title="" @(ViewBag.CFtype == "N" && ViewBag.paraid == item.paraid ? "" : "disabled")>
                                                     <i class="glyph-icon icon-floppy-o"></i>
                                                 </button>
                                             </div>
@@ -419,13 +487,9 @@ else if (ViewBag.Result == "N")
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6">
                                                 <input type="text" class="form-control txtConfig" id="txtConfig_@item.paraid" min="1" value="@item.paraValue" maxlength="4">
-                                                @if (item.paraName == "ParaMPretestPass")
+                                                @if (item.paraUnit != "")
                                                 {
-                                                    <label> &nbsp;ครั้ง</label>
-                                                }
-                                                else if (item.paraName == "ParaMClearBooking")
-                                                {
-                                                    <label> &nbsp;นาที</label>
+                                                    <label> &nbsp;@item.paraUnit</label>
                                                 }
                                             </div>
                                             <div class="col-lg-6 col-md-6">
@@ -512,6 +576,30 @@ else if (ViewBag.Result == "N")
     });
 </script>
 @section scripts{
+    <script>
+        $(".toggle-password1").click(function () {
+
+            $(".toggle-password11").toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+        $(".toggle-password2").click(function () {
+
+            $(".toggle-password22").toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+    </script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/assets/firstlogin_validation.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#datatable-responsive').DataTable({
@@ -646,7 +734,7 @@ else if (ViewBag.Result == "N")
                 //else {
                 //    $('#btnsaveconfigCheck_' + $('#paraid').val()).attr("disabled", "disabled");
                 //}
-                
+
                 $('#txtTag').text($('#MessageCF').val());
                 document.getElementById("txtTag").style.color = "green";
                 $('#SetConfigModal').modal({ backdrop: 'static', keyboard: false });
@@ -687,11 +775,10 @@ else if (ViewBag.Result == "N")
                         var filerdr = new FileReader();
                         filerdr.onload = function (e) {
                             $('#photo1').attr('src', e.target.result);
-                            var temppic = e.target.result.split(',');
-                            document.getElementById('photo_temp1').value = temppic[1];
+                            //var temppic = e.target.result.split(',');
+                            //document.getElementById('photo_temp1').value = temppic[1];                           
                         }
                         filerdr.readAsDataURL(input.files[0]);
-
                     }
                 } else {
                     //
@@ -713,6 +800,7 @@ else if (ViewBag.Result == "N")
             var pngB = typ.match(".PNG");
             if (input.files[0].size <= 2097152) {
                 if (jpgS || jpgB || jpegS || jpegB || pngS || pngB) {
+                //if ( pngS || pngB) {
                     //  alert("sucess");
                     //console.log(input.files[0].size);
                     if (input.files && input.files[0]) {
@@ -720,8 +808,8 @@ else if (ViewBag.Result == "N")
                         var filerdr = new FileReader();
                         filerdr.onload = function (e) {
                             $('#photo2').attr('src', e.target.result);
-                            var temppic = e.target.result.split(',');
-                            document.getElementById('photo_temp2').value = temppic[1];
+                            //var temppic = e.target.result.split(',');                           
+                            //document.getElementById('photo_temp2').value = temppic[1];
                         }
                         filerdr.readAsDataURL(input.files[0]);
 
@@ -729,6 +817,37 @@ else if (ViewBag.Result == "N")
                 } else {
                     //
                     alert("กรุณาใช้ไฟล์ภาพนามสกุล .jpg .jpeg .png เท่านั้น");
+                    // document.getElementById("file").value;
+                    return false;
+                }
+            } else {
+                alert('รูปภาพมีขนาดใหญ่เกิน 100 kb');
+            }
+        }
+        function showimagepreview3(input) {
+            var typ = document.getElementById("file3").value
+            var icoS = typ.match(".ico");
+            var ICOB = typ.match(".ICO");
+            var pngS = typ.match(".png");
+            var pngB = typ.match(".PNG");
+            if (input.files[0].size <= 2097152) {
+                if (icoS || ICOB || pngS || pngB) {
+                    //  alert("sucess");
+                    //console.log(input.files[0].size);
+                    if (input.files && input.files[0]) {
+
+                        var filerdr = new FileReader();
+                        filerdr.onload = function (e) {
+                            $('#photo3').attr('src', e.target.result);
+                            //var temppic = e.target.result.split(',');
+                            //document.getElementById('photo_temp3').value = temppic[1];
+                        }
+                        filerdr.readAsDataURL(input.files[0]);
+
+                    }
+                } else {
+                    //
+                    alert("กรุณาใช้ไฟล์ภาพนามสกุล .ico .png เท่านั้น");
                     // document.getElementById("file").value;
                     return false;
                 }

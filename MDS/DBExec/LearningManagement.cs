@@ -175,6 +175,52 @@ namespace MDS.DBExec
             return list;
         }
         #endregion
+        #region "ดึงข้อมูล GetteacherCalendar"
+        public static List<TeacherCalendarModel> GetteacherCalendar()
+        {
+            var list = new List<TeacherCalendarModel>();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("sp_SCLookup", db);
+                cm.Parameters.AddWithValue("@flag", "lteacherwithHour");
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        var model = new TeacherCalendarModel();
+                        model.id= dr["ind"].ToString();
+                        model.title = dr["nameT"].ToString() + " " +dr["surnameT"].ToString();
+                        model.a1 = dr["a1"].ToString();
+                        model.a2 = dr["a2"].ToString();
+                        model.a3 = dr["a3"].ToString();
+                        model.a4 = dr["a4"].ToString();
+                        model.a5 = dr["a5"].ToString();
+                        model.b1 = dr["b1"].ToString();
+                        model.b2 = dr["b2"].ToString();
+                        model.b3 = dr["b3"].ToString();
+                        model.b4 = dr["b4"].ToString();
+                        model.b5 = dr["b5"].ToString();
+                        model.c1 = dr["c1"].ToString();
+                        model.c2 = dr["c2"].ToString();
+                        model.c3 = dr["c3"].ToString();
+                        model.c4 = dr["c4"].ToString();
+                        model.c5 = dr["c5"].ToString();
+                        model.d1 = dr["d1"].ToString();
+                        model.d2 = dr["d2"].ToString();
+                        model.d3 = dr["d3"].ToString();
+                        model.d4 = dr["d4"].ToString();
+                        model.d5 = dr["d5"].ToString();
+                        list.Add(model);
+                    }
+                    dr.Close();
+                }
+            }
+            return list;
+        }
+        #endregion
         #region "ดึงข้อมูล GetteacherBycourseid"
         public static List<lteacherModel> GetteacherBycourseid(string courseid)
         {
@@ -449,6 +495,7 @@ namespace MDS.DBExec
                                 DateTime stDate = DateTime.ParseExact(dr["studydate"].ToString(), "yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
                                 //DateTime stDate = DateTime.Parse(dr["studydate"].ToString());
                                 model.eventID = dr["ind"].ToString();
+                                model.resourceId=dr["teacherind"].ToString();
                                 model.title = dr["title"].ToString() + "-" + dr["description"].ToString();
                                 //model.description = dr["subjectid"].ToString() + "-" + dr["title"].ToString() + "-" + dr["description"].ToString() + "-" + dr["bookingid"].ToString() + "-" + dr["teacherind"].ToString() + "-" + dr["studytime"].ToString();
                                 model.description = dr["bookingid"].ToString();
@@ -505,6 +552,7 @@ namespace MDS.DBExec
                                 DateTime stDate = DateTime.Parse(dr["studydate"].ToString());
                                 //DateTime stDate = DateTime.ParseExact(dr["studydate"].ToString(), "yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
                                 model.eventID = dr["ind"].ToString();
+                                model.resourceId = dr["teacherind"].ToString();
                                 model.title = dr["title"].ToString() + "-" + dr["description"].ToString();
                                 //model.description = dr["subjectid"].ToString() + "-" + dr["title"].ToString() + "-" + dr["description"].ToString() + "-" + dr["bookingid"].ToString();
                                 model.description = dr["bookingid"].ToString();
@@ -548,6 +596,7 @@ namespace MDS.DBExec
                         {
                             DateTime stDate = DateTime.Parse(dr["studydate"].ToString());
                             model.eventID = dr["ind"].ToString();
+                            model.resourceId = dr["teacherind"].ToString();
                             model.title = dr["title"].ToString() + "-" + dr["description"].ToString();                            
                             //model.description = dr["subjectid"].ToString() + "-" + dr["title"].ToString() + "-" + dr["description"].ToString() + "-" + dr["bookingid"].ToString() + "-" + dr["teacherind"].ToString() + "-" + dr["studytime"].ToString();
                             model.description = dr["bookingid"].ToString();
@@ -561,6 +610,54 @@ namespace MDS.DBExec
                             model.rendering = "";
                             model.overlap = "true";
                             list.Add(model);
+                        }
+
+
+                    }
+                    dr.Close();
+                }
+            }
+            return list;
+        }
+        #endregion
+        #region "ดึงข้อมูล ListBookingByDateGear"
+        public static List<CalendarModel> ListBookingByDateGear(string currentdate)
+        {
+            var list = new List<CalendarModel>();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("sp_SCBooking", db);
+                cm.Parameters.AddWithValue("@flag", "ListBookingByDate");
+                cm.Parameters.AddWithValue("@currentdate", currentdate);
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        var model = new CalendarModel();
+                        if (dr["ind"].ToString() != "")
+                        {
+                            if (dr["subjecttype"].ToString() == "P") {
+                                DateTime stDate = DateTime.Parse(dr["studydate"].ToString());
+                                model.eventID = dr["ind"].ToString();
+                                model.resourceId = dr["gear"].ToString();
+                                model.title = dr["title"].ToString() + "-" + dr["description"].ToString();
+                                //model.description = dr["subjectid"].ToString() + "-" + dr["title"].ToString() + "-" + dr["description"].ToString() + "-" + dr["bookingid"].ToString() + "-" + dr["teacherind"].ToString() + "-" + dr["studytime"].ToString();
+                                model.description = dr["bookingid"].ToString();
+                                model.start = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studystime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
+                                model.end = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studyetime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
+                                model.backgroundColor = "";
+                                model.color = "#FEFCAD";
+                                model.borderColor = "#cac702";
+                                model.textColor = "#0000FF";
+                                model.allDay = "";
+                                model.rendering = "";
+                                model.overlap = "true";
+                                list.Add(model);
+                            }
+                            
                         }
 
 
@@ -948,6 +1045,60 @@ namespace MDS.DBExec
 
             }
             return model;
+        }
+        #endregion
+        #region "ดึงข้อมูลเกียร์"
+        public static List<lgearModel> GetGear()
+        {
+            var list = new List<lgearModel>();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlCommand cm = new SqlCommand("[sp_SCLookup]", db);
+                cm.CommandType = CommandType.StoredProcedure;
+                cm.Parameters.AddWithValue("@flag", "lgear");
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        var model = new lgearModel();
+                        model.gear = dr["gear"].ToString();
+                        model.display = dr["display"].ToString();
+                        list.Add(model);
+                    };
+                }
+                dr.Close();
+
+            }
+            return list;
+        }
+        #endregion
+        #region "ดึงข้อมูลCalendar"
+        public static List<lgearModel> GetGearCalendar()
+        {
+            var list = new List<lgearModel>();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlCommand cm = new SqlCommand("[sp_SCLookup]", db);
+                cm.CommandType = CommandType.StoredProcedure;
+                cm.Parameters.AddWithValue("@flag", "lgear");
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        var model = new lgearModel();
+                        model.id = dr["gear"].ToString();
+                        model.title = dr["display"].ToString();
+                        list.Add(model);
+                    };
+                }
+                dr.Close();
+
+            }
+            return list;
         }
         #endregion
     }

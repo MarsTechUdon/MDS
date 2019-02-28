@@ -2,6 +2,7 @@
 @{ var userData = Session["userSession"] as ChangePasswordModel;}
 @{
     Layout = null;
+    var Company = (CompanyModel)ViewBag.GetCompany;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -78,16 +79,12 @@
     </style>
     <meta charset="UTF-8">
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-    <title>เข้าใช้งานครั้งแรก - Mars Driving Center</title>
+    <title>เข้าใช้งานครั้งแรก - @(Company.SchoolNameE == "" ? Company.SchoolName : Company.SchoolNameE)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Favicons -->
-    <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center114.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center72.png">
-    <link rel="apple-touch-icon-precomposed" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center57.png">
-    <link rel="shortcut icon" href="~/MDSMiddleFile/DefaultMediaIMG/icon/favicon.png">
+    <link rel="shortcut icon" href="~/@Company.schoolfavicon?@DateTime.Now.Ticks.ToString()">
 
 
 
@@ -296,7 +293,7 @@
                     }
 
                     <div class="content-box-wrapper pad20A">
-                        <img class="mrg25B center-margin display-block" src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" width="200" height="150" alt="">
+                        <img class="mrg25B center-margin display-block" src="~/@Company.SchoolLogo?@DateTime.Now.Ticks.ToString()" width="200" height="150" alt="">
                         <div class="row">
                             <div class="col-lg-offset-4 col-md-4">
                                 <label style="float:right">ผู้ใช้งาน : @userData.FirstName @userData.LastName</label>

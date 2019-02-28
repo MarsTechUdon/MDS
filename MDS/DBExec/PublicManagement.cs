@@ -19,7 +19,7 @@ namespace MDS.DBExec
         public static string _CON_STR = ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
 
         #region "GenQRcode"
-        public string Image(string url)
+        public string Image(string url, string logo)
         {
             string code = "http://163.44.197.45/MDS/Public/Student?id=0x01000000738E62A713B7686C52B39E2BFFBDA0088173B423D43F2FA7";
             code = url;
@@ -30,7 +30,7 @@ namespace MDS.DBExec
             imgBarCode.Height = 150;
             imgBarCode.Width = 150;
             byte[] byteImage;
-            using (Bitmap bitMap = qrCode.GetGraphic(21, Color.Black, Color.White, (Bitmap)Bitmap.FromFile(HttpContext.Current.Server.MapPath("~/MDSMiddleFile/DefaultMediaIMG/LOGO.png"))))
+            using (Bitmap bitMap = qrCode.GetGraphic(21, Color.Black, Color.White, (Bitmap)Bitmap.FromFile(HttpContext.Current.Server.MapPath("~/"+ logo))))
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
@@ -232,17 +232,18 @@ namespace MDS.DBExec
                 {
                     Examid = dr["examid"].ToString();
                 }
+                dr.Close();
             }
             return Examid;
         }
         #endregion
 
-        #region "ดึงภาษาส่ง ภาษาเข้าข้อสอบ"
+        #region "ดึงข้อมูลโรงเรียน"
         /// <summary>
-        /// ฟังก์ชั่นดึงภาษาเข้าข้อสอบ
+        /// ฟังก์ชั่นดึงข้อมูลโรงเรียน
         /// </summary>
-        /// <param name="studentid"></param>
-        /// <param name="Lang"></param>
+        /// <param name="ind"></param>
+        /// <param name="langid"></param>
         /// <returns></returns>
         public static SessionCompanyModel GetCompany(SessionCompanyModel model)
         {
@@ -258,14 +259,17 @@ namespace MDS.DBExec
                 while (dr.Read())
                 {
                     model.ind = dr["ind"].ToString();
-                    model.schoollogo = dr["schoollogo"].ToString();
+                    model.schoollogo = dr["logopath"].ToString() + dr["schoollogo"].ToString();
                     model.schoolname = dr["schoolname"].ToString();
                     model.schooladdr1 = dr["schooladdr1"].ToString();
                     model.schooladdr2 = dr["schooladdr2"].ToString();
                     model.schooladdr3 = dr["schooladdr3"].ToString();
+                    model.schoolfavicon = dr["logopath"].ToString() + dr["schoolfavicon"].ToString();
+                    model.schoolnameE = dr["schoolnameE"].ToString();
                     model.footer = dr["footer"].ToString();
 
                 }
+                dr.Close();
             }
             return model;
         }
