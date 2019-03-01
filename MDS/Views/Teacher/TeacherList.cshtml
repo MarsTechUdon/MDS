@@ -1,6 +1,10 @@
-﻿@model List<MDS.Models.TeacherModel>
+﻿@using MDC.Models;
+@model List<MDC.Models.TeacherModel>
 @{
-    ViewBag.Title = "รายชื่อครูสอน";
+                /**/
+
+                ViewBag.Title = "รายชื่อครูสอน";
+                var company = Session["Company"] as CompanyModel;
 }
 
 <link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
@@ -162,7 +166,7 @@ else if (ViewBag.boolResult < 0)
                     @foreach (var Teacher in Model)
                     {
                         <tr>
-                            <td style="text-align:center;"> <a href="#"><img src="~/MDSMiddleFile/DefaultMediaIMG/QRUrl.png" width="25" height="25" onclick="changeIt('@Teacher.teachername','@Teacher.URL')" /></a>@{ i = i + 1; } @i </td>
+                            <td style="text-align:center;"> <a href="#"><img src="~/MDCMiddleFile/DefaultMediaIMG/QRUrl.png" width="25" height="25" onclick="changeIt('@Teacher.teachername','@Teacher.URL')" /></a>@{ i = i + 1; } @i </td>
                             <td><a><img id="photo1" src="data:image/jpeg;base64,@Teacher.cardimg" class="img-responsive" style="width:100px;" /></a></td>
                             <td>@Teacher.teachername</td>
                             <td>@Teacher.nickname</td>
@@ -254,74 +258,74 @@ else if (ViewBag.boolResult < 0)
     </div>
 </div>
 
-    <!-- Data tables -->
-    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
-    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
-    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
-    <script>
-        /* Datatables responsive */
-        $(document).ready(function () {
-            $('#datatable-responsive22').DataTable({
-                responsive: true
-            });
+<!-- Data tables -->
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+<script>
+    /* Datatables responsive */
+    $(document).ready(function () {
+        $('#datatable-responsive22').DataTable({
+            responsive: true
         });
+    });
 
-        $(document).ready(function () {
-            $('.dataTables_filter input').attr("placeholder", "Search...");
+    $(document).ready(function () {
+        $('.dataTables_filter input').attr("placeholder", "Search...");
+    });
+</script>
+
+<script type="text/javascript">
+    //aleat
+    $(document).ready(function () {
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
         });
-    </script>
+    });
 
-    <script type="text/javascript">
-        //aleat
-        $(document).ready(function () {
-            $("#success-alert").hide();
-            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
-                $("#success-alert").slideUp(500);
-            });
+    //modal cancle Teacher
+    $(document).ready(function () {
+        $('#cancleTeacher').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+
+            var id = button.data('id');
+            var Teacher = button.data('teachername');
+
+            var modal = $(this);
+            modal.find('#ca_Teacher_id').val(id);
+            // modal.find('#ca_Teacher_Teachername').val(TeacherName);
+            document.getElementById("ca_Teacher_Teachername").innerHTML = Teacher;
+
         });
+    });
 
-        //modal cancle Teacher
-        $(document).ready(function () {
-            $('#cancleTeacher').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
+    //modal re-cancle Teacher
+    $(document).ready(function () {
+        $('#recancleTeacher').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
 
-                var id = button.data('id');
-                var Teacher = button.data('teachername');
+            var id = button.data('id');
+            var Teacher = button.data('teachername');
 
-                var modal = $(this);
-                modal.find('#ca_Teacher_id').val(id);
-                // modal.find('#ca_Teacher_Teachername').val(TeacherName);
-                document.getElementById("ca_Teacher_Teachername").innerHTML = Teacher;
+            var modal = $(this);
+            modal.find('#re_ca_Teacher_id').val(id);
+            // modal.find('#ca_Teacher_Teachername').val(TeacherName);
+            document.getElementById("re_ca_Teacher_Teachername").innerHTML = Teacher;
 
-            });
         });
+    });
 
-        //modal re-cancle Teacher
-        $(document).ready(function () {
-            $('#recancleTeacher').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
+</script>
 
-                var id = button.data('id');
-                var Teacher = button.data('teachername');
-
-                var modal = $(this);
-                modal.find('#re_ca_Teacher_id').val(id);
-                // modal.find('#ca_Teacher_Teachername').val(TeacherName);
-                document.getElementById("re_ca_Teacher_Teachername").innerHTML = Teacher;
-
-            });
-        });
-
-    </script>
-
-    <script type="text/javascript">
+<script type="text/javascript">
         function changeIt(teachername, url) {
             $.ajax({
                 url: '@Url.Action("GenQR", "Public")',
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'Json',
-                data: JSON.stringify({ Url: url }),
+                data: JSON.stringify({ Url: url ,Logo: '@company.SchoolLogo'}),
                 success: successFunction,
                 error: errorFunction
             });
@@ -339,7 +343,7 @@ else if (ViewBag.boolResult < 0)
             function errorFunction(result) {
                 alert(result);
             }
-            
+
         }
 
         function coppyClip() {
@@ -364,7 +368,7 @@ else if (ViewBag.boolResult < 0)
             var tooltip = document.getElementById("myTooltip");
             tooltip.innerHTML = "คัดลอก";
         }
-    </script>
+</script>
 
 
 
