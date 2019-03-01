@@ -1,5 +1,5 @@
-﻿@using MDC.Models;
-@model List<MDC.Models.TeacherModel>
+﻿@using MDS.Models;
+@model List<MDS.Models.TeacherModel>
 @{
                 /**/
 
@@ -166,7 +166,7 @@ else if (ViewBag.boolResult < 0)
                     @foreach (var Teacher in Model)
                     {
                         <tr>
-                            <td style="text-align:center;"> <a href="#"><img src="~/MDCMiddleFile/DefaultMediaIMG/QRUrl.png" width="25" height="25" onclick="changeIt('@Teacher.teachername','@Teacher.URL')" /></a>@{ i = i + 1; } @i </td>
+                            <td style="text-align:center;"> <a href="#"><img src="~/MDSMiddleFile/DefaultMediaIMG/QRUrl.png" width="25" height="25" onclick="changeIt('@Teacher.teachername','@Teacher.URL')" /></a>@{ i = i + 1; } @i </td>
                             <td><a><img id="photo1" src="data:image/jpeg;base64,@Teacher.cardimg" class="img-responsive" style="width:100px;" /></a></td>
                             <td>@Teacher.teachername</td>
                             <td>@Teacher.nickname</td>
