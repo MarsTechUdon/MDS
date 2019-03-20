@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace MDC.Reports.TeacherHours {
+namespace MDS.Reports.TeacherHours {
     
     
     /// <summary>
@@ -945,7 +945,7 @@ namespace MDC.Reports.TeacherHours {
         }
     }
 }
-namespace MDC.Reports.TeacherHours.TeacherHoursXSDTableAdapters {
+namespace MDS.Reports.TeacherHours.TeacherHoursXSDTableAdapters {
     
     
     /// <summary>
@@ -1085,7 +1085,7 @@ namespace MDC.Reports.TeacherHours.TeacherHoursXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDC"].ConnectionString;
+            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

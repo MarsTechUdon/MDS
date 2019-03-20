@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace MDC.Reports.Deposit {
+namespace MDS.Reports.Deposit {
     
     
     /// <summary>
@@ -1748,7 +1748,7 @@ namespace MDC.Reports.Deposit {
         }
     }
 }
-namespace MDC.Reports.Deposit.DepositXSDTableAdapters {
+namespace MDS.Reports.Deposit.DepositXSDTableAdapters {
     
     
     /// <summary>
@@ -1895,7 +1895,7 @@ namespace MDC.Reports.Deposit.DepositXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDC"].ConnectionString;
+            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2079,7 +2079,7 @@ namespace MDC.Reports.Deposit.DepositXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDC"].ConnectionString;
+            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

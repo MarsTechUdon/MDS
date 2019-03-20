@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace MDC.Reports.Channel {
+namespace MDS.Reports.Channel {
     
     
     /// <summary>
@@ -1069,7 +1069,7 @@ namespace MDC.Reports.Channel {
         }
     }
 }
-namespace MDC.Reports.Channel.ChannelXSDTableAdapters {
+namespace MDS.Reports.Channel.ChannelXSDTableAdapters {
     
     
     /// <summary>
@@ -1212,7 +1212,7 @@ namespace MDC.Reports.Channel.ChannelXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDC"].ConnectionString;
+            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

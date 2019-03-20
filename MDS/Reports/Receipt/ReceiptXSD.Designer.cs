@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace MDC.Reports.Receipt {
+namespace MDS.Reports.Receipt {
     
     
     /// <summary>
@@ -2218,7 +2218,7 @@ namespace MDC.Reports.Receipt {
         }
     }
 }
-namespace MDC.Reports.Receipt.ReceiptXSDTableAdapters {
+namespace MDS.Reports.Receipt.ReceiptXSDTableAdapters {
     
     
     /// <summary>
@@ -2361,7 +2361,7 @@ namespace MDC.Reports.Receipt.ReceiptXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDC"].ConnectionString;
+            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2571,7 +2571,7 @@ namespace MDC.Reports.Receipt.ReceiptXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDC"].ConnectionString;
+            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2785,7 +2785,7 @@ namespace MDC.Reports.Receipt.ReceiptXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDC"].ConnectionString;
+            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

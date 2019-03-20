@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace MDC.Reports.DepositAC {
+namespace MDS.Reports.DepositAC {
     
     
     /// <summary>
@@ -1257,7 +1257,7 @@ namespace MDC.Reports.DepositAC {
         }
     }
 }
-namespace MDC.Reports.DepositAC.DepositACXSDTableAdapters {
+namespace MDS.Reports.DepositAC.DepositACXSDTableAdapters {
     
     
     /// <summary>
@@ -1404,7 +1404,7 @@ namespace MDC.Reports.DepositAC.DepositACXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDC"].ConnectionString;
+            this._connection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

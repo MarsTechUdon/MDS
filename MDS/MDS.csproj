@@ -405,68 +405,57 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Reports\Appointment\AppointmentXSD.Designer.cs" />
-    <Compile Include="Reports\Appointment\AppointmentXSD1.Designer.cs">
+    <Compile Include="Reports\Appointment\AppointmentXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AppointmentXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\Channel\ChannelXSD.Designer.cs" />
-    <Compile Include="Reports\Channel\ChannelXSD1.Designer.cs">
+    <Compile Include="Reports\Channel\ChannelXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ChannelXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\DepositACRevenue\DepositACRevenueXSD.Designer.cs" />
-    <Compile Include="Reports\DepositACRevenue\DepositACRevenueXSD1.Designer.cs">
+    <Compile Include="Reports\DepositACRevenue\DepositACRevenueXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DepositACRevenueXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\DepositAC\DepositACXSD.Designer.cs" />
-    <Compile Include="Reports\DepositAC\DepositACXSD1.Designer.cs">
+    <Compile Include="Reports\DepositAC\DepositACXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DepositACXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\Deposit\DepositXSD.Designer.cs" />
-    <Compile Include="Reports\Deposit\DepositXSD1.Designer.cs">
+    <Compile Include="Reports\Deposit\DepositXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DepositXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\ReceiptSingle\ReceiptSingleXSD.Designer.cs" />
-    <Compile Include="Reports\ReceiptSingle\ReceiptSingleXSD1.Designer.cs">
+    <Compile Include="Reports\ReceiptSingle\ReceiptSingleXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ReceiptSingleXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\Receipt\ReceiptXSD.Designer.cs" />
-    <Compile Include="Reports\Receipt\ReceiptXSD1.Designer.cs">
+    <Compile Include="Reports\Receipt\ReceiptXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ReceiptXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\ReportStudent\ReportStudentXSD.Designer.cs" />
-    <Compile Include="Reports\ReportStudent\ReportStudentXSD1.Designer.cs">
+    <Compile Include="Reports\ReportStudent\ReportStudentXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ReportStudentXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\Revenue\RevenueXSD.Designer.cs" />
-    <Compile Include="Reports\Revenue\RevenueXSD1.Designer.cs">
+    <Compile Include="Reports\Revenue\RevenueXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RevenueXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\Student\StudentXSD.Designer.cs" />
-    <Compile Include="Reports\Student\StudentXSD1.Designer.cs">
+    <Compile Include="Reports\Student\StudentXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StudentXSD.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\TeacherHours\TeacherHoursXSD.Designer.cs" />
-    <Compile Include="Reports\TeacherHours\TeacherHoursXSD1.Designer.cs">
+    <Compile Include="Reports\TeacherHours\TeacherHoursXSD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
@@ -2799,137 +2788,126 @@
     <Content Include="fonts\kanit-regular.woff" />
     <Content Include="MDSMiddleFile\MediaFile\131751702665433317_2.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <Content Include="Reports\Appointment\AppointmentReport.rdlc" />
-    <Content Include="Reports\Appointment\AppointmentXSD.xsc">
-      <DependentUpon>AppointmentXSD.xsd</DependentUpon>
-    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Reports\DepositAC\DepositACXSD.xsc">
+      <DependentUpon>DepositACXSD.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\Channel\ChannelXSD.xsc">
+      <DependentUpon>ChannelXSD.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\Appointment\AppointmentXSD.xsc">
+      <DependentUpon>AppointmentXSD.xsd</DependentUpon>
+    </Content>
     <None Include="Reports\Appointment\AppointmentXSD.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>AppointmentXSD1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>AppointmentXSD.Designer.cs</LastGenOutput>
     </None>
     <Content Include="Reports\Appointment\AppointmentXSD.xss">
       <DependentUpon>AppointmentXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\Channel\ChannelReport.rdlc" />
-    <Content Include="Reports\Channel\ChannelXSD.xsc">
-      <DependentUpon>ChannelXSD.xsd</DependentUpon>
-    </Content>
     <None Include="Reports\Channel\ChannelXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ChannelXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>ChannelXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\Channel\ChannelXSD.xss">
       <DependentUpon>ChannelXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\DepositACRevenue\DepositACRevenue.rdlc" />
     <Content Include="Reports\DepositACRevenue\DepositACRevenueXSD.xsc">
       <DependentUpon>DepositACRevenueXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\DepositACRevenue\DepositACRevenueXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DepositACRevenueXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>DepositACRevenueXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\DepositACRevenue\DepositACRevenueXSD.xss">
       <DependentUpon>DepositACRevenueXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\DepositAC\DepositACReport.rdlc" />
-    <Content Include="Reports\DepositAC\DepositACXSD.xsc">
-      <DependentUpon>DepositACXSD.xsd</DependentUpon>
-    </Content>
     <None Include="Reports\DepositAC\DepositACXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DepositACXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>DepositACXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\DepositAC\DepositACXSD.xss">
       <DependentUpon>DepositACXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\Deposit\DepositReport.rdlc" />
     <Content Include="Reports\Deposit\DepositXSD.xsc">
       <DependentUpon>DepositXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\Deposit\DepositXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DepositXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>DepositXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\Deposit\DepositXSD.xss">
       <DependentUpon>DepositXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\ReceiptSingle\ReceiptSingle.rdlc" />
+    <Content Include="Reports\Receipt\ReceiptXSD.xsc">
+      <DependentUpon>ReceiptXSD.xsd</DependentUpon>
+    </Content>
     <Content Include="Reports\ReceiptSingle\ReceiptSingleXSD.xsc">
       <DependentUpon>ReceiptSingleXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\ReceiptSingle\ReceiptSingleXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ReceiptSingleXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>ReceiptSingleXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\ReceiptSingle\ReceiptSingleXSD.xss">
       <DependentUpon>ReceiptSingleXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\Receipt\Receipt.rdlc" />
-    <Content Include="Reports\Receipt\ReceiptXSD.xsc">
-      <DependentUpon>ReceiptXSD.xsd</DependentUpon>
-    </Content>
     <None Include="Reports\Receipt\ReceiptXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ReceiptXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>ReceiptXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\Receipt\ReceiptXSD.xss">
       <DependentUpon>ReceiptXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\ReportStudent\ReportStudentRDLC.rdlc" />
     <Content Include="Reports\ReportStudent\ReportStudentXSD.xsc">
       <DependentUpon>ReportStudentXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\ReportStudent\ReportStudentXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ReportStudentXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>ReportStudentXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\ReportStudent\ReportStudentXSD.xss">
       <DependentUpon>ReportStudentXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\Revenue\RevenueRDLC.rdlc" />
     <Content Include="Reports\Revenue\RevenueXSD.xsc">
       <DependentUpon>RevenueXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\Revenue\RevenueXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>RevenueXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>RevenueXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\Revenue\RevenueXSD.xss">
       <DependentUpon>RevenueXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\Student\StudentRDLC.rdlc" />
     <Content Include="Reports\Student\StudentXSD.xsc">
       <DependentUpon>StudentXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\Student\StudentXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>StudentXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>StudentXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\Student\StudentXSD.xss">
       <DependentUpon>StudentXSD.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\TeacherHours\TeacherHoursReport.rdlc" />
     <Content Include="Reports\TeacherHours\TeacherHoursXSD.xsc">
       <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\TeacherHours\TeacherHoursXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>TeacherHoursXSD1.Designer.cs</LastGenOutput>
+      <LastGenOutput>TeacherHoursXSD.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\TeacherHours\TeacherHoursXSD.xss">
@@ -3079,6 +3057,19 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reports\Appointment\AppointmentReport.rdlc" />
+    <EmbeddedResource Include="Reports\Channel\ChannelReport.rdlc" />
+    <EmbeddedResource Include="Reports\DepositACRevenue\DepositACRevenue.rdlc" />
+    <EmbeddedResource Include="Reports\DepositAC\DepositACReport.rdlc" />
+    <EmbeddedResource Include="Reports\Deposit\DepositReport.rdlc" />
+    <EmbeddedResource Include="Reports\ReceiptSingle\ReceiptSingle.rdlc" />
+    <EmbeddedResource Include="Reports\Receipt\Receipt.rdlc" />
+    <EmbeddedResource Include="Reports\ReportStudent\ReportStudentRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\Revenue\RevenueRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\Student\StudentRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TeacherHours\TeacherHoursReport.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
