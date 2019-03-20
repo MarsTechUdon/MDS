@@ -829,7 +829,7 @@ else if (ViewBag.Result == "N")
                                                 <div class="col-sm-4" style="padding-left:0px;">
                                                     <div class="form-group">
                                                         <label>ช่องทาง <label style="color:red; margin-bottom: 0px !important;">*</label></label>
-                                                        @Html.DropDownListFor(x => x.channelid, new SelectList(ViewData["ListIChannel"] as List<SelectListItem>, "Value", "Text"), new { @class = "form-control", style = "font-size: 0.9em", required = "required", @id = "channelid" })
+                                                        @Html.DropDownListFor(x => x.channelid, new SelectList(ViewData["ListIChannel"] as List<SelectListItem>, "Value", "Text"), "- กรุณาเลือก -", new { @class = "form-control", style = "font-size: 0.9em", required = "required", @id = "channelid" })
                                                     </div>
                                                 </div>
                                             </div>

@@ -67,6 +67,7 @@ else if (ViewBag.Result == "N")
                 <table id="datatable-responsive" class="table table-striped " cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
+                            <th style="text-align:center;background-color:#e6e6e6;color:black" width="2%">#</th>
                             <th style="text-align:center;" width="15%">
                                 <p>หมายเลขการจอง</p>
                                 <p>สาขาที่จอง</p>
@@ -90,7 +91,7 @@ else if (ViewBag.Result == "N")
                             <th style="text-align:left;" width="10%">
                                 เวลาที่จองแล้ว(ชม.)
                             </th>
-                            <th style="text-align:left;" width="10%">
+                            <th style="text-align:left;" width="8%">
                                 ดำเนินการ
                             </th>
                         </tr>
@@ -98,29 +99,30 @@ else if (ViewBag.Result == "N")
                     <tbody>
                         @foreach (var item in ViewBag.ListBooking as List<BookingModel>)
                         {
-                            <tr>
-                                <td>
-                                    @item.branchname
-                                </td>
-                                <td>
-                                    <p>@item.bookingname </p>
-                                    <p> @item.bookingdate</p>
-                                </td>
-                                <td>
-                                    @item.coursenickname
-                                </td>
-                                <td>
-                                    @item.studentname
-                                </td>
-                                <td>@item.fullname</td>
-                                <td>@item.statusdesc</td>
-                                <td class="text-center">@item.totaltime</td>
-                                <td style="text-align:center">
-                                    <a href="@Url.Action("Timetable", "Learning", new {value1= @item.courseid,value2="",value3=@item.bookingid})" class="btn btn-success editBtn tooltip-button" data-placement="top" title="แก้ไข Booking">
-                                        <i class="glyph-icon icon-pencil-square-o"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td style="text-align:center;background-color:#e6e6e6;color:black"></td>
+                            <td>
+                                @item.branchname
+                            </td>
+                            <td>
+                                <p>@item.bookingname </p>
+                                <p> @item.bookingdate</p>
+                            </td>
+                            <td>
+                                @item.coursenickname
+                            </td>
+                            <td>
+                                @item.studentname
+                            </td>
+                            <td>@item.fullname</td>
+                            <td>@item.statusdesc</td>
+                            <td class="text-center">@item.totaltime</td>
+                            <td style="text-align:center">
+                                <a href="@Url.Action("Timetable", "Learning", new {value1= @item.courseid,value2="",value3=@item.bookingid})" class="btn btn-success editBtn tooltip-button" data-placement="top" title="แก้ไข Booking">
+                                    <i class="glyph-icon icon-pencil-square-o"></i>
+                                </a>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -244,124 +246,6 @@ else if (ViewBag.Result == "N")
 <script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/fullcalendar.js"></script>
 <script type="text/javascript" src="~/Content/Other/fullcalendar-3.9.0/locale/th.js"></script>
 <script type="text/javascript" src="~/Content/Other/scheduler.js"></script>
-<script>
-    $(document).ready(function () {
-          $.ajax({
-                url: '@Url.Action("GetCalendarBooking", "Learning")',
-                dataType: "json",
-                type: "POST",
-                success: function (item) {
-                    $('#calendar').fullCalendar({
-                        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-                        //now: '2016-12-07',
-                        header: {
-                            left: 'prev,next today',
-                            center: 'title',
-                            //right: 'month,agendaWeek,agendaDay'
-                            right: 'timelineDay,timelineThreeDays,agendaWeek,month'
-                        },
-                        defaultView: 'timelineDay',
-                        views: {
-                            timelineThreeDays: {
-                                type: 'timeline',
-                                duration: { days: 3 }
-                            }
-                        },
-                        //lang: 'th',
-                        allDaySlot: false,
-                        slotLabelInterval: 5,
-                        //slotLabelInterval: '00:30',
-                        resourceAreaWidth: '20%',
-                        slotLabelFormat: 'HH:mm',
-                        slotEventOverlap: true,
-                        titleFormat: 'DD MMMM YYYY',
-                        columnFormat: 'dddd',
-                        slotDuration: '00:30:00',
-                        minTime: '08:00:00',
-                        maxTime: '22:00:00',
-                        dragOpacity: {
-                            agenda: .5
-                        },
-                        businessHours: true,
-                        editable: false,
-                        droppable: true,
-                        handleWindowResize: true,
-                        buttonIcons: false, // show the prev/next text
-                        navLinks: true, // can click day/week names to navigate views
-                        eventLimit: true, // allow "more" link when too many events
-                        displayEventTime: false,
-
-                        listDayAltFormat: false,
-                        resourceColumns: [
-                            {
-                                labelText: 'ชื่อครู',
-                                field: 'title',
-                                width: 150
-                            }
-                        ],
-                        resources: item.TeacherList,
-                        resourceRender: function (resourceObj, $td, eventObj) {
-                            $td.eq(0).css({ 'cursor': 'pointer' });
-                            var $content = $('<div/>');
-                            $content.append($('<p/>').html('<span style="' + resourceObj.a2 + ';font-size:14px" class="glyph-icon ' + resourceObj.a1 + '">&nbsp;<span style="' + resourceObj.a2 + '">' + resourceObj.a3 + '</span>'));
-                            $content.append($('<p/>').html('<p style="' + resourceObj.a2 + '">ทฤษฎี ' + resourceObj.a4 + ' ชม. ปฏิบัติ ' + resourceObj.a5 + ' ชม.</p>'));
-                            $content.append($('<p/>').html('<span style="' + resourceObj.b2 + ';font-size:14px" class="glyph-icon ' + resourceObj.b1 + '">&nbsp;<span style="' + resourceObj.b2 + '">' + resourceObj.b3 + '</span>'));
-                            $content.append($('<p/>').html('<p style="' + resourceObj.b2 + '">ทฤษฎี ' + resourceObj.b4 + ' ชม. ปฏิบัติ ' + resourceObj.b5 + ' ชม.</p>'));
-                            $content.append($('<p/>').html('<span style="' + resourceObj.c2 + ';font-size:14px" class="glyph-icon ' + resourceObj.c1 + '">&nbsp;<span style="' + resourceObj.c2 + '">' + resourceObj.c3 + '</span>'));
-                            $content.append($('<p/>').html('<p style="' + resourceObj.c2 + '">ทฤษฎี ' + resourceObj.c4 + ' ชม. ปฏิบัติ ' + resourceObj.c5 + ' ชม.</p>'));
-                            $content.append($('<p/>').html('<span style="' + resourceObj.d2 + ';font-size:14px" class="glyph-icon ' + resourceObj.d1 + '">&nbsp;<span style="' + resourceObj.d2 + '">' + resourceObj.d3 + '</span>'));
-                            $content.append($('<p/>').html('<p style="' + resourceObj.d2 + '">ทฤษฎี ' + resourceObj.a4 + ' ชม. ปฏิบัติ ' + resourceObj.d5 + ' ชม.</p>'));
-                            $td.eq(0).popover({
-                                html: true,
-                                title: 'จำนวนชั่วโมง',
-                                content: $content,
-                                trigger: 'hover',
-                                placement: 'bottom',
-                                container: 'body'
-                            });
-                            $td.eq(0).find('.fc-cell-content').append("<p style='font-size:10px'>"
-                                + "<span style='" + resourceObj.a2 + ";font-size:14px' class='glyph-icon " + resourceObj.a1 + "'>&nbsp;</span><span  style='" + resourceObj.a2 + "'>" + resourceObj.a4 + "</span>/<span  style='" + resourceObj.a2 + "'>" + resourceObj.a5 + "</span>&nbsp;"
-                                + "<span style='" + resourceObj.b2 + ";font-size:14px' class='glyph-icon " + resourceObj.b1 + "'>&nbsp;</span><span  style='" + resourceObj.b2 + "'>" + resourceObj.b4 + "</span>/<span  style='" + resourceObj.b2 + "'>" + resourceObj.b5 + "</span>&nbsp;"
-                                + "<span style='" + resourceObj.c2 + ";font-size:14px' class='glyph-icon " + resourceObj.c1 + "'>&nbsp;</span><span  style='" + resourceObj.c2 + "'>" + resourceObj.c4 + "</span>/<span  style='" + resourceObj.c2 + "'>" + resourceObj.c5 + "</span>&nbsp;"
-                                + "<span style='" + resourceObj.d2 + ";font-size:14px' class='glyph-icon " + resourceObj.d1 + "'>&nbsp;</span><span  style='" + resourceObj.d2 + "'>" + resourceObj.d4 + "</span>/<span  style='" + resourceObj.d2 + "'>" + resourceObj.d5 + "</span>"
-                            );
-                        },
-                        events: item.CalendarList,
-                        eventClick: function (event, jsEvent, view) {
-                            OpenEvent(event);
-                        },
-                        eventRender: function (eventObj, $el) {
-                            var strtitle = eventObj.title.split('-');
-                            var $content = $('<div/>');
-
-                            $.each(strtitle, function (i, item) {
-                                if (i % 2 == 0) {
-                                    $content.append($('<p/>').html('<span style="color:blue">' + item + '</span>'));
-                                } else {
-                                    $content.append($('<p/>').html('<span style="color:green">' + item + '</span>'));
-                                }
-
-                            })
-                            $el.popover({
-                                html: true,
-                                title: 'ข้อมูล',
-                                content: $content,
-                                trigger: 'hover',
-                                placement: 'top',
-                                container: 'body'
-                            });
-                        },
-                    });
-                },
-                error: function (a, b, c) {
-                    alert("error" + a);
-              }
-                
-            });
-    });
-
-
-</script>
 <script type="text/javascript" src="~/assets/widgets/tabs-ui/tabs.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script type="text/javascript" src="~/Scripts/validate.js"></script>
@@ -425,9 +309,23 @@ else if (ViewBag.Result == "N")
 <script type="text/javascript">
     $(document).ready(function () {
         $(document).on("click", "#tebclick_2", function () {
-            $('#calendar').fullCalendar('render');
+            CalendarTeacher();
         });
-        $('#datatable-responsive').DataTable({
+         function CalendarTeacher() {
+             $.ajax({
+                url: '@Url.Action("GetCalendarBooking", "Learning")',
+                dataType: "json",
+                type: "POST",
+                success: function (item) {
+                    calendarEvenTeach(item);
+                },
+                error: function (a, b, c) {
+                    alert("error" + a);
+              }
+                
+            });
+        }
+        var t = $('#datatable-responsive').DataTable({
             "responsive": true,
             "paging": true,
             "lengthChange": true,
@@ -451,8 +349,116 @@ else if (ViewBag.Result == "N")
                 }
             }
         });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
          
     });
+    function calendarEvenTeach(item) {
+        $('#calendar').fullCalendar({
+            schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+            //now: '2016-12-07',
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                //right: 'month,agendaWeek,agendaDay'
+                right: 'timelineDay,timelineThreeDays,agendaWeek,month'
+            },
+            defaultView: 'timelineDay',
+            views: {
+                timelineThreeDays: {
+                    type: 'timeline',
+                    duration: { days: 3 }
+                }
+            },
+            //lang: 'th',
+            allDaySlot: false,
+            slotLabelInterval: 5,
+            //slotLabelInterval: '00:30',
+            resourceAreaWidth: '20%',
+            slotLabelFormat: 'HH:mm',
+            slotEventOverlap: true,
+            titleFormat: 'DD MMMM YYYY',
+            columnFormat: 'dddd',
+            slotDuration: '00:30:00',
+            minTime: '06:00:00',
+            maxTime: '22:00:00',
+            dragOpacity: {
+                agenda: .5
+            },
+            businessHours: true,
+            editable: false,
+            droppable: true,
+            handleWindowResize: true,
+            buttonIcons: false, // show the prev/next text
+            navLinks: true, // can click day/week names to navigate views
+            eventLimit: true, // allow "more" link when too many events
+            displayEventTime: false,
+
+            listDayAltFormat: false,
+            resourceColumns: [
+                {
+                    labelText: 'ชื่อครู',
+                    field: 'title',
+                    width: 150
+                }
+            ],
+            resources: item.TeacherList,
+            resourceRender: function (resourceObj, $td, eventObj) {
+                $td.eq(0).css({ 'cursor': 'pointer' });
+                var $content = $('<div/>');
+                $content.append($('<p/>').html('<span style="' + resourceObj.a2 + ';font-size:14px" class="glyph-icon ' + resourceObj.a1 + '">&nbsp;<span style="' + resourceObj.a2 + '">' + resourceObj.a3 + '</span>'));
+                $content.append($('<p/>').html('<p style="' + resourceObj.a2 + '">ทฤษฎี ' + resourceObj.a4 + ' ชม. ปฏิบัติ ' + resourceObj.a5 + ' ชม.</p>'));
+                $content.append($('<p/>').html('<span style="' + resourceObj.b2 + ';font-size:14px" class="glyph-icon ' + resourceObj.b1 + '">&nbsp;<span style="' + resourceObj.b2 + '">' + resourceObj.b3 + '</span>'));
+                $content.append($('<p/>').html('<p style="' + resourceObj.b2 + '">ทฤษฎี ' + resourceObj.b4 + ' ชม. ปฏิบัติ ' + resourceObj.b5 + ' ชม.</p>'));
+                $content.append($('<p/>').html('<span style="' + resourceObj.c2 + ';font-size:14px" class="glyph-icon ' + resourceObj.c1 + '">&nbsp;<span style="' + resourceObj.c2 + '">' + resourceObj.c3 + '</span>'));
+                $content.append($('<p/>').html('<p style="' + resourceObj.c2 + '">ทฤษฎี ' + resourceObj.c4 + ' ชม. ปฏิบัติ ' + resourceObj.c5 + ' ชม.</p>'));
+                $content.append($('<p/>').html('<span style="' + resourceObj.d2 + ';font-size:14px" class="glyph-icon ' + resourceObj.d1 + '">&nbsp;<span style="' + resourceObj.d2 + '">' + resourceObj.d3 + '</span>'));
+                $content.append($('<p/>').html('<p style="' + resourceObj.d2 + '">ทฤษฎี ' + resourceObj.d4 + ' ชม. ปฏิบัติ ' + resourceObj.d5 + ' ชม.</p>'));
+                $td.eq(0).popover({
+                    html: true,
+                    title: 'จำนวนชั่วโมง',
+                    content: $content,
+                    trigger: 'hover',
+                    placement: 'bottom',
+                    container: 'body'
+                });
+                $td.eq(0).find('.fc-cell-content').append("<p style='font-size:10px'>"
+                    + "<span style='" + resourceObj.a2 + ";font-size:14px' class='glyph-icon " + resourceObj.a1 + "'>&nbsp;</span><span  style='" + resourceObj.a2 + "'>" + resourceObj.a4 + "</span>/<span  style='" + resourceObj.a2 + "'>" + resourceObj.a5 + "</span>&nbsp;"
+                    + "<span style='" + resourceObj.b2 + ";font-size:14px' class='glyph-icon " + resourceObj.b1 + "'>&nbsp;</span><span  style='" + resourceObj.b2 + "'>" + resourceObj.b4 + "</span>/<span  style='" + resourceObj.b2 + "'>" + resourceObj.b5 + "</span>&nbsp;"
+                    + "<span style='" + resourceObj.c2 + ";font-size:14px' class='glyph-icon " + resourceObj.c1 + "'>&nbsp;</span><span  style='" + resourceObj.c2 + "'>" + resourceObj.c4 + "</span>/<span  style='" + resourceObj.c2 + "'>" + resourceObj.c5 + "</span>&nbsp;"
+                    + "<span style='" + resourceObj.d2 + ";font-size:14px' class='glyph-icon " + resourceObj.d1 + "'>&nbsp;</span><span  style='" + resourceObj.d2 + "'>" + resourceObj.d4 + "</span>/<span  style='" + resourceObj.d2 + "'>" + resourceObj.d5 + "</span>"
+                );
+            },
+            events: item.CalendarList,
+            eventClick: function (event, jsEvent, view) {
+                OpenEvent(event);
+            },
+            eventRender: function (eventObj, $el) {
+                var strtitle = eventObj.title.split('-');
+                var $content = $('<div/>');
+
+                $.each(strtitle, function (i, item) {
+                    if (i % 2 == 0) {
+                        $content.append($('<p/>').html('<span style="color:blue">' + item + '</span>'));
+                    } else {
+                        $content.append($('<p/>').html('<span style="color:green">' + item + '</span>'));
+                    }
+
+                })
+                $el.popover({
+                    html: true,
+                    title: 'ข้อมูล',
+                    content: $content,
+                    trigger: 'hover',
+                    placement: 'top',
+                    container: 'body'
+                });
+            },
+        });
+    }
       function OpenEvent(calEvent) {
                 $('#ShowEventind').val(calEvent.eventID);
                     $.ajax({

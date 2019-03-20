@@ -1,0 +1,213 @@
+﻿@using ReportViewerForMvc;
+@{
+    ViewBag.Title = "รายงานจำนวนชม.ครู";
+}
+
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+<style type="text/css">
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none;
+        line-height: 30px;
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+</style>
+
+<div class="panel">
+    <div class="panel-body">
+        <div class="row">
+            <h2 style="text-align:center;">พิมพ์รายงานจำนวน ชม.ครู</h2>
+        </div>
+        <div class="row" style="margin-top: 25px; text-align:center;">
+            @using (Html.BeginForm("TeacherHoursSearchReport", "Report", FormMethod.Post, new { id = "Form" }))
+            {
+                <div class="col-sm-4">
+                    <div class="form-group float-right">
+                        <label class="col-sm-3 control-label">ตั้งแต่ :</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control bootstrap-datepicker" name="fdate" id="fdate" placeholder="ตั้งแต่วันที่.." value="@ViewBag.Fdate" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-group float-left">
+                        <label class="col-sm-2 control-label">ถึง :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control bootstrap-datepicker" name="tdate" id="tdate" placeholder="ถึงวันที่.." value="@ViewBag.Tdate" readonly>
+                        </div>
+                        <label class="col-sm-2 control-label">ภาค:</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" name="SubjectType" id="SubjectType" style="font-size: 0.8em;">
+                                <option value="A">ทั้งหมด</option>
+                                <option value="T">ทฤษฎี</option>
+                                <option value="P">ปฏิบัติ</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-success"> <i class="glyphicon glyphicon-search"></i> ค้นหา</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (ViewBag.ReportViewer != null)
+        {
+            <div class="row table-responsive">
+                <center>
+                    @Html.ReportViewer(ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer, new { @style = "width:100%; height:100%;" })
+                </center>
+            </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                <h1 style="text-align:center">ไม่พบข้อมูล</h1>
+            </div>
+
+        }
+
+    </div>
+</div>
+@section scripts{
+    <script src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+    <script src="~/Content/Jquery/jquery-ui.js"></script>
+    <script src="~/assets/jQuery/jquery.validate.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $.validator.setDefaults({
+                    errorClass: 'help-block',
+                    highlight: function (element) {
+                        $(element)
+                            .closest('.form-group')
+                            .addClass('has-error');
+                    },
+                    unhighlight: function (element) {
+                        $(element)
+                            .closest('.form-group')
+                            .removeClass('has-error');
+                    },
+                    errorPlacement: function (error, element) {
+                        if (element.prop('type') === 'checkbox') {
+                            error.insertAfter(element.parent());
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+                $.validator.addMethod("valueNotEquals",
+                    function (value, element, arg) {
+                        return arg !== value;
+                    }, "Value must not equal arg.");
+                $("#Form").validate({
+                    rules: {
+                        fdate: {
+                            required: true
+                        },
+                        tdate: {
+                            required: true
+                        },
+                    },
+                    messages: {
+
+                        fdate: {
+                            required: 'กรุณาระบุวันที่'
+                        },
+                        tdate: {
+                            required: 'กรุณาระบุวันที่'
+                        },
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            var d = new Date();
+            var toDay = (d.getFullYear()) + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+            $("#fdate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                defaultDate: toDay,
+                autoclose: true,
+                dateFormat: 'yy-mm-dd',
+                isBuddhist: true,
+                orientation: "bottom left",
+                yearRange: "-100:+0",
+                dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+                dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+            }).keydown(function (e) {
+                return false;
+            });
+
+            $("#tdate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                defaultDate: toDay,
+                autoclose: true,
+                dateFormat: 'yy-mm-dd',
+                isBuddhist: true,
+                orientation: "bottom left",
+                yearRange: "-100:+0",
+                dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+                dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+            }).keydown(function (e) {
+                return false;
+            });
+        });
+        //set Selected
+        SelectElement("SubjectType", '@ViewBag.SubType');
+
+        function SelectElement(id, valueToSelect) {
+            var element = document.getElementById(id);
+            element.value = valueToSelect;
+        }
+    </script>
+}

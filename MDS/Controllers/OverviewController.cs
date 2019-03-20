@@ -14,8 +14,8 @@ namespace MDS.Controllers
 {
     public class OverviewController : Controller
     {
-        SchoolManagement school = new SchoolManagement();
         OverviewManagement OverviewMN = new OverviewManagement();
+        SchoolManagement school = new SchoolManagement();
         // GET: Overview
         [NeedLogin]
         public ActionResult Main()

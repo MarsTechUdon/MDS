@@ -11,10 +11,14 @@ using MDS.Reports.Deposit.DepositXSDTableAdapters;
 using MDS.Reports.Appointment.AppointmentXSDTableAdapters;
 using MDS.Reports.DepositAC.DepositACXSDTableAdapters;
 using MDS.Reports.DepositACRevenue.DepositACRevenueXSDTableAdapters;
+using MDS.Reports.Channel.ChannelXSDTableAdapters;
+using MDS.Reports.TeacherHours.TeacherHoursXSDTableAdapters;
 using System.Globalization;
 using MDS.Models;
 using MDS.DBExec;
 using MDS.Fillter;
+using MDS.Reports.ReportStudent.ReportStudentXSDTableAdapters;
+using MDS.Reports.Revenue.RevenueXSDTableAdapters;
 
 namespace MDS.Controllers
 {
@@ -258,7 +262,7 @@ namespace MDS.Controllers
         [NeedLogin]
         public ActionResult DepositAC()
         {
-            var model = ReportManagement.GetCourseList();
+            var model = ReportManagement.GetCurrentDate();
             ViewBag.Fdate = model.fdate;
             ViewBag.Tdate = model.tdate;
             ReportViewer reportViewer = new ReportViewer();
@@ -339,7 +343,7 @@ namespace MDS.Controllers
         [NeedLogin]
         public ActionResult DepositACRevenue()
         {
-            var model = ReportManagement.GetCourseList();
+            var model = ReportManagement.GetCurrentDate();
             //model.fdate = "2018-10-01";
             //model.tdate = "2018-12-30";
             ViewBag.Fdate = model.fdate;
@@ -417,6 +421,408 @@ namespace MDS.Controllers
             ViewBag.Fdate = fdate;
             ViewBag.Tdate = tdate;
             return View("DepositACRevenue");
+        }
+
+        [NeedLogin]
+        public ActionResult ChannelReport()
+        {
+            var model = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = model.fdate;
+            ViewBag.Tdate = model.tdate;
+            string dtype = "R";
+            ViewBag.datetype = dtype;
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\Channel\ChannelReport.rdlc";
+            sp_reportchannelTableAdapter Channel = new sp_reportchannelTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("ChannelDataset", (object)Channel.GetData(model.fdate, model.tdate, dtype)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานช่องทาง";
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAdd1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAdd2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAdd3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+            ReportParameter Fdate = new ReportParameter("Fdate", model.fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", model.tdate);
+            string DatetypeStr = string.Empty;
+            if (dtype == "R")
+            {
+                DatetypeStr = "วันที่สมัคร";
+            }
+            else
+            {
+                DatetypeStr = "วันที่จบหลักสูตร";
+            }
+            ReportParameter Datetype = new ReportParameter("DatetypeStr", DatetypeStr);
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAdd1, SchoolAdd2, SchoolAdd3 , Fdate , Tdate, Datetype });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+        [NeedLogin]
+        public ActionResult ChannelSearchReport(FormCollection form)
+        {
+            string fdate = form["fdate"].ToString();
+            string tdate = form["tdate"].ToString();
+            string dtype = form["dtype"].ToString();
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\Channel\ChannelReport.rdlc";
+            sp_reportchannelTableAdapter Channel = new sp_reportchannelTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("ChannelDataset", (object)Channel.GetData(fdate, tdate, dtype)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานช่องทาง";
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAdd1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAdd2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAdd3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+            ReportParameter Fdate = new ReportParameter("Fdate", fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", tdate);
+            string DatetypeStr = string.Empty;
+            if (dtype == "R")
+            {
+                DatetypeStr = "วันที่สมัคร";
+            }
+            else
+            {
+                DatetypeStr = "วันที่จบหลักสูตร";
+            }
+            ReportParameter Datetype = new ReportParameter("DatetypeStr", DatetypeStr);
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAdd1, SchoolAdd2, SchoolAdd3, Fdate, Tdate, Datetype });
+            ViewBag.ReportViewer = reportViewer;
+            ViewBag.Fdate = fdate;
+            ViewBag.Tdate = tdate;
+            ViewBag.datetype = dtype;
+            return View("ChannelReport");
+        }
+
+        [NeedLogin]
+        public ActionResult TeacherHoursReport()
+        {
+            var model = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = model.fdate;
+            ViewBag.Tdate = model.tdate;
+            string subjecttype = "A";
+            ViewBag.SubType = subjecttype;
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TeacherHours\TeacherHoursReport.rdlc";
+            sp_reportTeacherHoursTableAdapter TeacherHours = new sp_reportTeacherHoursTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursDataset", (object)TeacherHours.GetData(model.fdate, model.tdate, subjecttype)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานรายงานจำนวน_ชม_ครู";
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAdd1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAdd2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAdd3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+            ReportParameter Fdate = new ReportParameter("Fdate", model.fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", model.tdate);
+            string type = string.Empty;
+            if (subjecttype == "A")
+            {
+                type = "ทั้งหมด";
+            }
+            else if(subjecttype == "T")
+            {
+                type = "ทฤษฎี";
+            }
+            else if (subjecttype == "P")
+            {
+                type = "ปฏิบัติ";
+            }
+            ReportParameter SubjectType = new ReportParameter("SubjectType", type);
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAdd1, SchoolAdd2, SchoolAdd3, Fdate, Tdate , SubjectType });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+        [NeedLogin]
+        public ActionResult TeacherHoursSearchReport(FormCollection form)
+        {
+            string fdate = form["fdate"].ToString();
+            string tdate = form["tdate"].ToString();
+            string subjecttype = form["SubjectType"].ToString();
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TeacherHours\TeacherHoursReport.rdlc";
+            sp_reportTeacherHoursTableAdapter TeacherHours = new sp_reportTeacherHoursTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursDataset", (object)TeacherHours.GetData(fdate, tdate, subjecttype)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานรายงานจำนวน_ชม_ครู";
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAdd1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAdd2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAdd3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+            ReportParameter Fdate = new ReportParameter("Fdate", fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", tdate);
+            string type = string.Empty;
+            if (subjecttype == "A")
+            {
+                type = "ทั้งหมด";
+            }
+            else if (subjecttype == "T")
+            {
+                type = "ทฤษฎี";
+            }
+            else if (subjecttype == "P")
+            {
+                type = "ปฏิบัติ";
+            }
+            ReportParameter SubjectType = new ReportParameter("SubjectType", type);
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAdd1, SchoolAdd2, SchoolAdd3, Fdate, Tdate, SubjectType });
+            ViewBag.ReportViewer = reportViewer;
+            ViewBag.Fdate = fdate;
+            ViewBag.Tdate = tdate;
+            ViewBag.SubType = subjecttype;
+            return View("TeacherHoursReport");
+        }
+
+        // GET: ReportStudent
+        [NeedLogin]
+        public ActionResult ReportStudent()
+        {
+            var model = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = model.fdate;
+            ViewBag.Tdate = model.tdate;
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\ReportStudent\ReportStudentRDLC.rdlc";
+            sp_reportStudentTableAdapter ReportStudent = new sp_reportStudentTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("StudentDataset", (object)ReportStudent.GetData(model.fdate, model.tdate)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานสรุปจำนวนนักเรียน";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+            ReportParameter Fdate = new ReportParameter("Fdate", model.fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", model.tdate);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, Fdate, Tdate });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+
+        [NeedLogin]
+        public ActionResult SumReportStudent(FormCollection form)
+        {
+            string fdate = form["fdate"].ToString();
+            string tdate = form["tdate"].ToString();
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\ReportStudent\ReportStudentRDLC.rdlc";
+            sp_reportStudentTableAdapter ReportStudent = new sp_reportStudentTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("StudentDataset", (object)ReportStudent.GetData(fdate, tdate)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานสรุปจำนวนนักเรียน";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+            ReportParameter Fdate = new ReportParameter("Fdate", fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", tdate);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, Fdate, Tdate });
+            ViewBag.ReportViewer = reportViewer;
+
+            ViewBag.Fdate = fdate;
+            ViewBag.Tdate = tdate;
+            return View("ReportStudent");
+        }
+
+        // GET: Revenue
+        [NeedLogin]
+        public ActionResult Revenue()
+        {
+            var model = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = model.fdate;
+            ViewBag.Tdate = model.tdate;
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\Revenue\RevenueRDLC.rdlc";
+            sp_reportreceiveTableAdapter Revenue = new sp_reportreceiveTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("RevenueDataset", (object)Revenue.GetData(model.fdate, model.tdate)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานสรุปรายได้";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+            ReportParameter Fdate = new ReportParameter("Fdate", model.fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", model.tdate);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, Fdate, Tdate });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+
+        [NeedLogin]
+        public ActionResult SumRevenue(FormCollection form)
+        {
+            string fdate = form["fdate"].ToString();
+            string tdate = form["tdate"].ToString();
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\Revenue\RevenueRDLC.rdlc";
+            sp_reportreceiveTableAdapter Revenue = new sp_reportreceiveTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("RevenueDataset", (object)Revenue.GetData(fdate, tdate)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานสรุปรายได้";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+
+            ReportParameter Fdate = new ReportParameter("Fdate", fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", tdate);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, Fdate, Tdate });
+            ViewBag.ReportViewer = reportViewer;
+
+            ViewBag.Fdate = fdate;
+            ViewBag.Tdate = tdate;
+            return View("Revenue");
         }
     }
 }

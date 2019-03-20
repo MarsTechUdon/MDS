@@ -18,6 +18,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - @(Company.SchoolNameE == "" ? Company.SchoolName : Company.SchoolNameE)</title>
     <style>
+        #sidebar-menu li .sidebar-submenu ul li a:hover, #sidebar-menu li .sidebar-submenu ul li a.sfActive {
+            background: #f5c977 !important;
+        }
         /* Loading Spinner */
         .spinner {
             margin: 0;
@@ -225,7 +228,7 @@
             </div>
         </div>
         <div id="page-wrapper">
-            <div id="page-header" class="bg-gradient-9">
+            <div id="page-header" class="bg-warning font-inverse">
                 <div id="mobile-navigation">
                     <button id="nav-toggle" class="collapsed" data-toggle="collapse" data-target="#page-sidebar"><span></span></button>
                     <a href="@Url.Action("Main", "Overview")" class="logo-content-small" title="@(Company.SchoolNameE == "" ? Company.SchoolName : Company.SchoolNameE)" 
@@ -429,7 +432,7 @@
                     </div>
                 </div><!-- #header-nav-right -->
             </div>
-            <div id="page-sidebar">
+            <div id="page-sidebar" class="bg-warning font-inverse">
                 <div class="scroll-sidebar">
                     <ul id="sidebar-menu">
                         <li class="header"><span>Manage Website</span></li>

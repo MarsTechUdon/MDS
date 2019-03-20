@@ -37,5 +37,7 @@ namespace MDS.Models
         public string CompanyLogoName { get; set; }
         public string SchoolLogoName { get; set; }
         public string logopath { get; set; }
+        
+
     }
 }

@@ -1,6 +1,8 @@
-﻿@model List<MDS.Models.TeacherModel>
+﻿@using MDS.Models;
+@model List<MDS.Models.TeacherModel>
 @{
     ViewBag.Title = "รายชื่อครูสอน";
+    var company = Session["Company"] as CompanyModel;
 }
 
 <link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
@@ -146,7 +148,8 @@ else if (ViewBag.boolResult < 0)
             <table id="datatable-responsive22" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th class="text-center">ลำดับ</th>
+                        <th style="text-align:center;background-color:#e6e6e6;color:black" width="2%">#</th>
+                        <th class="text-center">คิวอาร์โค้ด</th>
                         <th class="text-center">รูป</th>
                         <th class="text-center">ชื่อ-นามสกุล</th>
                         <th class="text-center">ชื่อเล่น</th>
@@ -161,52 +164,53 @@ else if (ViewBag.boolResult < 0)
                     @{ int i = 0;}
                     @foreach (var Teacher in Model)
                     {
-                        <tr>
-                            <td style="text-align:center;"> <a href="#"><img src="~/MDSMiddleFile/DefaultMediaIMG/QRUrl.png" width="25" height="25" onclick="changeIt('@Teacher.teachername','@Teacher.URL')" /></a>@{ i = i + 1; } @i </td>
-                            <td><a><img id="photo1" src="data:image/jpeg;base64,@Teacher.cardimg" class="img-responsive" style="width:100px;" /></a></td>
-                            <td>@Teacher.teachername</td>
-                            <td>@Teacher.nickname</td>
-                            <td>@Teacher.mobileno</td>
-                            <td>@Teacher.email</td>
-                            <td class="text-center">
-                                @if (Teacher.status.Equals("A"))
-                                {
-                                    <b style="color:green;">อนุมัติ</b>
-                                }
-                                else if (Teacher.status.Equals("C"))
-                                {
-                                    <b style="color:red;">ไม่อนุมัติ</b>
-                                }
-                            </td>
-                            <td class="text-center">
-                                @if (@Teacher.status.Equals("A"))
-                                {
+                    <tr>
+                        <td style="text-align:center;background-color:#e6e6e6;color:black"></td>
+                        <td style="text-align:center;"> <a href="#"><img src="~/MDSMiddleFile/DefaultMediaIMG/QRUrl.png" width="25" height="25" onclick="changeIt('@Teacher.teachername','@Teacher.URL')" /></a> </td>
+                        <td><a><img id="photo1" src="data:image/jpeg;base64,@Teacher.cardimg" class="img-responsive" style="width:100px;" /></a></td>
+                        <td>@Teacher.teachername</td>
+                        <td>@Teacher.nickname</td>
+                        <td>@Teacher.mobileno</td>
+                        <td>@Teacher.email</td>
+                        <td class="text-center">
+                            @if (Teacher.status.Equals("A"))
+                            {
+                                <b style="color:green;">อนุมัติ</b>
+                            }
+                            else if (Teacher.status.Equals("C"))
+                            {
+                                <b style="color:red;">ไม่อนุมัติ</b>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (@Teacher.status.Equals("A"))
+                            {
 
-                                    <div class="col-sm-12 col-md-6">
-                                        @using (Html.BeginForm("TeacherDetail", "Teacher", FormMethod.Post))
-                                        {
-                                            <button class="btn btn-yellow tooltip-button" data-original-title="แก้ไข" name="ind" value="@Teacher.ind">
-                                                <i class="glyph-icon tooltip-button icon-edit icon-size20"></i>
-                                            </button>
-                                            @*<input type="hidden" name="tabActive" value="1" />
-                                                <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
-                                                <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />*@
-                                        }
-                                    </div>
+                                <div class="col-sm-12 col-md-6">
+                                    @using (Html.BeginForm("TeacherDetail", "Teacher", FormMethod.Post))
+                                    {
+                                        <button class="btn btn-yellow tooltip-button" data-original-title="แก้ไข" name="ind" value="@Teacher.ind">
+                                            <i class="glyph-icon tooltip-button icon-edit icon-size20"></i>
+                                        </button>
+                                        @*<input type="hidden" name="tabActive" value="1" />
+                        <input type="hidden" name="studenttype" value="@ListStudents.studenttype" />
+                        <input type="hidden" name="voucherid" value="@ListStudents.voucherno" />*@
+                                    }
+                                </div>
 
-                                    <button class="btn btn-danger btn-md" data-toggle="modal" data-target="#cancleTeacher" data-id="@Teacher.ind" data-teachername="@Teacher.teachername">
-                                        <i class="glyph-icon icon-trash"></i>
-                                    </button>
-                                }
-                                else if (@Teacher.status.Equals("C"))
-                                {
-                                    <button class="btn btn-purple btn-md" data-toggle="modal" data-target="#recancleTeacher" data-id="@Teacher.ind" data-teachername="@Teacher.teachername">
-                                        <i class="glyph-icon icon-elusive-arrows-cw"></i>
-                                    </button>
-                                }
+                                <button class="btn btn-danger btn-md" data-toggle="modal" data-target="#cancleTeacher" data-id="@Teacher.ind" data-teachername="@Teacher.teachername">
+                                    <i class="glyph-icon icon-trash"></i>
+                                </button>
+                            }
+                            else if (@Teacher.status.Equals("C"))
+                            {
+                                <button class="btn btn-purple btn-md" data-toggle="modal" data-target="#recancleTeacher" data-id="@Teacher.ind" data-teachername="@Teacher.teachername">
+                                    <i class="glyph-icon icon-elusive-arrows-cw"></i>
+                                </button>
+                            }
 
-                            </td>
-                        </tr>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -261,14 +265,22 @@ else if (ViewBag.boolResult < 0)
     <script>
         /* Datatables responsive */
         $(document).ready(function () {
-            $('#datatable-responsive22').DataTable({
+            var t = $('#datatable-responsive22').DataTable({
                 responsive: true
             });
+            t.on('order.dt search.dt', function () {
+                t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
         });
+
+
 
         $(document).ready(function () {
             $('.dataTables_filter input').attr("placeholder", "Search...");
         });
+
     </script>
 
     <script type="text/javascript">
@@ -321,7 +333,7 @@ else if (ViewBag.boolResult < 0)
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'Json',
-                data: JSON.stringify({ Url: url }),
+                data: JSON.stringify({ Url: url ,Logo: '@company.SchoolLogo'}),
                 success: successFunction,
                 error: errorFunction
             });

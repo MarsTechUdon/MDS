@@ -14,7 +14,7 @@ namespace MDS.DBExec
         public static string _CON_STR = ConfigurationManager.ConnectionStrings["MDS"].ConnectionString;
 
         #region "Get Current Date"
-        public static DepositACModel GetCourseList()
+        public static DepositACModel GetCurrentDate()
         {
             DepositACModel CurrentDate = new DepositACModel();
             using (SqlConnection db = new SqlConnection(_CON_STR))

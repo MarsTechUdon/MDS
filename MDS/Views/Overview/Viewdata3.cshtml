@@ -23,7 +23,7 @@
             <table id="datatable-responsive" class="table table-striped" cellpadding="0" cellspacing="0">
                 <thead>
                     <tr>
-                        <th style="text-align:center;" width="5%">ลำดับ</th>
+                        <th style="text-align:center;background-color:#e6e6e6;color:black" width="2%">#</th>
                         <th style="text-align:left;" width="30%">รายละเอียด</th>
                         <th style="text-align:left;" width="20%">หลักสูตร</th>
                         <th style="text-align:left;" width="5%"></th>
@@ -36,7 +36,7 @@
                     {
                         <tr>
 
-                            <td>@item.rno</td>
+                            <td style="text-align:center;background-color:#e6e6e6;color:black"></td>
                             <td>
                                 <p>
                                     <b>รหัสนักเรียน :</b> @item.ind &nbsp;
@@ -110,7 +110,7 @@
     <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#datatable-responsive').DataTable({
+            var t = $('#datatable-responsive').DataTable({
                 responsive: true,
                 "paging": true,
                 "lengthChange": true,
@@ -132,6 +132,11 @@
                     }
                 }
             });
+            t.on('order.dt search.dt', function () {
+                t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
         });
 
         $(document).ready(function () {

@@ -2369,7 +2369,7 @@ else if (ViewBag.Result == "N")
                 titleFormat: 'DD MMMM YYYY',
                 columnFormat: 'dddd',
                 slotDuration: '00:30:00',
-                minTime: '08:00:00',
+                minTime: '06:00:00',
                 maxTime: '22:00:00',
                 dragOpacity: {
                     agenda: .5
@@ -2481,7 +2481,7 @@ else if (ViewBag.Result == "N")
                     titleFormat: 'DD MMMM YYYY',
                     columnFormat: 'dddd',
                     slotDuration: '00:30:00',
-                    minTime: '08:00:00',
+                    minTime: '06:00:00',
                     maxTime: '22:00:00',
                     dragOpacity: {
                         agenda: .5
@@ -2496,6 +2496,10 @@ else if (ViewBag.Result == "N")
                     displayEventTime: false,
 
                     listDayAltFormat: false,
+                    // click : Openmodal
+                    eventClick: function (event, jsEvent, view) {
+                        OpenEvent(event);
+                    },
                     resourceColumns: [
                         {
                             labelText: 'ชื่อครู',
@@ -2517,7 +2521,7 @@ else if (ViewBag.Result == "N")
                         $content.append($('<p/>').html('<span style="' + resourceObj.c2 + ';font-size:14px" class="glyph-icon ' + resourceObj.c1 + '">&nbsp;<span style="' + resourceObj.c2 + '">' + resourceObj.c3 + '</span>'));
                         $content.append($('<p/>').html('<p style="' + resourceObj.c2 + '">ทฤษฎี ' + resourceObj.c4 + ' ชม. ปฏิบัติ ' + resourceObj.c5 + ' ชม.</p>'));
                         $content.append($('<p/>').html('<span style="' + resourceObj.d2 + ';font-size:14px" class="glyph-icon ' + resourceObj.d1 + '">&nbsp;<span style="' + resourceObj.d2 + '">' + resourceObj.d3 + '</span>'));
-                        $content.append($('<p/>').html('<p style="' + resourceObj.d2 + '">ทฤษฎี ' + resourceObj.a4 + ' ชม. ปฏิบัติ ' + resourceObj.d5 + ' ชม.</p>'));
+                        $content.append($('<p/>').html('<p style="' + resourceObj.d2 + '">ทฤษฎี ' + resourceObj.d4 + ' ชม. ปฏิบัติ ' + resourceObj.d5 + ' ชม.</p>'));
                         $td.eq(0).popover({
                             html: true,
                             title: 'จำนวนชั่วโมง',
@@ -2585,7 +2589,7 @@ else if (ViewBag.Result == "N")
                     titleFormat: 'DD MMMM YYYY',
                     columnFormat: 'dddd',
                     slotDuration: '00:30:00',
-                    minTime: '08:00:00',
+                    minTime: '06:00:00',
                     maxTime: '22:00:00',
                     dragOpacity: {
                         agenda: .5
@@ -2600,6 +2604,10 @@ else if (ViewBag.Result == "N")
                     displayEventTime: false,
 
                     listDayAltFormat: false,
+                    // click : Openmodal
+                    eventClick: function (event, jsEvent, view) {
+                        OpenEvent(event);
+                    },
                     resourceColumns: [
                         {
                             labelText: 'ชื่อครู',

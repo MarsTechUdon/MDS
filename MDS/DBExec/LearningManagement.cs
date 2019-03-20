@@ -192,7 +192,7 @@ namespace MDS.DBExec
                     {
                         var model = new TeacherCalendarModel();
                         model.id= dr["ind"].ToString();
-                        model.title = dr["nameT"].ToString() + " " +dr["surnameT"].ToString();
+                        model.title = dr["nameT"].ToString() + " " +dr["surnameT"].ToString() + " - " + dr["nickname"].ToString();
                         model.a1 = dr["a1"].ToString();
                         model.a2 = dr["a2"].ToString();
                         model.a3 = dr["a3"].ToString();

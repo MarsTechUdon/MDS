@@ -219,6 +219,8 @@
     <Compile Include="Controllers\RcNameController.cs" />
     <Compile Include="Controllers\ReceiptController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\ReportStudentController.cs" />
+    <Compile Include="Controllers\RevenueController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ScBranchController.cs" />
     <Compile Include="Controllers\SchoolController.cs" />
@@ -370,10 +372,12 @@
     <Compile Include="Models\RcNameModel.cs" />
     <Compile Include="Models\ReceiptModel.cs" />
     <Compile Include="Models\remainingTimeModel.cs" />
+    <Compile Include="Models\ReportStudentModel.cs" />
     <Compile Include="Models\ResultBookingModel.cs" />
     <Compile Include="Models\ResultCheckBdModel.cs" />
     <Compile Include="Models\ResultModel.cs" />
     <Compile Include="Models\ReturnCheckBdModel.cs" />
+    <Compile Include="Models\RevenueModel.cs" />
     <Compile Include="Models\RoleSelectionModel.cs" />
     <Compile Include="Models\RoomModel.cs" />
     <Compile Include="Models\ScBranchModel.cs" />
@@ -396,11 +400,22 @@
     <Compile Include="Models\UserSessionModel.cs" />
     <Compile Include="Models\VehicleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Reports\Appointment\AppointmentXSD.Designer.cs" />
     <Compile Include="Reports\Appointment\AppointmentXSD1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AppointmentXSD.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Channel\ChannelXSD.Designer.cs" />
+    <Compile Include="Reports\Channel\ChannelXSD1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ChannelXSD.xsd</DependentUpon>
     </Compile>
     <Compile Include="Reports\DepositACRevenue\DepositACRevenueXSD.Designer.cs" />
     <Compile Include="Reports\DepositACRevenue\DepositACRevenueXSD1.Designer.cs">
@@ -432,11 +447,29 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ReceiptXSD.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Reports\ReportStudent\ReportStudentXSD.Designer.cs" />
+    <Compile Include="Reports\ReportStudent\ReportStudentXSD1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReportStudentXSD.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Revenue\RevenueXSD.Designer.cs" />
+    <Compile Include="Reports\Revenue\RevenueXSD1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RevenueXSD.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Reports\Student\StudentXSD.Designer.cs" />
     <Compile Include="Reports\Student\StudentXSD1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StudentXSD.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\TeacherHours\TeacherHoursXSD.Designer.cs" />
+    <Compile Include="Reports\TeacherHours\TeacherHoursXSD1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
   </ItemGroup>
@@ -2617,6 +2650,7 @@
     <Content Include="MDSMiddleFile\DefaultMediaIMG\LOGOsmall.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\QRUrl.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\QRUrl1.png" />
+    <Content Include="MDSMiddleFile\DefaultMediaIMG\red1.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\redmobile.png" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\SchoolLogo.jpg" />
     <Content Include="MDSMiddleFile\DefaultMediaIMG\SchoolLogo.png" />
@@ -2643,10 +2677,6 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Reports\Appointment\AppointmentReport.rdlc" />
-    <Content Include="Reports\Appointment\AppointmentXSD.xsc">
-      <DependentUpon>AppointmentXSD.xsd</DependentUpon>
     </Content>
     <EntityDeploy Include="DBEntity\MDS.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
@@ -2769,6 +2799,14 @@
     <Content Include="fonts\kanit-regular.woff" />
     <Content Include="MDSMiddleFile\MediaFile\131751702665433317_2.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Reports\Appointment\AppointmentReport.rdlc" />
+    <Content Include="Reports\Appointment\AppointmentXSD.xsc">
+      <DependentUpon>AppointmentXSD.xsd</DependentUpon>
+    </Content>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Reports\Appointment\AppointmentXSD.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>AppointmentXSD1.Designer.cs</LastGenOutput>
@@ -2776,6 +2814,18 @@
     </None>
     <Content Include="Reports\Appointment\AppointmentXSD.xss">
       <DependentUpon>AppointmentXSD.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\Channel\ChannelReport.rdlc" />
+    <Content Include="Reports\Channel\ChannelXSD.xsc">
+      <DependentUpon>ChannelXSD.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\Channel\ChannelXSD.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ChannelXSD1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Reports\Channel\ChannelXSD.xss">
+      <DependentUpon>ChannelXSD.xsd</DependentUpon>
     </Content>
     <Content Include="Reports\DepositACRevenue\DepositACRevenue.rdlc" />
     <Content Include="Reports\DepositACRevenue\DepositACRevenueXSD.xsc">
@@ -2837,6 +2887,30 @@
     <Content Include="Reports\Receipt\ReceiptXSD.xss">
       <DependentUpon>ReceiptXSD.xsd</DependentUpon>
     </Content>
+    <Content Include="Reports\ReportStudent\ReportStudentRDLC.rdlc" />
+    <Content Include="Reports\ReportStudent\ReportStudentXSD.xsc">
+      <DependentUpon>ReportStudentXSD.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\ReportStudent\ReportStudentXSD.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ReportStudentXSD1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Reports\ReportStudent\ReportStudentXSD.xss">
+      <DependentUpon>ReportStudentXSD.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\Revenue\RevenueRDLC.rdlc" />
+    <Content Include="Reports\Revenue\RevenueXSD.xsc">
+      <DependentUpon>RevenueXSD.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\Revenue\RevenueXSD.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>RevenueXSD1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Reports\Revenue\RevenueXSD.xss">
+      <DependentUpon>RevenueXSD.xsd</DependentUpon>
+    </Content>
     <Content Include="Reports\Student\StudentRDLC.rdlc" />
     <Content Include="Reports\Student\StudentXSD.xsc">
       <DependentUpon>StudentXSD.xsd</DependentUpon>
@@ -2848,6 +2922,18 @@
     </None>
     <Content Include="Reports\Student\StudentXSD.xss">
       <DependentUpon>StudentXSD.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\TeacherHours\TeacherHoursReport.rdlc" />
+    <Content Include="Reports\TeacherHours\TeacherHoursXSD.xsc">
+      <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\TeacherHours\TeacherHoursXSD.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>TeacherHoursXSD1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Reports\TeacherHours\TeacherHoursXSD.xss">
+      <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\formprint.js" />
@@ -2956,6 +3042,10 @@
     <Content Include="Views\UserManager\EditProfile.cshtml" />
     <Content Include="Views\UserManager\ManageUserGroup.cshtml" />
     <Content Include="Views\Vehicle\VehicleList.cshtml" />
+    <Content Include="Views\Report\ChannelReport.cshtml" />
+    <Content Include="Views\Report\ReportStudent.cshtml" />
+    <Content Include="Views\Report\Revenue.cshtml" />
+    <Content Include="Views\Report\TeacherHoursReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
