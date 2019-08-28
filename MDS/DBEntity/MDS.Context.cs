@@ -67,23 +67,6 @@ namespace MDS.DBEntity
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetUser_Result>("sp_GetUser", flagParameter, userIdParameter);
         }
     
-        public virtual ObjectResult<string> sp_ResetPwd(Nullable<int> userId, string pwdNew, string iP)
-        {
-            var userIdParameter = userId.HasValue ?
-                new ObjectParameter("UserId", userId) :
-                new ObjectParameter("UserId", typeof(int));
-    
-            var pwdNewParameter = pwdNew != null ?
-                new ObjectParameter("pwdNew", pwdNew) :
-                new ObjectParameter("pwdNew", typeof(string));
-    
-            var iPParameter = iP != null ?
-                new ObjectParameter("IP", iP) :
-                new ObjectParameter("IP", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("sp_ResetPwd", userIdParameter, pwdNewParameter, iPParameter);
-        }
-    
         public virtual ObjectResult<sp_SelectAllRole_Result> sp_SelectAllRole()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_SelectAllRole_Result>("sp_SelectAllRole");
@@ -457,6 +440,23 @@ namespace MDS.DBEntity
                 new ObjectParameter("IP", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_UserLogin_Result>("sp_UserLogin", usernameParameter, passwordParameter, iPParameter);
+        }
+    
+        public virtual ObjectResult<sp_ResetPwd_Result> sp_ResetPwd(Nullable<int> userId, string pwdNew, string iP)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            var pwdNewParameter = pwdNew != null ?
+                new ObjectParameter("pwdNew", pwdNew) :
+                new ObjectParameter("pwdNew", typeof(string));
+    
+            var iPParameter = iP != null ?
+                new ObjectParameter("IP", iP) :
+                new ObjectParameter("IP", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_ResetPwd_Result>("sp_ResetPwd", userIdParameter, pwdNewParameter, iPParameter);
         }
     }
 }

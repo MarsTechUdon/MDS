@@ -44,6 +44,6 @@ namespace MDS.Models
         public string studentname { get; set; }
         public string subjectmin { get; set; }
         public string gear { get; set; }
-        
+        public string ViewCalendar { get; set; }
     }
 }

@@ -219,8 +219,6 @@
     <Compile Include="Controllers\RcNameController.cs" />
     <Compile Include="Controllers\ReceiptController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
-    <Compile Include="Controllers\ReportStudentController.cs" />
-    <Compile Include="Controllers\RevenueController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ScBranchController.cs" />
     <Compile Include="Controllers\SchoolController.cs" />
@@ -252,6 +250,9 @@
       <DependentUpon>MDS.tt</DependentUpon>
     </Compile>
     <Compile Include="DBEntity\sp_GetUser_Result.cs">
+      <DependentUpon>MDS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DBEntity\sp_ResetPwd_Result.cs">
       <DependentUpon>MDS.tt</DependentUpon>
     </Compile>
     <Compile Include="DBEntity\sp_SelectAllRole_Result.cs">
@@ -3059,7 +3060,9 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reports\Appointment\AppointmentReport.rdlc" />
+    <EmbeddedResource Include="Reports\Appointment\AppointmentReport.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Channel\ChannelReport.rdlc" />
     <EmbeddedResource Include="Reports\DepositACRevenue\DepositACRevenue.rdlc" />
     <EmbeddedResource Include="Reports\DepositAC\DepositACReport.rdlc" />

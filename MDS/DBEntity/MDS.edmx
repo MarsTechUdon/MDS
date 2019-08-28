@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MDSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MDSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <Function Name="sp_ForgetPwd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="email" Type="varchar" Mode="In" />
         </Function>
@@ -125,14 +125,13 @@
           <Parameter Name="IP" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="MDSModelStoreContainer" />
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MDSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="MDSEntities" annotation:LazyLoadingEnabled="true" >
           <FunctionImport Name="sp_ForgetPwd" ReturnType="Collection(MDSModel.sp_ForgetPwd_Result)">
-            <Parameter Name="email" Mode="In" Type="String" />
+          <Parameter Name="email" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_GetMenu" ReturnType="Collection(MDSModel.sp_GetMenu_Result)">
             <Parameter Name="flag" Mode="In" Type="String" />
@@ -142,11 +141,6 @@
           <FunctionImport Name="sp_GetUser" ReturnType="Collection(MDSModel.sp_GetUser_Result)">
             <Parameter Name="flag" Mode="In" Type="String" />
             <Parameter Name="UserId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_ResetPwd" ReturnType="Collection(String)">
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
-            <Parameter Name="pwdNew" Mode="In" Type="String" />
-            <Parameter Name="IP" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_SelectAllRole" ReturnType="Collection(MDSModel.sp_SelectAllRole_Result)" />
           <FunctionImport Name="sp_SelectAllUserDetail" ReturnType="Collection(MDSModel.sp_SelectAllUserDetail_Result)" />
@@ -226,10 +220,10 @@
           </FunctionImport>
           <FunctionImport Name="sp_UM_SelectAllMenu" ReturnType="Collection(MDSModel.sp_UM_SelectAllMenu_Result)" />
           <FunctionImport Name="sp_UM_SelectMenuByUserID" ReturnType="Collection(MDSModel.sp_UM_SelectMenuByUserID_Result)">
-            <Parameter Name="UserID" Mode="In" Type="Int32" />
+          <Parameter Name="UserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_UM_SelectMenuFromUserID" ReturnType="Collection(MDSModel.sp_UM_SelectMenuFromUserID_Result)">
-            <Parameter Name="UserID" Mode="In" Type="Int32" />
+          <Parameter Name="UserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_UM_SetGrantMenu" ReturnType="Collection(MDSModel.sp_UM_SetGrantMenu_Result)">
             <Parameter Name="flag" Mode="In" Type="String" />
@@ -248,6 +242,11 @@
           <FunctionImport Name="sp_UserLogin" ReturnType="Collection(MDSModel.sp_UserLogin_Result)">
             <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="IP" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ResetPwd" ReturnType="Collection(MDSModel.sp_ResetPwd_Result)">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+            <Parameter Name="pwdNew" Mode="In" Type="String" />
             <Parameter Name="IP" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
@@ -399,6 +398,11 @@
           <Property Type="String" Name="Tel" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="UserIMG" Nullable="true" MaxLength="100" />
         </ComplexType>
+        <ComplexType Name="sp_ResetPwd_Result">
+          <Property Type="Int32" Name="UserId" Nullable="true" />
+          <Property Type="String" Name="result" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="msg" Nullable="false" MaxLength="50" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -443,7 +447,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_ResetPwd" FunctionName="MDSModel.Store.sp_ResetPwd" />
           <FunctionImportMapping FunctionImportName="sp_SelectAllRole" FunctionName="MDSModel.Store.sp_SelectAllRole">
             <ResultMapping>
               <ComplexTypeMapping TypeName="MDSModel.sp_SelectAllRole_Result">
@@ -600,6 +603,15 @@
                 <ScalarProperty Name="UserLock" ColumnName="UserLock" />
                 <ScalarProperty Name="Tel" ColumnName="Tel" />
                 <ScalarProperty Name="UserIMG" ColumnName="UserIMG" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_ResetPwd" FunctionName="MDSModel.Store.sp_ResetPwd">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MDSModel.sp_ResetPwd_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="msg" ColumnName="msg" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

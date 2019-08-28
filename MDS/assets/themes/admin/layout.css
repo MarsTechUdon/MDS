@@ -207,7 +207,7 @@ body #nav-toggle.collapsed span {
     -ms-transform: translateX(0px);
     -o-transform: translateX(0px);
     -webkit-transform: translateX(0px);
-    background-color: #fff;
+    /*background-color: #fff;*/
     float: none;
     width: 100%;
     position: relative;

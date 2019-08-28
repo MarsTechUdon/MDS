@@ -97,7 +97,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Favicons -->
-    @*<link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center114.png">
+    @*
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center114.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center72.png">
         <link rel="apple-touch-icon-precomposed" href="~/MDSMiddleFile/DefaultMediaIMG/icon/Mars Driving Center57.png">
         <link rel="shortcut icon" href="~/MDSMiddleFile/DefaultMediaIMG/icon/favicon.png">*@
@@ -252,17 +253,6 @@
             }, 300);
         });
     </script>
-</head>
-<body style="background-image:url(@Url.Content("~/"+Company.logopath+"Background-12.jpg"));background-repeat: no-repeat;
-    background-size: cover;">
-    <div id="loading">
-        <div class="spinner">
-            <div class="bounce1"></div>
-            <div class="bounce2"></div>
-            <div class="bounce3"></div>
-        </div>
-    </div>
-
     <style>
 
         html, body {
@@ -281,7 +271,6 @@
         .login-block {
             float: left;
             width: 100%;
-            padding: 50px 0;
         }
 
         .banner-sec {
@@ -382,6 +371,18 @@
                 color: #fff;
             }
     </style>
+</head>
+<body style="background-image:url(@Url.Content(" ~/"+Company.logopath+"Background-12.jpg"));background-repeat: no-repeat;
+    background-size: cover;">
+    <div id="loading">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+
+
     <section class="login-block">
         <div class="container" style="">
             <div class="row">
@@ -389,7 +390,7 @@
                     @*<h2 class="text-center">Login</h2>*@
                     @*<img src="~/MDSMiddleFile/DefaultMediaIMG/LOGO.png" style="width:100%;height:150px; margin-bottom:20px;">*@
                     <img src="~/@Company.SchoolLogo?@DateTime.Now.Ticks.ToString()" style="width:100%;height:150px; margin-bottom:20px;">
-                    
+
                     @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "login-form", data_parsley_validate = "" }))
                     {
                         <div class="form-group">
@@ -398,7 +399,7 @@
                                 <span class="input-group-addon addon-inside bg-gray">
                                     <i class="glyph-icon icon-user"></i>
                                 </span>
-                                <input type="text" class="form-control" name="Username" placeholder="Username" value="@(user != "" ? user : "")" required>
+                                <input type="text" class="form-control" name="Username" placeholder="Username" value="@(user != " " ? user : " ")" required>
                             </div>
                         </div>
 
@@ -435,7 +436,7 @@
 
                             </div>
                             <div class="text-right col-md-6">
-                                <a href="@Url.Action("Index", "ForgetPassword")">ลืมรหัสผ่าน</a><br>
+                                <a href="@Url.Action(" Index", "ForgetPassword" )">ลืมรหัสผ่าน</a><br>
                             </div>
                         </div>
                     }
@@ -448,16 +449,16 @@
 
 
     <script>
-        $(".toggle-password1").click(function () {
+    $(".toggle-password1").click(function () {
 
-            $(".toggle-password").toggleClass("fa-eye fa-eye-slash");
-            var input = $($(this).attr("toggle"));
-            if (input.attr("type") == "password") {
-                input.attr("type", "text");
-            } else {
-                input.attr("type", "password");
-            }
-        });
+        $(".toggle-password").toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
     </script>
     <!-- WIDGETS -->
 
@@ -520,7 +521,8 @@
     <script type="text/javascript" src="~/assets/themes/admin/layout.js"></script>
 
     <!-- Theme switcher -->
-    @*<script type="text/javascript" src="~/assets/widgets/theme-switcher/themeswitcher.js"></script>
+    @*
+        <script type="text/javascript" src="~/assets/widgets/theme-switcher/themeswitcher.js"></script>
         <script type="text/javascript" src="~/Content/Other/jquery.ui.touch-punch.js"></script>*@
 </body>
 </html>

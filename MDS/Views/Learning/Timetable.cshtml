@@ -30,9 +30,11 @@
         font-size: 10px !important;
         cursor: pointer;
     }
+
     .ui-datepicker {
-    z-index:1051 !important;
+        z-index: 1051 !important;
     }
+
     .demoHeaders {
         margin-top: 2em;
     }
@@ -71,9 +73,8 @@
         }
 
     ul.test {
-        list-style: none ;
+        list-style: none;
         line-height: 30px;
-       
     }
     /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
     .ui-datepicker-prev, .ui-datepicker-next {
@@ -138,6 +139,8 @@ else if (ViewBag.Result == "N")
 <input type="hidden" id="courseid" value="@ViewBag.courseid">
 <input type="hidden" id="bookingind" value="@ViewBag.bookingid">
 <input type="hidden" id="BookingConfirm" value="@ViewBag.BookingConfirm">
+<input type="hidden" id="ActiveDate" value="@ViewBag.ActiveDate">
+<input type="hidden" id="ActiveView" value="@ViewBag.ActiveView">
 <div class="panel">
     <div class="panel-body">
         <h3 class="title-hero">
@@ -207,10 +210,10 @@ else if (ViewBag.Result == "N")
                     }
                     else if (gear == "M")
                     {
-                        <label class="font-size-18" style="color:black;">ออโต้</label>
+                        <label class="font-size-18" style="color:black;">กระปุก</label>
                     }
                     else
-                    { 
+                    {
                         <label class="font-size-18" style="color:black;">ไม่ระบุ</label>
                     }
 
@@ -240,7 +243,7 @@ else if (ViewBag.Result == "N")
                                         foreach (var item in teachbycourseid)
                                         {
 
-                                    <option value="@item.ind">@item.nickname - @item.studytime ชม. </option>
+                                            <option value="@item.ind">@item.nickname - @item.studytime ชม. </option>
                                         }
                                     }
                                     else
@@ -251,11 +254,11 @@ else if (ViewBag.Result == "N")
                                             var Count = listteach.FirstOrDefault(i => i.ind == item.ind);
                                             if (Count == null)
                                             {
-                                    <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
+                                                <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
                                             }
                                             else
                                             {
-                                    <option value="@item.ind" selected>@item.nickname - @item.studytime ชม.</option>
+                                                <option value="@item.ind" selected>@item.nickname - @item.studytime ชม.</option>
                                             }
                                         }
                                     }
@@ -555,7 +558,10 @@ else if (ViewBag.Result == "N")
                             <div class="content-box-wrapper">
                                 <div class="row">
                                     <div class="table-responsive">
-                                        <div id="calendar"></div>
+                                        <div id="PosReaload">
+                                            <div id="calendar"></div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -592,10 +598,10 @@ else if (ViewBag.Result == "N")
                 </div>
             </div>
             @*<div class="row">
-            <div class="table-responsive">
-                <div id="calendar"></div>
-            </div>
-        </div>*@
+                    <div class="table-responsive">
+                        <div id="calendar"></div>
+                    </div>
+                </div>*@
         </div>
     </div>
 </div>
@@ -647,6 +653,7 @@ else if (ViewBag.Result == "N")
                             <input name="bookingid" type="hidden" id="bookingidDrop" value="@ViewBag.bookingid">
                             <input name="courseid" type="hidden" id="courseidDrop" value="@ViewBag.courseid">
                             <input name="arrteacher" type="hidden" id="arrteacherDrop" value="@ViewBag.arrteacher">
+                            <input name="ViewCalendar" id="ViewCalendarDrop" type="hidden">
                         </div>
                     </div>
                     <div class="row">
@@ -658,7 +665,7 @@ else if (ViewBag.Result == "N")
                                         <option value="" disabled selected>--เลือกครูผู้สอน--</option>
                                         @foreach (var item in @ViewBag.teach as List<lteacherModel>)
                                         {
-                                        <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
+                                            <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
                                         }
                                     </select>
                                 </div>
@@ -777,7 +784,7 @@ else if (ViewBag.Result == "N")
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">                   
+                <div class="modal-footer">
                     <span style="float:left;color:red">*สามารถเลือกวันได้ตั้งแต่ วันที่ @ViewBag.previous</span>
                     <button type="button" class="btn btn-success btnSaveDrop">บันทึก</button>
                     <button type="button" class="btn btn-danger cancel" data-dismiss="modal">ยกเลิก</button>
@@ -811,6 +818,7 @@ else if (ViewBag.Result == "N")
                             <input name="bookingid" type="hidden" id="bookingidAdd" value="@ViewBag.bookingid">
                             <input name="courseid" type="hidden" id="courseidAdd" value="@ViewBag.courseid">
                             <input name="arrteacher" type="hidden" id="arrteacherAdd" value="@ViewBag.arrteacher">
+                            <input name="ViewCalendar" id="ViewCalendarAdd" type="hidden">
                         </div>
                     </div>
                     <div class="row">
@@ -822,7 +830,7 @@ else if (ViewBag.Result == "N")
                                         <option value="" disabled selected>--เลือกครูผู้สอน--</option>
                                         @foreach (var item in @ViewBag.teach as List<lteacherModel>)
                                         {
-                                        <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
+                                            <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
                                         }
                                     </select>
                                 </div>
@@ -973,7 +981,7 @@ else if (ViewBag.Result == "N")
                             <input name="courseid" type="hidden" id="courseidEdit" value="@ViewBag.courseid">
                             <input name="arrteacher" type="hidden" id="arrteacherEdit" value="@ViewBag.arrteacher">
                             <input name="bookingdetailind" type="hidden" id="bookingdetailind">
-
+                            <input name="ViewCalendar" id="ViewCalendarEdit" type="hidden">
                         </div>
                     </div>
                     <div class="row">
@@ -985,7 +993,7 @@ else if (ViewBag.Result == "N")
                                         <option value="" disabled selected>--เลือกครูผู้สอน--</option>
                                         @foreach (var item in @ViewBag.teach as List<lteacherModel>)
                                         {
-                                        <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
+                                            <option value="@item.ind">@item.nickname - @item.studytime ชม.</option>
                                         }
                                     </select>
                                 </div>
@@ -1124,33 +1132,33 @@ else if (ViewBag.Result == "N")
             @using (Html.BeginForm("EditBooking", "Learning",
                  FormMethod.Post, new { @class = "form-horizontal bordered-row", @id = "SearchCourse" }))
             {
-            <div class="modal-body">
-                <div>
-                    <label>ชื่อนักเรียน/ชื่อจอง</label>
-                    <div class="input-prepend input-group">
-                        <input type="text" id="bookingname" name="bookingname" class="form-control" autocomplete="off" value="@bookingname" />
-                        <input type="hidden" name="arrteacher" value="@ViewBag.arrteacher">
-                        <input type="hidden" name="courseid" value="@ViewBag.courseid">
-                        <input type="hidden" name="bookingind" value="@ViewBag.bookingid">
+                <div class="modal-body">
+                    <div>
+                        <label>ชื่อนักเรียน/ชื่อจอง</label>
+                        <div class="input-prepend input-group">
+                            <input type="text" id="bookingname" name="bookingname" class="form-control" autocomplete="off" value="@bookingname" />
+                            <input type="hidden" name="arrteacher" value="@ViewBag.arrteacher">
+                            <input type="hidden" name="courseid" value="@ViewBag.courseid">
+                            <input type="hidden" name="bookingind" value="@ViewBag.bookingid">
+                        </div>
+                    </div>
+                    <div>
+                        <label>รายละเอียดเพิ่มเติม</label>
+                        <div class="input-prepend input-group">
+                            <input type="text" id="remark" name="remark" class="form-control" autocomplete="off" value="@remark" />
+                        </div>
+                    </div>
+                    <div>
+                        <label>ระบุเกียร์</label>
+                        <div class="input-prepend input-group">
+                            <select class="form-control" id="gear" name="gear" required>
+                                <option value="" disabled selected>--เลือกเกียร์--</option>
+                                <option value="A" @(gear == "A" ? "selected" : "")>ออโต้</option>
+                                <option value="M" @(gear == "M" ? "selected" : "")>กระปุก</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <label>รายละเอียดเพิ่มเติม</label>
-                    <div class="input-prepend input-group">
-                        <input type="text" id="remark" name="remark" class="form-control" autocomplete="off" value="@remark" />
-                    </div>
-                </div>
-                <div>
-                    <label>ระบุเกียร์</label>
-                    <div class="input-prepend input-group">
-                        <select class="form-control" id="gear" name="gear" required>
-                            <option value="" disabled selected>--เลือกเกียร์--</option>
-                            <option value="A" @(gear == "A" ? "selected" : "")>ออโต้</option>
-                            <option value="M" @(gear == "M" ? "selected" : "")>กระปุก</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
                     <button type="submit" class="btn btn-primary">บันทึก</button>
@@ -1367,6 +1375,8 @@ else if (ViewBag.Result == "N")
         //$('#dtp1,#dtp2').bsdatepicker();
         //แสดงข้อมูลวิชา ทฤษฎี และ ปฏิบัติ
         $(document).ready(function () {
+            //$("#PosReaload").focus();
+
             $(".datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -1383,7 +1393,8 @@ else if (ViewBag.Result == "N")
                 monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
             }).keydown(function (e) {
                 return false;
-            });
+                });
+
             //$('#btnStudentype').click(function () {
             //    $('#BookingConfirmModal').modal('hide');
             //    $('#StudentypeModal').modal({ backdrop: 'static', keyboard: false });
@@ -1406,7 +1417,7 @@ else if (ViewBag.Result == "N")
             $(document).on("click", "#btnsts", function () {
                 var bookingid = $('#bookingind').val();
                 var bookingexamdate = $('#bookingexamdate').val();
-                
+
                   $.ajax({
                       data: { bookingexamdate: bookingexamdate, bookingid: bookingid  },
                         url: '@Url.Action("SetBookingExamDate", "Learning")',
@@ -1463,7 +1474,7 @@ else if (ViewBag.Result == "N")
                 $('#divEndtimeDroptxt').show();
                 //$('#divEndtimeAdd').attr("disabled", "disabled");
             });
-           
+
         //datepicker
         $('.timepicker').timepicker({
             showhour: true,
@@ -1503,7 +1514,8 @@ else if (ViewBag.Result == "N")
           ///Enddraggable
         var events = [];
         var selectedEvent = null;
-            FetchEventAndRenderCalendar(); 
+            FetchEventAndRenderCalendar();
+
             $(document).on("click", "#tebclick_21", function () {
                 FetchEventAndRenderCalendar();
             });
@@ -1513,7 +1525,7 @@ else if (ViewBag.Result == "N")
             $(document).on("click", "#tebclick_23", function () {
                 CalendarCar();
             });
-          
+
         function FetchEventAndRenderCalendar() {
             var teacher = $('#arrteacher').val();
             var courseid = $('#courseid').val();
@@ -1526,6 +1538,7 @@ else if (ViewBag.Result == "N")
                 type: "POST",
                 success: function (item) {
                     calendar(item);
+
                 },
                 error: function (a, b, c) {
                     alert("error" + a);
@@ -1543,7 +1556,7 @@ else if (ViewBag.Result == "N")
                 error: function (a, b, c) {
                     alert("error" + a);
               }
-                
+
             });
             };
             function CalendarCar() {
@@ -1557,7 +1570,7 @@ else if (ViewBag.Result == "N")
                 error: function (a, b, c) {
                     alert("error" + a);
               }
-                
+
             });
         };
             $('#btnEdit').click(function () {
@@ -1603,12 +1616,12 @@ else if (ViewBag.Result == "N")
                             $('#Showstudyetime').val(result.studyetime);
                             var $description = $('<div/>');
                             $description.append($('<p/>').html('<b>หลักสูตร : </b><span style="color:blue">' + result.coursenickname + '</span>'));
-                            $description.append($('<p/>').html('<b>วิชา : </b><span style="color:blue">' + result.subjectname +'</span>'));                            
+                            $description.append($('<p/>').html('<b>วิชา : </b><span style="color:blue">' + result.subjectname +'</span>'));
                             $description.append($('<p/>').html('<b>ภาค : </b>' + result.subjecttypedesc));
                             $description.append($('<p/>').html('<b>ครูผู้สอน : </b><span style="color:blue">' + result.nickname + '</span>'));
                             $description.append($('<p/>').html('<b>นักเรียน : </b><span style="color:blue">' + studentname + '</span>'));
                             $description.append($('<p/>').html('<b>วันที่ : </b>' + result.studydate));
-                            $description.append($('<p/>').html('<b>เวลา : </b>' + result.studystime + " น." + " - " + result.studyetime + " น."));                            
+                            $description.append($('<p/>').html('<b>เวลา : </b>' + result.studystime + " น." + " - " + result.studyetime + " น."));
                             $description.append($('<p/>').html('<b>จำนวน : </b>' + studyhr + " ชม."));
 
                             if (result.bookingid != bookingindCheck) {
@@ -1693,7 +1706,8 @@ else if (ViewBag.Result == "N")
                     });
 
                 }
-
+                var view = $('#calendar').fullCalendar('getView');
+                $('#ViewCalendarAdd').val(view.name);
                 $('#AddEventModal').modal({ backdrop: 'static', keyboard: false });
                 $('#AddEventModal').appendTo('body');
             }
@@ -1735,6 +1749,8 @@ else if (ViewBag.Result == "N")
 
                 });
                 }
+                var view = $('#calendar').fullCalendar('getView');
+                $('#ViewCalendarDrop').val(view.name);
                 //show Modal
                 $('#AddEventDropModal').modal({ backdrop: 'static', keyboard: false });
                 $('#AddEventDropModal').appendTo('body');
@@ -1865,7 +1881,8 @@ else if (ViewBag.Result == "N")
                     }
                 });
 
-
+                var view = $('#calendar').fullCalendar('getView');
+                $('#ViewCalendarEdit').val(view.name);
                 //show Modal
                 $('#EditEventModal').modal({ backdrop: 'static', keyboard: false });
                 $('#EditEventModal').appendTo('body');
@@ -2123,7 +2140,7 @@ else if (ViewBag.Result == "N")
             });
             };
             $(document).on('click', '.btnSaveDrop', function () {
-               
+
                 $('#AddEventDropfrm').submit();
 
             });
@@ -2191,7 +2208,7 @@ else if (ViewBag.Result == "N")
                         }
                         });
                 }
-                    
+
 
 
                 }
@@ -2225,14 +2242,14 @@ else if (ViewBag.Result == "N")
                             var courseid = $('#courseidAdd').val();
                             var arrteacher = $('#arrteacherAdd').val();
                             var subjectid = $('#subjectAdd').val();
-                            var teacherind = $('#teacherAdd').val();     
+                            var teacherind = $('#teacherAdd').val();
                             var studydate = $('#txtStartAdd').val();
                             var studystime = $('#divStarttimeAdd').val();
                             var studyetime = $('#divEndtimeAdd').val();
                             //if (subjectid == null || teacherind == null) {
                             //    $('#AddEventAddfrm').submit();
                             //} else {
-                               
+
                             //}
                         $.ajax({
                                     data: { bookingid: bookingid, courseid: courseid, arrteacher: arrteacher, subjectid: subjectid, teacherind: teacherind, studydate: studydate, studystime: studystime, studyetime: studyetime },
@@ -2347,10 +2364,22 @@ else if (ViewBag.Result == "N")
                         error: function (a, b, c) {
                             alert("เกิดข้อผิดพลาด : กรุณาตรวจสอบข้อมูล");
                         }
-                        });        
+                        });
                 }
             });
-        function calendar(item) {
+            function calendar(item) {
+
+                var ActiveDate = $('#ActiveDate').val();
+                var ActiveView = $('#ActiveView').val();
+                var datenow = "";
+                var dfView = "";
+                if (ActiveDate=="") {
+                    datenow = $("#calendar").fullCalendar('getDate');
+                } else {
+                    window.location.hash = '#PosReaload';
+                    datenow = ActiveDate;
+                }
+                var dfView = (ActiveView != "" ? ActiveView : "agendaDay");
             $('#calendar').fullCalendar({
                 schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
                 header: {
@@ -2359,7 +2388,8 @@ else if (ViewBag.Result == "N")
                     right: 'agendaDay,agendaWeek,month'
                     //right: 'month,agendaWeek'
                 },
-                defaultView: 'agendaDay',
+                defaultView: dfView,
+                defaultDate: datenow,
                 //lang: 'th',
                 allDaySlot: false,
                 slotDuration: '00:30:00',

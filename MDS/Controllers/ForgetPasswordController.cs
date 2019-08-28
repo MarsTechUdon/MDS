@@ -22,7 +22,7 @@ namespace MDS.Controllers
         [IsLoggedIn]
         public ActionResult Index()
         {
-            ViewBag.GetCompany = school.GetCompanyView();
+            ViewBag.GetCompany = school.GetCompany();
             ViewBag.Result = TempData["ResultMessage"];
             ViewBag.Message = TempData["Message"];
             return View();
@@ -49,14 +49,14 @@ namespace MDS.Controllers
             {
                 using (var db = new MDSEntities())
                 {
-                    var Dataalert = db.sp_ResetPwd(Id, NewPassword, IpAddress).SingleOrDefault();
-                    var str = Dataalert.Split('_');
-                    if (str[1] == "Y")
+                    var model = db.sp_ResetPwd(Id, NewPassword, IpAddress).FirstOrDefault();
+                    if (model.result == "Y")
                     {
-                        TempData["IsChange"] = str[0];
+                        TempData["IsChange"] = model.msg;
                     }
-                    else {
-                        TempData["FailLogin"] = str[0];
+                    else
+                    {
+                        TempData["FailLogin"] = model.msg;
                     }
 
                 }

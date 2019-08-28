@@ -1,5 +1,5 @@
-﻿@model MDS.Models.StudentModel
-@using MDS.Models
+﻿@model MDC.Models.StudentModel
+@using MDC.Models
 @{
     ViewBag.Title = "CreateForeignStudent";
 }
@@ -929,21 +929,17 @@
         function checkper() {
             var age = document.getElementById('age').value;
             var age2 = $('#age').val();
-
             if (age != "") {
                 var id = document.getElementById("courseid").value;
-                if (id == 2 || id == 7 || id == 8 || id == 4 || id == 11 || id == 12) {
-                    if (age < 18) {
+                if (id == 4 || id == 5 || id == 11) {
+                    if (age < 15) {
                         $("#save").attr('disabled', 'disabled');
-                        return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
-
+                        return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
 
                     } else {
                         $("#save").removeAttr('disabled');
-
                     }
-
-                } else if (id == 5 || id == 13 || id == 6) {
+                } else if (id == 6 || id == 7 || id == 28 || id == 23) {
                     if (age < 20) {
                         $("#save").attr('disabled', 'disabled');
                         return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
@@ -952,13 +948,16 @@
                     } else {
                         $("#save").removeAttr('disabled');
                     }
-                } else if (id == 3 || id == 9 || 10) {
-                    if (age < 15) {
+
+                } else {
+                    if (age < 18) {
                         $("#save").attr('disabled', 'disabled');
-                        return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+                        return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
 
                     } else {
                         $("#save").removeAttr('disabled');
+
                     }
                 }
             }

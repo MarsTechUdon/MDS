@@ -17,11 +17,11 @@ namespace MDS.Controllers
         [NeedLogin]
         public ActionResult Booking()
         {
-                ViewBag.Result = TempData["Result"];
-                ViewBag.Message = TempData["Message"];
-              
-               ViewBag.course = LearningManagement.Getlcourse();
-               ViewBag.ListBooking = LearningManagement.GetListBooking();
+            ViewBag.Result = TempData["Result"];
+            ViewBag.Message = TempData["Message"];
+
+            ViewBag.course = LearningManagement.Getlcourse();
+            ViewBag.ListBooking = LearningManagement.GetListBooking();
             return View();
         }
         #endregion
@@ -92,7 +92,7 @@ namespace MDS.Controllers
         [NeedLogin]
         public ActionResult GetTeacher(string coursegroupid)
         {
-          
+
             List<lteacherModel> model = new List<lteacherModel>();
             List<lteacherModel> list = new List<lteacherModel>();
             list = LearningManagement.Getteacher();
@@ -106,7 +106,7 @@ namespace MDS.Controllers
         {
             ViewBag.Result = TempData["Result"];
             ViewBag.Message = TempData["Message"];
-            ViewBag.BookingConfirm= TempData["BookingConfirm"];
+            ViewBag.BookingConfirm = TempData["BookingConfirm"];
             var subject = new List<lsubjectModel>();
             var subjectByBookingid = new List<lsubjectModel>();
             var listteach = new List<lteacherModel>();
@@ -140,41 +140,48 @@ namespace MDS.Controllers
             listBookingDetailOneRow = LearningManagement.GetbookingByidOneRow(bookingid);
             //group by bookingid//ข้อมมูล booking 1 row
             ViewBag.Booking1row = listBookingDetailOneRow.GroupBy(x => new { x.bookingid }).Select(s => s.FirstOrDefault()).ToList();
-            if (listBookingDetail.Count()!=0) {
+            if (listBookingDetail.Count() != 0)
+            {
                 //เวลาหลักสูตรรวม
                 ViewBag.coursetime = listBookingDetail.FirstOrDefault(x => x.bookingid.Equals(bookingid)).coursetime;
                 //เวลาตารางเรียนรวม
                 ViewBag.sumstudytime = listBookingDetail.FirstOrDefault(x => x.bookingid.Equals(bookingid)).sumstudytime;
             }
-            else {
+            else
+            {
                 ViewBag.coursetime = "0";
                 ViewBag.sumstudytime = "1";
             }
             //ครูผู้สอน by courseid
             listteach = LearningManagement.GetteacherBycourseid(coursegroupid);
             ViewBag.teachbycourseid = listteach;
-            if (arrteacher!=null)
+            if (arrteacher != null)
             {
                 var arrteacherStr = arrteacher.Split(',');
-                foreach (string item in arrteacherStr) {
+                foreach (string item in arrteacherStr)
+                {
                     listteachContact1 = listteach.Where(s => s.ind == item).ToList();
                     listteachselect = listteachselect.Concat(listteachContact1).ToList();
-                   
+
                 }
                 ViewBag.teach = listteachselect;
             }
-            else {
+            else
+            {
                 ViewBag.teach = listteach;
             }
             string dateprevious = SchoolManagement.getParamInfoEditDay(); //วันย้อนหลัง
-            DateTime dateForButton = DateTime.Now.AddDays((Convert.ToInt32(dateprevious)*-1));
-            ViewBag.previous = dateForButton.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB")) ;
+            DateTime dateForButton = DateTime.Now.AddDays((Convert.ToInt32(dateprevious) * -1));
+            ViewBag.previous = dateForButton.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
             ViewBag.dateprevious = (Convert.ToInt32(dateprevious) * -1);
             //End ครูผู้สอน by courseid
             ViewBag.coursename = coursename;
             ViewBag.courseid = courseid;
             ViewBag.arrteacher = arrteacher;
             ViewBag.bookingid = bookingid;
+            ViewBag.ActiveDate = (TempData["ActiveDate"] != null ? TempData["ActiveDate"].ToString() : "");
+            ViewBag.ActiveView = (TempData["ActiveView"] != null ? TempData["ActiveView"].ToString() : "");
+            //TempData["ActiveView"] = value.ViewCalendar;
             return View();
         }
         #endregion
@@ -204,7 +211,8 @@ namespace MDS.Controllers
             {
                 listCalendar1 = LearningManagement.ListBookingByteacher(cid, teacher);
             }
-            else {
+            else
+            {
                 listCalendar1 = LearningManagement.ListBookingByDate(currentdate);
             }
             if (bookingid != "")
@@ -220,12 +228,12 @@ namespace MDS.Controllers
         #endregion
         #region "GetByBookinginddetail"
         [HttpPost]
-        public JsonResult GetByBookinginddetail (string ind, string bookingid)
+        public JsonResult GetByBookinginddetail(string ind, string bookingid)
         {
             var listBookingDetail = new List<BookingDetailModel>();
             var modal = new BookingDetailModel();
             listBookingDetail = LearningManagement.GetbookingByid(bookingid);
-             modal = listBookingDetail.FirstOrDefault(x => x.ind.Equals(ind));
+            modal = listBookingDetail.FirstOrDefault(x => x.ind.Equals(ind));
             return Json(modal, JsonRequestBehavior.AllowGet);
         }
         #endregion
@@ -255,12 +263,16 @@ namespace MDS.Controllers
                     TempData["Result"] = resultset.result;
                     TempData["Message"] = resultset.msg;
                 }
+                DateTime stDate = DateTime.ParseExact(value.studydate, "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                TempData["ActiveDate"] = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+                TempData["ActiveView"] = value.ViewCalendar;
 
             }
             else
             {
                 TempData["Result"] = model.result;
                 TempData["Message"] = model.msg;
+
             }
             var value1 = (value.courseid != "") ? ENDEtxtManagement.Encrypt(value.courseid) : "";//courseid
             var value2 = (value.arrteacher != "") ? ENDEtxtManagement.Encrypt(value.arrteacher) : "";//teacherid
@@ -274,7 +286,8 @@ namespace MDS.Controllers
         {
             var check = new List<ResultCheckBdModel>();
             var list = new ReturnCheckBdModel();
-            if (value.bookingdetailind==null) {
+            if (value.bookingdetailind == null)
+            {
                 value.bookingdetailind = "0";
             }
             check = LearningManagement.checkBookingdetail(value);
@@ -309,7 +322,7 @@ namespace MDS.Controllers
         public JsonResult GetEditBookingDetail(string subjectid, string bookingid)
         {
             var subjectByBookingid = new List<lsubjectModel>();
-            var subjectRemainById = new List<lsubjectModel>();        
+            var subjectRemainById = new List<lsubjectModel>();
 
             subjectByBookingid = LearningManagement.GetsubjectByBookingid(bookingid);
             subjectRemainById = LearningManagement.GetlsubjectRemainById(bookingid, subjectid);
@@ -326,6 +339,9 @@ namespace MDS.Controllers
             var resultset = new ResultBookingModel();
             var userData = Session["UserProfile"] as UserSessionModel;
             model = LearningManagement.EditBookingDetail(value, userData.Username);
+            DateTime stDate = DateTime.ParseExact(value.studydate, "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+            TempData["ActiveDate"] = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            TempData["ActiveView"] = value.ViewCalendar;
             TempData["Result"] = model.result;
             TempData["Message"] = model.msg;
             var value1 = (value.courseid != "") ? ENDEtxtManagement.Encrypt(value.courseid) : "";//courseid
@@ -369,11 +385,11 @@ namespace MDS.Controllers
         #endregion
         #region " EditBooking"
         [NeedLogin]
-        public ActionResult EditBooking(string bookingname ,string remark, string arrteacher, string courseid, string bookingind,string gear)
+        public ActionResult EditBooking(string bookingname, string remark, string arrteacher, string courseid, string bookingind, string gear)
         {
             var userData = Session["UserProfile"] as UserSessionModel;
             var model = new ResultBookingModel();
-            model = LearningManagement.EditBooking(bookingind,bookingname, remark, userData.Username, gear);
+            model = LearningManagement.EditBooking(bookingind, bookingname, remark, userData.Username, gear);
             TempData["Result"] = model.result;
             TempData["Message"] = model.msg;
             var value1 = (courseid != "") ? ENDEtxtManagement.Encrypt(courseid) : "";//courseid
@@ -384,7 +400,7 @@ namespace MDS.Controllers
         #endregion
         #region "GetremainingTime"
         [NeedLogin]
-        public ActionResult GetremainingTime(string bookingid, string courseid,string subjectid, string start, string end,string stdate,string subjecttype)
+        public ActionResult GetremainingTime(string bookingid, string courseid, string subjectid, string start, string end, string stdate, string subjecttype)
         {
             var listBookingDetail = new List<BookingDetailModel>();
             var model = new remainingTimeModel();
@@ -395,12 +411,12 @@ namespace MDS.Controllers
             string now = DateTime.Now.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
             //DateTime EndDate = DateTime.Parse(now);
             DateTime EndDate = DateTime.ParseExact(now, "dd/MM/yyyy", new System.Globalization.CultureInfo("en-US"));
-            TimeSpan result = StartDate-EndDate;
+            TimeSpan result = StartDate - EndDate;
             string previous = SchoolManagement.getParamInfoEditDay();
             int sumdate = result.Days + Convert.ToInt32(previous);
             if (sumdate >= 0)
             {
-               
+
                 var strsubject = LearningManagement.Getsubject(courseid);//วิชา
                 var subjectmin = strsubject.FirstOrDefault(x => x.subjectid.Equals(subjectid)).subjectmin;//หลักสูตร
 
@@ -419,7 +435,8 @@ namespace MDS.Controllers
                 {
                     TotalMinutes = remainingTemp.ToString();
                 }
-                else {
+                else
+                {
                     if (!end.Equals(""))
                     {
                         DateTime startTime = DateTime.ParseExact(start, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
@@ -434,13 +451,14 @@ namespace MDS.Controllers
 
                     }
                 }
-               
+
                 int remainingTime = remainingTemp - Convert.ToInt32(TotalMinutes);
                 model.TotalMinutes = TotalMinutes;
                 model.remaining = remainingTime.ToString();
                 model.remainingTemp = remainingTemp.ToString();
             }
-            else {
+            else
+            {
                 model.remainingDate = result.Days.ToString();
             }
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -448,7 +466,7 @@ namespace MDS.Controllers
         #endregion
         #region "GetremainingTimeEdit"
         [NeedLogin]
-        public ActionResult GetremainingTimeEdit(string bookingid, string courseid, string subjectid, string start, string end, string stdate, string subjecttype,string studytime)
+        public ActionResult GetremainingTimeEdit(string bookingid, string courseid, string subjectid, string start, string end, string stdate, string subjecttype, string studytime)
         {
             var listBookingDetail = new List<BookingDetailModel>();
             var model = new remainingTimeModel();
@@ -501,7 +519,7 @@ namespace MDS.Controllers
                     }
                 }
                 int remainingTime = remainingTemp - Convert.ToInt32(TotalMinutes);
-                int Current = remainingTemp ;
+                int Current = remainingTemp;
                 model.TotalMinutes = TotalMinutes;
                 model.remaining = remainingTime.ToString();
                 model.remainingTemp = remainingTempCurrent.ToString();
@@ -523,9 +541,9 @@ namespace MDS.Controllers
             var BookingDetail = new BookingDetailModel();
             listBookingDetail = LearningManagement.GetbookingByid(bookingind);
             var Detail = listBookingDetail.GroupBy(x => new { x.bookingid }).Select(s => s.FirstOrDefault()).ToList();
-           var studentind = Detail.FirstOrDefault(x => x.bookingid.Equals(bookingind)).studentind;//studentind
+            var studentind = Detail.FirstOrDefault(x => x.bookingid.Equals(bookingind)).studentind;//studentind
             var voucherid = Detail.FirstOrDefault(x => x.bookingid.Equals(bookingind)).voucherid;//studentind
-  
+
 
             model = LearningManagement.SetconfirmBooking(bookingind);
             if (model.result == "Y")
@@ -538,17 +556,19 @@ namespace MDS.Controllers
                     var value3 = (bookingind != "") ? ENDEtxtManagement.Encrypt(bookingind) : "";//bookingid  
                     return RedirectToAction("Timetable", "Learning", new { value1, value2, value3 });
                 }
-                else {
+                else
+                {
                     StudentModel modelStudent = new StudentModel();
                     modelStudent.studentind = studentind;
                     modelStudent.voucherid = voucherid;
                     modelStudent.tabActive = "3";
                     return RedirectToAction("StudentDetail", "Student", modelStudent);
                 }
-                
-                
+
+
             }
-            else {
+            else
+            {
                 TempData["Result"] = model.result;
                 TempData["Message"] = model.msg;
                 var value1 = (courseid != "") ? ENDEtxtManagement.Encrypt(courseid) : "";//courseid
@@ -569,19 +589,21 @@ namespace MDS.Controllers
             //TempData["Message"] = model.msg;
             //var Studenttype = (sentStudenttype != "") ? ENDEtxtManagement.Encrypt(sentStudenttype) : "";//Studenttype
             var bid = (bookingind != "") ? ENDEtxtManagement.Encrypt(bookingind) : "";//bookingind  
-            if (Studenttype!="2") {
+            if (Studenttype != "2")
+            {
                 return RedirectToAction("Createstudent", "Student", new { Studenttype, bid });
             }
-            else {
+            else
+            {
                 return RedirectToAction("CreateForeignStudent", "Student", new { Studenttype, bid });
             }
-           
+
         }
         #endregion
         #region "SetToTimetable"
         [NeedLogin]
         public ActionResult SetToTimetable(string courseid, string bookingind)
-        {          
+        {
             var value1 = (courseid != "") ? ENDEtxtManagement.Encrypt(courseid) : "";//courseid
             var value2 = "";//teacherid
             var value3 = (bookingind != "") ? ENDEtxtManagement.Encrypt(bookingind) : "";//bookingid  
@@ -610,18 +632,21 @@ namespace MDS.Controllers
             var Dtdatenow = datenow.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
             var currentdate = userDt;
             //var currentdate = "2018-11-28";
-            if (TempData["liststudybydate"]!=null) {
+            if (TempData["liststudybydate"] != null)
+            {
                 ViewBag.liststudybydate = TempData["liststudybydate"];
             }
-            else {
-                
+            else
+            {
+
                 ViewBag.liststudybydate = LearningManagement.liststudybydate("0", currentdate);
             }
             if (TempData["Classroomdate"] != null)
             {
                 ViewBag.Classroomdate = TempData["Classroomdate"].ToString();
             }
-            else {
+            else
+            {
                 ViewBag.Classroomdate = Dtdatenow;
                 //ViewBag.Classroomdate = "28/11/2018";
             }
