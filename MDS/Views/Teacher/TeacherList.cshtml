@@ -1,8 +1,10 @@
 ﻿@using MDS.Models;
 @model List<MDS.Models.TeacherModel>
 @{
-    ViewBag.Title = "รายชื่อครูสอน";
-    var company = Session["Company"] as CompanyModel;
+                /**/
+
+                ViewBag.Title = "รายชื่อครูสอน";
+                var company = Session["Company"] as CompanyModel;
 }
 
 <link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
@@ -258,75 +260,75 @@ else if (ViewBag.boolResult < 0)
     </div>
 </div>
 
-    <!-- Data tables -->
-    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
-    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
-    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
-    <script>
-        /* Datatables responsive */
-        $(document).ready(function () {
+<!-- Data tables -->
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+<script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+<script>
+    /* Datatables responsive */
+    $(document).ready(function () {
             var t = $('#datatable-responsive22').DataTable({
-                responsive: true
-            });
+            responsive: true
+        });
             t.on('order.dt search.dt', function () {
                 t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                     cell.innerHTML = i + 1;
                 });
             }).draw();
+    });
+
+
+
+    $(document).ready(function () {
+        $('.dataTables_filter input').attr("placeholder", "Search...");
+    });
+
+</script>
+
+<script type="text/javascript">
+    //aleat
+    $(document).ready(function () {
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
         });
+    });
 
+    //modal cancle Teacher
+    $(document).ready(function () {
+        $('#cancleTeacher').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
 
+            var id = button.data('id');
+            var Teacher = button.data('teachername');
 
-        $(document).ready(function () {
-            $('.dataTables_filter input').attr("placeholder", "Search...");
+            var modal = $(this);
+            modal.find('#ca_Teacher_id').val(id);
+            // modal.find('#ca_Teacher_Teachername').val(TeacherName);
+            document.getElementById("ca_Teacher_Teachername").innerHTML = Teacher;
+
         });
+    });
 
-    </script>
+    //modal re-cancle Teacher
+    $(document).ready(function () {
+        $('#recancleTeacher').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
 
-    <script type="text/javascript">
-        //aleat
-        $(document).ready(function () {
-            $("#success-alert").hide();
-            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
-                $("#success-alert").slideUp(500);
-            });
+            var id = button.data('id');
+            var Teacher = button.data('teachername');
+
+            var modal = $(this);
+            modal.find('#re_ca_Teacher_id').val(id);
+            // modal.find('#ca_Teacher_Teachername').val(TeacherName);
+            document.getElementById("re_ca_Teacher_Teachername").innerHTML = Teacher;
+
         });
+    });
 
-        //modal cancle Teacher
-        $(document).ready(function () {
-            $('#cancleTeacher').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
+</script>
 
-                var id = button.data('id');
-                var Teacher = button.data('teachername');
-
-                var modal = $(this);
-                modal.find('#ca_Teacher_id').val(id);
-                // modal.find('#ca_Teacher_Teachername').val(TeacherName);
-                document.getElementById("ca_Teacher_Teachername").innerHTML = Teacher;
-
-            });
-        });
-
-        //modal re-cancle Teacher
-        $(document).ready(function () {
-            $('#recancleTeacher').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-
-                var id = button.data('id');
-                var Teacher = button.data('teachername');
-
-                var modal = $(this);
-                modal.find('#re_ca_Teacher_id').val(id);
-                // modal.find('#ca_Teacher_Teachername').val(TeacherName);
-                document.getElementById("re_ca_Teacher_Teachername").innerHTML = Teacher;
-
-            });
-        });
-
-    </script>
-
-    <script type="text/javascript">
+<script type="text/javascript">
         function changeIt(teachername, url) {
             $.ajax({
                 url: '@Url.Action("GenQR", "Public")',
@@ -351,7 +353,7 @@ else if (ViewBag.boolResult < 0)
             function errorFunction(result) {
                 alert(result);
             }
-            
+
         }
 
         function coppyClip() {
@@ -376,7 +378,7 @@ else if (ViewBag.boolResult < 0)
             var tooltip = document.getElementById("myTooltip");
             tooltip.innerHTML = "คัดลอก";
         }
-    </script>
+</script>
 
 
 
