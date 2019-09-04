@@ -140,9 +140,10 @@ else if (ViewBag.boolResult < 0)
         รายการข้อมูลครู
         <div class="header-buttons">
             @*<button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#addTeacher">
-                    <i class="glyphicon glyphicon-plus"></i> เพิ่มข้อมูล
-                </button>*@
-            <a href="@Url.Action("CreateTeacher","Teacher")" class="btn btn-sm btn-success pull-right"> <i class="glyphicon glyphicon-plus"></i> เพิ่มข้อมูล</a>
+            <i class="glyphicon glyphicon-plus"></i> เพิ่มข้อมูล
+        </button>*@
+            <a href="@Url.Action("CreateTeacher","Teacher")" class="btn btn-sm btn-success pull-right" style="margin-left:20px !important"> <i class="glyphicon glyphicon-plus"></i> เพิ่มข้อมูล</a>
+            <a href="@Url.Action("ListLeaveDate","Teacher")" class="btn btn-sm btn-warning pull-right"> <i class="fa fa-clock-o"></i> วันหยุด</a>
         </div>
     </h3><br />
     <div class="panel-body">

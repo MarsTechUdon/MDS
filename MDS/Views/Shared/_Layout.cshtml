@@ -234,17 +234,15 @@
             <div id="page-header" class="bg-warning font-inverse">
                 <div id="mobile-navigation">
                     <button id="nav-toggle" class="collapsed" data-toggle="collapse" data-target="#page-sidebar"><span></span></button>
-                    <a href="@Url.Action("Main", "Overview")" class="logo-content-small" title="@(Company.SchoolNameE == "" ? Company.SchoolName : Company.SchoolNameE)" 
-                       style="background-image:url('@Url.Content("~/MDSMiddleFile/DefaultMediaIMG/redmobile.png")');"
-                       ></a>
+                    <a href="@Url.Action("Main", "Overview")" class="logo-content-small" title="@(Company.SchoolNameE == "" ? Company.SchoolName : Company.SchoolNameE)"
+                       style="background-image:url('@Url.Content("~/MDSMiddleFile/DefaultMediaIMG/redmobile.png")');"></a>
                 </div>
                 <div id="header-logo" class="logo-bg">
                     <a href="@Url.Action("Main", "Overview")" class="logo-content-big" title="@(Company.SchoolNameE == "" ? Company.SchoolName : Company.SchoolNameE)">
                         <img src="~/@Company.SchoolLogo?@DateTime.Now.Ticks.ToString()" style="height:100%" width="150" />
                     </a>
                     <a href="@Url.Action("Main", "Overview")" class="logo-content-small" title="@(Company.SchoolNameE == "" ? Company.SchoolName : Company.SchoolNameE)"
-                        style="background-image:url('@Url.Content("~/MDSMiddleFile/DefaultMediaIMG/redmobile.png")');"
-                       >
+                       style="background-image:url('@Url.Content("~/MDSMiddleFile/DefaultMediaIMG/redmobile.png")');">
                     </a>
                     <a id="close-sidebar" href="#" title="Close sidebar">
                         <i class="glyph-icon icon-angle-left"></i>
@@ -574,6 +572,8 @@
         <script type="text/javascript" src="~/assets/widgets/theme-switcher/themeswitcher.js"></script>
         <script type="text/javascript" src="~/assets/widgets/uniform/uniform.js"></script>
         <script type="text/javascript" src="~/assets/widgets/uniform/uniform-demo.js"></script>
+        <script type="text/javascript" src="~/assets/widgets/chosen/chosen.js"></script>
+        <script type="text/javascript" src="~/assets/widgets/chosen/chosen-demo.js"></script>
         <script>
             $(document).ready(function () {
                 var BNC = $('#BNC').val();
