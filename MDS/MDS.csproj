@@ -1793,6 +1793,7 @@
     <Content Include="assets\js-core\jquery-ui-position.js" />
     <Content Include="assets\js-core\jquery-ui-touch-punch.js" />
     <Content Include="assets\js-core\jquery-ui-widget.js" />
+    <Content Include="assets\js-core\jQuery.min.js" />
     <Content Include="assets\js-core\modernizr.js" />
     <Content Include="assets\js-core\raphael.js" />
     <Content Include="assets\js-core\transition.js" />
