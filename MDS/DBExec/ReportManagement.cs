@@ -34,5 +34,36 @@ namespace MDS.DBExec
             return CurrentDate;
         }
         #endregion
+        #region "TestTakers"
+        public List<TestTakersModel> GetDocNumberBooking(TestTakersModel ugmData)
+        {
+            var list = new List<TestTakersModel>();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("sp_reportExamList", db);
+                cm.Parameters.AddWithValue("@fdate", ugmData.fdate);
+                cm.Parameters.AddWithValue("@tdate", ugmData.tdate);
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        var model = new TestTakersModel();
+                        model.courseid = dr["courseid"].ToString();
+                        model.examdate = dr["examdate"].ToString();
+                        model.coursegroupname = dr["coursegroupname"].ToString();
+                        model.coursenickname = dr["coursenickname"].ToString();
+                        model.coursegroupid = dr["coursegroupid"].ToString();
+                        model.studentcount = dr["studentcount"].ToString();
+                        list.Add(model);
+                    }
+                    dr.Close();
+                }
+            }
+            return list;
+        }
+        #endregion
     }
 }
