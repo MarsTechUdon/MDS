@@ -19,6 +19,7 @@ using MDS.DBExec;
 using MDS.Fillter;
 using MDS.Reports.ReportStudent.ReportStudentXSDTableAdapters;
 using MDS.Reports.Revenue.RevenueXSDTableAdapters;
+using MDS.Reports.TestTakersName.TestTakersNameXSDTableAdapters;
 
 namespace MDS.Controllers
 {
@@ -824,5 +825,359 @@ namespace MDS.Controllers
             ViewBag.Tdate = tdate;
             return View("Revenue");
         }
+
+        // GET: TestTakers
+        #region TestTakers
+        [NeedLogin]
+        public ActionResult TestTakers(FormCollection val)
+        {
+            var date = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = (val["fdate"] != null ? val["fdate"] : date.fdate);
+            ViewBag.Tdate = (val["tdate"] != null ? val["tdate"] : date.tdate);
+
+            var ugmData = new TestTakersModel();
+            ugmData.fdate = ViewBag.Fdate;
+            ugmData.tdate = ViewBag.Tdate;
+            List<TestTakersModel> model = new List<TestTakersModel>();
+            model = ReportManagement.GetDocNumberBooking(ugmData);
+
+            return View(model);
+        }
+        #endregion
+        #region TestTakersName
+        [NeedLogin]
+        [HttpPost]
+        public ActionResult TestTakersName(TestTakersModel ugm)
+        {
+            var date = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = (ugm.fdate != null ? ugm.fdate : date.fdate);
+            ViewBag.Tdate = (ugm.tdate != null ? ugm.tdate : date.tdate);
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TestTakersName\TestTakersNameRDLC.rdlc";
+            sp_reportexamnamelistTableAdapter TestTakerName = new sp_reportexamnamelistTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersNameDataset", (object)TestTakerName.GetData(ugm.examdate, short.Parse(ugm.courseid))));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_ทะเบียนรายชื่อผู้เข้าสอบ";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+            string[] str = ugm.examdate.Split('-');
+            string month = "";
+            if (str[1] == "01") { month = "มกราคม"; }
+            else if (str[1] == "02") { month = "กุมภาพันธ์"; }
+            else if (str[1] == "03") { month = "มีนาคม"; }
+            else if (str[1] == "04") { month = "เมษายน"; }
+            else if (str[1] == "05") { month = "พฤษภาคม"; }
+            else if (str[1] == "06") { month = "มิถุนายน"; }
+            else if (str[1] == "07") { month = "กรกฎาคม"; }
+            else if (str[1] == "08") { month = "สิงหาคม"; }
+            else if (str[1] == "09") { month = "กันยายน"; }
+            else if (str[1] == "10") { month = "ตุลาคม"; }
+            else if (str[1] == "11") { month = "พฤษจิกายน"; }
+            else if (str[1] == "12") { month = "ธันวาคม"; }
+            int day = Int32.Parse(str[2]);
+            int year = Int32.Parse(str[0]);
+
+            string dateTH = day + " " + month + " " + (year + 543);
+
+            ReportParameter coursegroupname = new ReportParameter("coursegroupname", ugm.coursegroupname);
+            ReportParameter examdate = new ReportParameter("examdate", dateTH);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, coursegroupname, examdate });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+        #endregion
+        #region TestTakersTheory
+        [NeedLogin]
+        [HttpPost]
+        public ActionResult TestTakersTheory(TestTakersModel ugm)
+        {
+            var date = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = (ugm.fdate != null ? ugm.fdate : date.fdate);
+            ViewBag.Tdate = (ugm.tdate != null ? ugm.tdate : date.tdate);
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TestTakersName\TestTakersTheoryRDLC.rdlc";
+            sp_reportexamnamelistTableAdapter TestTakerName = new sp_reportexamnamelistTableAdapter();
+            sp_reportexamStaffListTableAdapter TestTakerStaffList = new sp_reportexamStaffListTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersNameDataset", (object)TestTakerName.GetData(ugm.examdate, short.Parse(ugm.courseid))));
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersStaffListDataset", (object)TestTakerStaffList.GetData(short.Parse(ugm.courseid), ugm.cflg)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_แบบบันทึกการสอบภาคทฤษฏี (" + ugm.coursegroupname + ")";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+            string[] str = ugm.examdate.Split('-');
+            string month = "";
+            if (str[1] == "01") { month = "มกราคม"; }
+            else if (str[1] == "02") { month = "กุมภาพันธ์"; }
+            else if (str[1] == "03") { month = "มีนาคม"; }
+            else if (str[1] == "04") { month = "เมษายน"; }
+            else if (str[1] == "05") { month = "พฤษภาคม"; }
+            else if (str[1] == "06") { month = "มิถุนายน"; }
+            else if (str[1] == "07") { month = "กรกฎาคม"; }
+            else if (str[1] == "08") { month = "สิงหาคม"; }
+            else if (str[1] == "09") { month = "กันยายน"; }
+            else if (str[1] == "10") { month = "ตุลาคม"; }
+            else if (str[1] == "11") { month = "พฤษจิกายน"; }
+            else if (str[1] == "12") { month = "ธันวาคม"; }
+            int day = Int32.Parse(str[2]);
+            int year = Int32.Parse(str[0]);
+
+            string dateTH = day + " " + month + " " + (year + 543);
+
+            ReportParameter coursegroupname = new ReportParameter("coursegroupname", ugm.coursegroupname);
+            ReportParameter examdate = new ReportParameter("examdate", dateTH);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, coursegroupname, examdate });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+        #endregion
+        #region TestTakersCar
+        [NeedLogin]
+        public ActionResult TestTakersCar(TestTakersModel ugm)
+        {
+            var date = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = (ugm.fdate != null ? ugm.fdate : date.fdate);
+            ViewBag.Tdate = (ugm.tdate != null ? ugm.tdate : date.tdate);
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TestTakersName\TestTakersCarRDLC.rdlc";
+            sp_reportexamnamelistTableAdapter TestTakerName = new sp_reportexamnamelistTableAdapter();
+            sp_reportexamStaffListTableAdapter TestTakerStaffList = new sp_reportexamStaffListTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersNameDataset", (object)TestTakerName.GetData(ugm.examdate, short.Parse(ugm.courseid))));
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersStaffListDataset", (object)TestTakerStaffList.GetData(short.Parse(ugm.courseid), ugm.cflg)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_แบบบันทึกการสอบภาคทฤษฏี (" + ugm.coursegroupname + ")";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+            string[] str = ugm.examdate.Split('-');
+            string month = "";
+            if (str[1] == "01") { month = "มกราคม"; }
+            else if (str[1] == "02") { month = "กุมภาพันธ์"; }
+            else if (str[1] == "03") { month = "มีนาคม"; }
+            else if (str[1] == "04") { month = "เมษายน"; }
+            else if (str[1] == "05") { month = "พฤษภาคม"; }
+            else if (str[1] == "06") { month = "มิถุนายน"; }
+            else if (str[1] == "07") { month = "กรกฎาคม"; }
+            else if (str[1] == "08") { month = "สิงหาคม"; }
+            else if (str[1] == "09") { month = "กันยายน"; }
+            else if (str[1] == "10") { month = "ตุลาคม"; }
+            else if (str[1] == "11") { month = "พฤษจิกายน"; }
+            else if (str[1] == "12") { month = "ธันวาคม"; }
+            int day = Int32.Parse(str[2]);
+            int year = Int32.Parse(str[0]);
+
+            string dateTH = day + " " + month + " " + (year + 543);
+
+            ReportParameter coursegroupname = new ReportParameter("coursegroupname", ugm.coursegroupname);
+            ReportParameter examdate = new ReportParameter("examdate", dateTH);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, coursegroupname, examdate });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+        #endregion
+        #region TestTakersMotorcycle
+        [NeedLogin]
+        public ActionResult TestTakersMotorcycle(TestTakersModel ugm)
+        {
+            var date = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = (ugm.fdate != null ? ugm.fdate : date.fdate);
+            ViewBag.Tdate = (ugm.tdate != null ? ugm.tdate : date.tdate);
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TestTakersName\TestTakersMotorcycleRDLC.rdlc";
+            sp_reportexamnamelistTableAdapter TestTakerName = new sp_reportexamnamelistTableAdapter();
+            sp_reportexamStaffListTableAdapter TestTakerStaffList = new sp_reportexamStaffListTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersNameDataset", (object)TestTakerName.GetData(ugm.examdate, short.Parse(ugm.courseid))));
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersStaffListDataset", (object)TestTakerStaffList.GetData(short.Parse(ugm.courseid), ugm.cflg)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_แบบบันทึกการสอบภาคทฤษฏี (" + ugm.coursegroupname + ")";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+            string[] str = ugm.examdate.Split('-');
+            string month = "";
+            if (str[1] == "01") { month = "มกราคม"; }
+            else if (str[1] == "02") { month = "กุมภาพันธ์"; }
+            else if (str[1] == "03") { month = "มีนาคม"; }
+            else if (str[1] == "04") { month = "เมษายน"; }
+            else if (str[1] == "05") { month = "พฤษภาคม"; }
+            else if (str[1] == "06") { month = "มิถุนายน"; }
+            else if (str[1] == "07") { month = "กรกฎาคม"; }
+            else if (str[1] == "08") { month = "สิงหาคม"; }
+            else if (str[1] == "09") { month = "กันยายน"; }
+            else if (str[1] == "10") { month = "ตุลาคม"; }
+            else if (str[1] == "11") { month = "พฤษจิกายน"; }
+            else if (str[1] == "12") { month = "ธันวาคม"; }
+            int day = Int32.Parse(str[2]);
+            int year = Int32.Parse(str[0]);
+
+            string dateTH = day + " " + month + " " + (year + 543);
+
+            ReportParameter coursegroupname = new ReportParameter("coursegroupname", ugm.coursegroupname);
+            ReportParameter examdate = new ReportParameter("examdate", dateTH);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, coursegroupname, examdate });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+        #endregion
+        #region TestTakersTransportation
+        [NeedLogin]
+        public ActionResult TestTakersTransportation(TestTakersModel ugm)
+        {
+            var date = ReportManagement.GetCurrentDate();
+            ViewBag.Fdate = (ugm.fdate != null ? ugm.fdate : date.fdate);
+            ViewBag.Tdate = (ugm.tdate != null ? ugm.tdate : date.tdate);
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TestTakersName\TestTakersTransportationRDLC.rdlc";
+            sp_reportexamnamelistTableAdapter TestTakerName = new sp_reportexamnamelistTableAdapter();
+            sp_reportexamStaffListTableAdapter TestTakerStaffList = new sp_reportexamStaffListTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersNameDataset", (object)TestTakerName.GetData(ugm.examdate, short.Parse(ugm.courseid))));
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TestTakersStaffListDataset", (object)TestTakerStaffList.GetData(short.Parse(ugm.courseid), ugm.cflg)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_แบบบันทึกการสอบภาคทฤษฏี (" + ugm.coursegroupname + ")";
+
+            var UserData = Session["UserProfile"] as UserSessionModel;
+            ReportParameter User = new ReportParameter("User", UserData.Username + ": " + UserData.UserFirstNameEN + " " + UserData.UserLastNameEN);
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+
+            var company = Session["Company"] as CompanyModel;
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAddr1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAddr2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAddr3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+
+            string[] str = ugm.examdate.Split('-');
+            string month = "";
+            if (str[1] == "01") { month = "มกราคม"; }
+            else if (str[1] == "02") { month = "กุมภาพันธ์"; }
+            else if (str[1] == "03") { month = "มีนาคม"; }
+            else if (str[1] == "04") { month = "เมษายน"; }
+            else if (str[1] == "05") { month = "พฤษภาคม"; }
+            else if (str[1] == "06") { month = "มิถุนายน"; }
+            else if (str[1] == "07") { month = "กรกฎาคม"; }
+            else if (str[1] == "08") { month = "สิงหาคม"; }
+            else if (str[1] == "09") { month = "กันยายน"; }
+            else if (str[1] == "10") { month = "ตุลาคม"; }
+            else if (str[1] == "11") { month = "พฤษจิกายน"; }
+            else if (str[1] == "12") { month = "ธันวาคม"; }
+            int day = Int32.Parse(str[2]);
+            int year = Int32.Parse(str[0]);
+
+            string dateTH = day + " " + month + " " + (year + 543);
+
+            ReportParameter coursegroupname = new ReportParameter("coursegroupname", ugm.coursegroupname);
+            ReportParameter examdate = new ReportParameter("examdate", dateTH);
+
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { User, Datecurrent, SchoolLogo, SchoolName, SchoolAddr1, SchoolAddr2, SchoolAddr3, coursegroupname, examdate });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+        #endregion
     }
 }

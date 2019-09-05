@@ -393,6 +393,7 @@
     <Compile Include="Models\TableTeacherModel.cs" />
     <Compile Include="Models\TeacherCalendarModel.cs" />
     <Compile Include="Models\TeacherModel.cs" />
+    <Compile Include="Models\TestTakersModel.cs" />
     <Compile Include="Models\UserDataModel.cs" />
     <Compile Include="Models\UserGroupModel.cs" />
     <Compile Include="Models\UserLoginModel.cs" />
@@ -460,6 +461,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\TestTakersName\TestTakersNameXSD.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestTakersNameXSD.xsd</DependentUpon>
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
   </ItemGroup>
@@ -2915,6 +2921,17 @@
     <Content Include="Reports\TeacherHours\TeacherHoursXSD.xss">
       <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
     </Content>
+    <Content Include="Reports\TestTakersName\TestTakersNameXSD.xsc">
+      <DependentUpon>TestTakersNameXSD.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\TestTakersName\TestTakersNameXSD.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>TestTakersNameXSD.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\TestTakersName\TestTakersNameXSD.xss">
+      <DependentUpon>TestTakersNameXSD.xsd</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\formprint.js" />
     <Content Include="Scripts\jquery-1.7.2.min.js" />
@@ -3026,6 +3043,12 @@
     <Content Include="Views\Report\ReportStudent.cshtml" />
     <Content Include="Views\Report\Revenue.cshtml" />
     <Content Include="Views\Report\TeacherHoursReport.cshtml" />
+    <Content Include="Views\Report\TestTakers.cshtml" />
+    <Content Include="Views\Report\TestTakersName.cshtml" />
+    <Content Include="Views\Report\TestTakersTheory.cshtml" />
+    <Content Include="Views\Report\TestTakersCar.cshtml" />
+    <Content Include="Views\Report\TestTakersMotorcycle.cshtml" />
+    <Content Include="Views\Report\TestTakersTransportation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3074,6 +3097,11 @@
     <EmbeddedResource Include="Reports\Revenue\RevenueRDLC.rdlc" />
     <EmbeddedResource Include="Reports\Student\StudentRDLC.rdlc" />
     <EmbeddedResource Include="Reports\TeacherHours\TeacherHoursReport.rdlc" />
+    <EmbeddedResource Include="Reports\TestTakersName\TestTakersCarRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TestTakersName\TestTakersMotorcycleRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TestTakersName\TestTakersNameRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TestTakersName\TestTakersTheoryRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TestTakersName\TestTakersTransportationRDLC.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
