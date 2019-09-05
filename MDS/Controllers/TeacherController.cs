@@ -166,5 +166,138 @@ namespace MDS.Controllers
             TempData["boolResult"] = result.result;
             return RedirectToAction("TeacherList");
         }
+        #region "ListLeaveDate"
+        /// <summary>
+        ///   วันหยุดครู
+        /// by : nopphakorn
+        /// </summary>
+        /// <returns></returns>
+        [NeedLogin]
+        public ActionResult ListLeaveDate()
+        {
+
+            var value = new LeaveDateModel();
+            ViewBag.Result = TempData["Result"];
+            ViewBag.Message = TempData["Message"];
+            var datenow = DateTime.Now;
+            var userDt = datenow.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            var Dtdatenow = datenow.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+            value.fdate = userDt;
+            //value.fdate = "2019-08-20";
+            value.tdate = userDt;
+            //var currentdate = "2018-11-28";           
+            ViewBag.ListLeaveDate = (TempData["ListLeaveDate"] != null ? TempData["ListLeaveDate"] : new TeacherManagement().GetListLeaveDate(value));
+            ViewBag.fdate = (TempData["fdate"] != null ? TempData["fdate"].ToString() : Dtdatenow);
+            ViewBag.tdate = (TempData["tdate"] != null ? TempData["tdate"].ToString() : Dtdatenow);  //ViewBag.fdate = "28/11/2018";
+            ViewBag.Activedate = Dtdatenow;
+            ViewBag.ind = (TempData["ind"] != null ? TempData["ind"].ToString() : "");
+            ViewBag.ListteacherActive = new TeacherManagement().GetListteacherActive();
+
+            return View();
+        }
+        #endregion
+        #region "SearchLeaveDate"
+        /// <summary>
+        ///   ค้นหา วันหยุดครู
+        /// by : nopphakorn
+        /// </summary>
+        /// <returns></returns>
+        [NeedLogin]
+        public ActionResult SearchLeaveDate(LeaveDateModel value)
+        {
+            string fdate = "";
+            string tdate = "";
+            DateTime sfDate = DateTime.ParseExact(value.fdate, "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+            value.fdate = sfDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            fdate = sfDate.ToString("dd/MM/yyy", new System.Globalization.CultureInfo("en-GB"));
+
+            DateTime stDate = DateTime.ParseExact(value.tdate, "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+            value.tdate = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            tdate = stDate.ToString("dd/MM/yyy", new System.Globalization.CultureInfo("en-GB"));
+
+            TempData["ListLeaveDate"] = new TeacherManagement().GetListLeaveDate(value);
+            TempData["fdate"] = fdate;
+            TempData["tdate"] = tdate;
+            TempData["ind"] = value.ind;
+            return RedirectToAction("ListLeaveDate", "Teacher");
+        }
+        #endregion
+        #region "addLeavedate"
+        /// <summary>
+        ///  เพิ่ม วันหยุดครู
+        /// by : nopphakorn
+        /// </summary>
+        /// <returns></returns>
+        [NeedLogin]
+        public ActionResult addLeavedate(LeaveDateModel value)
+        {
+            var userData = Session["UserProfile"] as UserSessionModel;
+            var model = new ResultModel();
+            if (value.typedate == "1")
+            {
+                model = new TeacherManagement().AddLeavebyday(value, userData.Username);
+            }
+            else
+            {
+                model = new TeacherManagement().AddLeavebydate(value, userData.Username);
+            }
+            TempData["Result"] = model.Result;
+            TempData["Message"] = model.Message;
+            return RedirectToAction("ListLeaveDate", "Teacher");
+        }
+        #endregion
+        #region "editLeavedate"
+        /// <summary>
+        ///  แก้ไข วันหยุดครู
+        /// by : nopphakorn
+        /// </summary>
+        /// <returns></returns>
+        [NeedLogin]
+        public ActionResult editLeavedate(LeaveDateModel value)
+        {
+            var userData = Session["UserProfile"] as UserSessionModel;
+            var model = new ResultModel();
+            model = new TeacherManagement().editLeavedate(value, userData.Username);
+            TempData["Result"] = model.Result;
+            TempData["Message"] = model.Message;
+            return RedirectToAction("ListLeaveDate", "Teacher");
+        }
+        #endregion
+        #region "deleteLeaveDate"
+        /// <summary>
+        ///  ลบ วันหยุดครู
+        /// by : nopphakorn
+        /// </summary>
+        /// <returns></returns>
+        [NeedLogin]
+        public ActionResult deleteLeaveDate(LeaveDateModel value)
+        {
+            var userData = Session["UserProfile"] as UserSessionModel;
+            var model = new ResultModel();
+            if (value.delind != null)
+            {
+                value.listDeteteLeave = string.Join(",", value.delind);
+            }
+            model = new TeacherManagement().deleteLeaveDate(value);
+            TempData["Result"] = model.Result;
+            TempData["Message"] = model.Message;
+            return RedirectToAction("ListLeaveDate", "Teacher");
+            //return Json(model, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        #region "Getleavebyid"
+        /// <summary>
+        ///  ดึงขอ้มูล วันหยุดครู by ind
+        /// by : nopphakorn
+        /// </summary>
+        /// <returns></returns>
+        [NeedLogin]
+        public ActionResult Getleavebyid(LeaveDateModel value)
+        {
+            var model = new LeaveDateModel();
+            model = new TeacherManagement().Getleavebyid(value);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 }

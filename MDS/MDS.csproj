@@ -352,6 +352,7 @@
     <Compile Include="Models\DepositACModel.cs" />
     <Compile Include="Models\GrantMenuModel.cs" />
     <Compile Include="Models\lcourseModel.cs" />
+    <Compile Include="Models\LeaveDateModel.cs" />
     <Compile Include="Models\lgearModel.cs" />
     <Compile Include="Models\ListBatchModel.cs" />
     <Compile Include="Models\ListCalendarModel.cs" />
@@ -3026,6 +3027,7 @@
     <Content Include="Views\Report\ReportStudent.cshtml" />
     <Content Include="Views\Report\Revenue.cshtml" />
     <Content Include="Views\Report\TeacherHoursReport.cshtml" />
+    <Content Include="Views\Teacher\ListLeaveDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -273,5 +273,270 @@ namespace MDS.DBExec
         }
         #endregion
 
+        #region "List ข้อมูลวันหยุดครู"
+        /// <summary>
+        /// ดึงข้อมูล List ข้อมูลวันหยุดครู
+        /// by : nopphakorn
+        /// </summary>
+        /// <returns></returns>
+        public List<LeaveDateModel> GetListLeaveDate(LeaveDateModel value)
+        {
+            var list = new List<LeaveDateModel>();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("sp_SetTeacher", db);
+                cm.Parameters.AddWithValue("@flag", "ListLeaveDate");
+                cm.Parameters.AddWithValue("@fdate", value.fdate);
+                cm.Parameters.AddWithValue("@tdate", value.tdate);
+                cm.Parameters.AddWithValue("@ind", value.ind);
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        var model = new LeaveDateModel();
+                        if (dr["leavefdate"].ToString() != "")
+                        {
+                            //DateTime _leavefdate = DateTime.ParseExact(dr["leavefdate"].ToString(), "yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+                            //model.leavefdate = _leavefdate.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                            model.leavefdate = Convert.ToDateTime(dr["leavefdate"].ToString()).ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                        }
+                        model.ind = dr["ind"].ToString();
+                        model.teacherind = dr["teacherind"].ToString();
+                        model.teachername = dr["teacharname"].ToString();
+                        model.leaveftime = dr["leaveftime"].ToString();
+                        model.leavettime = dr["leavettime"].ToString();
+                        model.remark = dr["remark"].ToString();
+                        model.para = dr["para"].ToString();
+                        list.Add(model);
+                    }
+                    dr.Close();
+                }
+            }
+            return list;
+        }
+        #endregion
+        #region "List ข้อมูลครู"
+        /// <summary>
+        /// ดึงข้อมูล List ข้อมูลครู
+        /// by : nopphakorn
+        /// </summary>
+        /// <returns></returns>
+        public List<LeaveDateModel> GetListteacherActive()
+        {
+            var list = new List<LeaveDateModel>();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("sp_SCLookup", db);
+                cm.Parameters.AddWithValue("@flag", "lteacherActive");
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        var model = new LeaveDateModel();
+                        model.ind = dr["ind"].ToString();
+                        model.teachername = dr["teachername"].ToString();
+                        model.nickname = dr["nickname"].ToString();
+                        list.Add(model);
+                    }
+                    dr.Close();
+                }
+            }
+            return list;
+        }
+        #endregion
+        #region "AddLeavebyday"
+        public ResultModel AddLeavebyday(LeaveDateModel value, string user)
+        {
+            var model = new ResultModel();
+            if (value.fdate_day != null)
+            {
+                DateTime _fdate = DateTime.ParseExact(value.fdate_day.Trim(), "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                value.fdate_day = _fdate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            }
+            if (value.tdate_day != null)
+            {
+                DateTime _tdate = DateTime.ParseExact(value.tdate_day.Trim(), "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                value.tdate_day = _tdate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            }
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("[sp_SetTeacher]", db);
+                cm.Parameters.AddWithValue("@flag", "addLeave");
+                cm.Parameters.AddWithValue("@fadd", "byday");
+                cm.Parameters.AddWithValue("@ind", value.ind);
+                cm.Parameters.AddWithValue("@day", value.day);
+                cm.Parameters.AddWithValue("@fldate", value.fdate_day);
+                cm.Parameters.AddWithValue("@tldate", value.tdate_day);
+                cm.Parameters.AddWithValue("@remark", value.remark);
+                cm.Parameters.AddWithValue("@ip", HttpContext.Current.Request.UserHostAddress);
+                cm.Parameters.AddWithValue("@user", user);
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    dr.Read();
+                    model.Result = dr["result"].ToString();
+                    model.Message = dr["msg"].ToString();
+                    model.ReturnId = dr["ind"].ToString();
+                }
+            }
+            return model;
+        }
+        #endregion
+        #region "AddLeavebydate"
+        public ResultModel AddLeavebydate(LeaveDateModel value, string user)
+        {
+            var model = new ResultModel();
+            if (value.fdate != null)
+            {
+                DateTime _fdate = DateTime.ParseExact(value.fdate.Trim(), "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                value.fdate = _fdate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            }
+            if (value.tdate != null)
+            {
+                DateTime _tdate = DateTime.ParseExact(value.tdate.Trim(), "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                value.tdate = _tdate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            }
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("[sp_SetTeacher]", db);
+                cm.Parameters.AddWithValue("@flag", "addLeave");
+                cm.Parameters.AddWithValue("@fadd", "bydate");
+                cm.Parameters.AddWithValue("@ind", value.ind);
+                cm.Parameters.AddWithValue("@fldate", value.fdate);
+                cm.Parameters.AddWithValue("@tldate", value.tdate);
+                cm.Parameters.AddWithValue("@ftime", value.leaveftime);
+                cm.Parameters.AddWithValue("@ttime", value.leavettime);
+                cm.Parameters.AddWithValue("@remark", value.remark);
+                cm.Parameters.AddWithValue("@ip", HttpContext.Current.Request.UserHostAddress);
+                cm.Parameters.AddWithValue("@user", user);
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    dr.Read();
+                    model.Result = dr["result"].ToString();
+                    model.Message = dr["msg"].ToString();
+                    model.ReturnId = dr["ind"].ToString();
+                }
+            }
+            return model;
+        }
+        #endregion
+        #region "editLeavedate"
+        public ResultModel editLeavedate(LeaveDateModel value, string user)
+        {
+            var model = new ResultModel();
+            if (value.leavefdate != null)
+            {
+                DateTime _fdate = DateTime.ParseExact(value.leavefdate.Trim(), "dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                value.leavefdate = _fdate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            }
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("[sp_SetTeacher]", db);
+                cm.Parameters.AddWithValue("@flag", "editLeave");
+                cm.Parameters.AddWithValue("@leaveind", value.ind);
+                cm.Parameters.AddWithValue("@leavefdate", value.leavefdate);
+                cm.Parameters.AddWithValue("@leaveftime", value.leaveftime);
+                cm.Parameters.AddWithValue("@leavettime", value.leavettime);
+                cm.Parameters.AddWithValue("@remark", value.remark);
+                cm.Parameters.AddWithValue("@ip", HttpContext.Current.Request.UserHostAddress);
+                cm.Parameters.AddWithValue("@user", user);
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    dr.Read();
+                    model.Result = dr["result"].ToString();
+                    model.Message = dr["msg"].ToString();
+                    model.ReturnId = dr["ind"].ToString();
+                }
+            }
+            return model;
+        }
+        #endregion
+        #region "deleteLeaveDate"
+        public ResultModel deleteLeaveDate(LeaveDateModel value)
+        {
+            var model = new ResultModel();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("[sp_SetTeacher]", db);
+                cm.Parameters.AddWithValue("@flag", "deleteLeaveDate");
+                cm.Parameters.AddWithValue("@listDeteteLeave", value.listDeteteLeave);
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    dr.Read();
+                    model.Result = dr["result"].ToString();
+                    model.Message = dr["msg"].ToString();
+                    model.ReturnId = dr["ind"].ToString();
+                }
+            }
+            return model;
+        }
+        #endregion
+        #region "Getleavebyid"
+        public LeaveDateModel Getleavebyid(LeaveDateModel value)
+        {
+            var model = new LeaveDateModel();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                SqlCommand cm = new SqlCommand("[sp_SetTeacher]", db);
+                cm.Parameters.AddWithValue("@flag", "getleavebyid");
+                cm.Parameters.AddWithValue("@leaveind ", value.ind);
+                cm.CommandType = CommandType.StoredProcedure;
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        if (dr["leavefdate"].ToString() != "")
+                        {
+                            //DateTime _leavefdate = DateTime.ParseExact(dr["leavefdate"].ToString(), "yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+                            //model.leavefdate = _leavefdate.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                            model.leavefdate = Convert.ToDateTime(dr["leavefdate"].ToString()).ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"));
+                        }
+                        if (dr["leaveftime"].ToString() != "")
+                        {
+                            TimeSpan _leaveftime = TimeSpan.Parse(dr["leaveftime"].ToString());
+                            model.leaveftime = _leaveftime.ToString(@"hh\:mm");
+                        }
+                        if (dr["leavettime"].ToString() != "")
+                        {
+                            TimeSpan _leavettime = TimeSpan.Parse(dr["leavettime"].ToString());
+                            model.leavettime = _leavettime.ToString(@"hh\:mm");
+                        }
+                        model.ind = dr["ind"].ToString();
+                        model.teacherind = dr["teacherind"].ToString();
+                        model.remark = dr["remark"].ToString();
+                        model.ip = dr["ip"].ToString();
+                        model.insertby = dr["insertby"].ToString();
+                        model.insertdate = dr["insertdate"].ToString();
+                        model.updateby = dr["updateby"].ToString();
+                        model.updatedate = dr["updatedate"].ToString();
+                        model.para = dr["para"].ToString();
+                        model.teachername = dr["teachername"].ToString();
+
+                    }
+                }
+                return model;
+            }
+        }
+        #endregion
+
     }
 }

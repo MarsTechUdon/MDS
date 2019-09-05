@@ -1,0 +1,1000 @@
+﻿@using MDS.Models;
+@{
+    var userData = Session["UserProfile"] as UserSessionModel;
+    ViewBag.Title = "วันหยุดครู";
+    var i = 0;
+    var Company = Session["Company"] as CompanyModel;
+}
+
+<link href="~/Content/plugins/datepicker_buddhist_year/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+<style type="text/css">
+    .ui-datepicker {
+        z-index: 1051 !important;
+    }
+
+    .demoHeaders {
+        margin-top: 2em;
+    }
+
+    #dialog_link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+
+        #dialog_link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+
+    ul#icons {
+        margin: 0;
+        padding: 0;
+    }
+
+        ul#icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+
+        ul#icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+
+    ul.test {
+        list-style: none;
+        line-height: 30px;
+    }
+    /* Overide css code กำหนดความกว้างของปฏิทินและอื่นๆ */
+    .ui-datepicker-prev, .ui-datepicker-next {
+        background: none !important;
+        /*width:220px;
+        font-family:tahoma;
+        font-size:11px;
+        text-align:center;*/
+    }
+
+    .content-box-header {
+        font-size: 20px !important;
+    }
+</style>
+@*<link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker-ui/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/widgets/daterangepicker/daterangepicker.css">*@
+
+<link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
+@if (ViewBag.Result == "Y" && ViewBag.Message != null)
+{
+    <div class="alert alert-success" id="success-alert">
+        <div class="bg-green alert-icon">
+            <i class="glyph-icon icon-check"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+else if (ViewBag.Result == "N")
+{
+    <div class="alert alert-danger" id="success-alert">
+        <div class="bg-red alert-icon">
+            <i class="glyph-icon icon-times"></i>
+        </div>
+        <div class="alert-content">
+            <h4 class="alert-title">แจ้งเตือน!</h4>
+            <p>@ViewBag.Message</p>
+        </div>
+    </div>
+}
+
+    <div class="content-box">
+        <div class="content-box-header bg-blue-alt">
+            <i class="fa fa-search"></i>
+            ค้นหา
+        </div>
+        <div class="content-box-wrapper">
+            @using (Html.BeginForm("SearchLeaveDate", "Teacher",
+                  FormMethod.Post, new { @class = "form-horizontal bordered-row", @id = "SeachingTime" }))
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">เลือกครู</label>
+                            <div class="col-md-7">
+                                <select name="ind" class="chosen-select" id="teachernameSearch">
+                                    <option value="" selected>เลือกครู</option>
+                                    @foreach (var item in ViewBag.ListteacherActive as List<LeaveDateModel>)
+                                    {
+                                        <option value="@item.ind"  @(ViewBag.ind == item.ind ? "selected" : "")>@item.teachername - @item.nickname</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-right">ตั้งแต่</label>
+                            <div class="col-md-3">
+                                <div class="input-prepend input-group">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" name="fdate" id="fdate" autocomplete="off" value="@(ViewBag.fdate!=""?ViewBag.fdate:"")" readonly />
+                                </div>
+                            </div>
+                            <label class="col-sm-1 control-label text-right">ถึง</label>
+                            <div class="col-md-3">
+                                <div class="input-prepend input-group">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" name="tdate" id="tdate" autocomplete="off" value="@(ViewBag.tdate!=""?ViewBag.tdate:"")" readonly />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="button-pane">
+                    <button type="submit" class="btn btn-primary" title="ค้นหา">
+                        <i class="fa fa-search"></i>&nbsp;ค้นหา
+                    </button>
+                </div>
+            }
+
+        </div>
+    </div>
+    <div class="content-box">
+        <div class="content-box-header bg-blue-alt">
+            <i class="glyph-icon fa fa-clock-o"></i>
+            วันหยุด
+            <div class="header-buttons">
+                <button type="button" class="btn btn-sm btn-success pull-right AddLeaveDate_btn"><i class="glyphicon glyphicon-plus"></i> เพิ่มวันหยุด</button>
+            </div>
+        </div>
+        <div class="content-box-wrapper">
+            @using (Html.BeginForm("deleteLeaveDate", "Teacher", FormMethod.Post, new { @class = "deleteLeaveDate", @id = "deleteLeaveDate" }))
+            {
+                <div class="table-responsive">
+                    <table id="datatable-responsive" class="table table-striped " cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;background-color:#e6e6e6;color:black" width="2%">#</th>
+                                <th style="text-align:center;" width="8%">
+                                    @*<input type="checkbox" name="select_all" value="1" id="example-select-all">*@
+                                    <input type="checkbox" name="ind" id="checkAll" class="" onchange="checkAll(this)" />
+                                </th>
+                                <th style="text-align:center;" width="25%">ครูฝึก</th>
+                                <th style="text-align:center;" width="15%">วันหยุด</th>
+                                <th style="text-align:center;" width="10%">ตั้งแต่เวลา</th>
+                                <th style="text-align:center;" width="10%">ถึงเวลา</th>
+                                <th style="text-align:center;" width="20%">หมายเหตุ</th>
+                                <th style="text-align:center;" width="10%">ดำเนินการ</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.ListLeaveDate as List<LeaveDateModel>)
+                            {
+                                <tr>
+                                    <td style="text-align:center;background-color:#e6e6e6;color:black"></td>
+                                    <td style="text-align:center">
+                                        <input id="ckc_@item.ind" name="delind" class="" value="@item.ind" type="checkbox" />
+                                    </td>
+                                    <td style="text-align:left" id="ind_@item.ind">
+                                        @item.teachername
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.leavefdate
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.leaveftime
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.leavettime
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.remark
+                                    </td>
+                                    <td style="text-align:center">
+                                        <button type="button" class="btn btn-success editLeaveDate"  value="@item.ind" title="แก้ไข">
+                                            <i class="glyph-icon icon-edit"></i>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="button-pane">
+                    <a href="@Url.Action("TeacherList", "Teacher")" class="btn btn-danger float-left"><i class="fa fa-reply"></i>&nbsp;กลับ</a>
+                    <button type="button" class="btn btn-danger float-right btnDelete" data-action="Delete" role="button"><i class="fa fa-trash"></i>&nbsp;ลบ</button>
+                </div>
+            }
+        </div>
+    </div>
+<!-- Add modal-->
+<div class="modal fade" id="modalAddLeaveDate" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title">เพิ่มวันหยุด</h3>
+            </div>
+            @using (Html.BeginForm("addLeavedate", "Teacher", FormMethod.Post, new { @class = "AddLeaveDate form-horizontal bordered-row", @id = "AddLeaveDate", data_parsley_validate = "" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">เลือกครู</label>
+                        <div class="col-sm-9">
+                            <select name="ind" class="chosen-select" id="teachername" required data-parsley-required-message="กรุณาเลือกครู">
+                                <option value="" selected>เลือกครู</option>
+                                @foreach (var item in ViewBag.ListteacherActive as List<LeaveDateModel>)
+                                {
+                                    <option value="@item.ind">@item.teachername - @item.nickname</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">ประเภทวันหยุด</label>
+                        <div class="col-sm-3">
+                            <select class="form-control typedate" name="typedate" id="typedate">
+                                <option value="1">ระบุวัน</option>
+                                <option value="2">ระบุวันที่</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="form_day">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">วัน</label>
+                            <div class="col-sm-9">
+                                <div class="row">
+                                    <div class="col-md-1 col-md-offset-1 col-sm-1 col-xs-1">
+                                        <div class=" radio-primary">
+                                            <label class="text-center">
+                                                อา.
+                                                <input type="radio" id="day_1" name="day" class="custom-radio" value="1" checked>
+
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1 col-xs-1">
+                                        <div class="radio-primary">
+                                            <label class="text-center">
+                                                จ.
+                                                <input type="radio" id="day_2" name="day" class="custom-radio" value="2">
+
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1">
+                                        <div class=" radio-primary">
+                                            <label>
+                                                อ.
+                                                <input type="radio" id="day_3" name="day" class="custom-radio" value="3">
+
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1">
+                                        <div class="radio-primary">
+                                            <label class="text-center">
+                                                พ.
+                                                <input type="radio" id="day_4" name="day" class="custom-radio" value="4">
+
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1">
+                                        <div class=" radio-primary">
+                                            <label class="text-center">
+                                                พฤ.
+                                                <input type="radio" id="day_5" name="day" class="custom-radio" value="5">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1">
+                                        <div class="radio-primary">
+                                            <label class="text-center">
+                                                ศ.
+                                                <input type="radio" id="day_6" name="day" class="custom-radio" value="6">
+
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1">
+                                        <div class=" radio-primary">
+                                            <label class="text-center">
+                                                ส.
+                                                <input type="radio" id="day_7" name="day" class="custom-radio" value="7">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-right">ตั้งแต่วันที่</label>
+                            <div class="col-md-3">
+                                <div class="input-prepend input-group">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" name="fdate_day" id="fdate_day" autocomplete="off" value="@(ViewBag.fdate!=""?ViewBag.fdate:"")" readonly />
+                                    @* <input type="text" name="fdate" id="fdate" class="datepicker form-control" autocomplete="off" value="@(ViewBag.fdate!=""?ViewBag.fdate:"")" />*@
+                                </div>
+                            </div>
+                            <label class="col-sm-2 control-label text-right">ถึงวันที่</label>
+                            <div class="col-md-3">
+                                <div class="input-prepend input-group">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" name="tdate_day" id="tdate_day" autocomplete="off" value="@(ViewBag.tdate!=""?ViewBag.tdate:"")" readonly />
+                                    @* <input type="text" name="tdate" id="tdate" class="datepicker form-control" autocomplete="off" value="@(ViewBag.tdate!=""?ViewBag.tdate:"")" />*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="form_allday">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-9">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="checkbox checkbox-primary">
+                                            <label>
+                                                <input type="checkbox" id="check_allday" class="custom-checkbox">
+                                                ทั้งวัน
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-right">ตั้งแต่วันที่</label>
+                            <div class="col-md-3">
+                                <div class="input-prepend input-group">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" name="fdate" id="fdate_allday" autocomplete="off" value="@(ViewBag.fdate!=""?ViewBag.fdate:"")" readonly />
+                                    @* <input type="text" name="fdate" id="fdate" class="datepicker form-control" autocomplete="off" value="@(ViewBag.fdate!=""?ViewBag.fdate:"")" />*@
+                                </div>
+                            </div>
+                            <label class="col-sm-2 control-label">เวลา</label>
+                            <div class="col-sm-3">
+                                <select name="leaveftime" class="form-control" id="f_time">
+                                    <option value="00:00">00:00</option>
+                                    <option value="00:30">00:30</option>
+                                    <option value="01:00">01:00</option>
+                                    <option value="01:30">01:30</option>
+                                    <option value="02:00">02:00</option>
+                                    <option value="02:30">02:30</option>
+                                    <option value="03:00">03:00</option>
+                                    <option value="03:30">03:30</option>
+                                    <option value="04:00">04:00</option>
+                                    <option value="04:30">04:30</option>
+                                    <option value="05:00">05:00</option>
+                                    <option value="05:30">05:30</option>
+                                    <option value="06:00">06:00</option>
+                                    <option value="06:30">06:30</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="07:30">07:30</option>
+                                    <option value="08:00">08:00</option>
+                                    <option value="08:30">08:30</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="09:30">09:30</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="10:30">10:30</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="11:30">11:30</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="12:30">12:30</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="13:30">13:30</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="14:30">14:30</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="15:30">15:30</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="16:30">16:30</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="17:30">17:30</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="18:30">18:30</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="19:30">19:30</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="20:30">20:30</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="21:30">21:30</option>
+                                    <option value="22:00">22:00</option>
+                                    <option value="22:30">22:30</option>
+                                    <option value="23:00">23:00</option>
+                                    <option value="23:30">23:30</option>
+                                </select>
+                                <input type="text" name="leaveftime" value="00:00" id="f_timetxt" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-right">ถึงวันที่</label>
+                            <div class="col-md-3">
+                                <div class="input-prepend input-group">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyph-icon icon-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" name="tdate" id="tdate_allday" autocomplete="off" value="@(ViewBag.tdate!=""?ViewBag.tdate:"")" readonly />
+                                    @* <input type="text" name="tdate" id="tdate" class="datepicker form-control" autocomplete="off" value="@(ViewBag.tdate!=""?ViewBag.tdate:"")" />*@
+                                </div>
+                            </div>
+                            <label class="col-sm-2 control-label">เวลา</label>
+                            <div class="col-sm-3">
+                                <select name="leavettime" class="form-control " id="t_time">
+                                    <option value="00:00">00:00</option>
+                                    <option value="00:30">00:30</option>
+                                    <option value="01:00">01:00</option>
+                                    <option value="01:30">01:30</option>
+                                    <option value="02:00">02:00</option>
+                                    <option value="02:30">02:30</option>
+                                    <option value="03:00">03:00</option>
+                                    <option value="03:30">03:30</option>
+                                    <option value="04:00">04:00</option>
+                                    <option value="04:30">04:30</option>
+                                    <option value="05:00">05:00</option>
+                                    <option value="05:30">05:30</option>
+                                    <option value="06:00">06:00</option>
+                                    <option value="06:30">06:30</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="07:30">07:30</option>
+                                    <option value="08:00">08:00</option>
+                                    <option value="08:30">08:30</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="09:30">09:30</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="10:30">10:30</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="11:30">11:30</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="12:30">12:30</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="13:30">13:30</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="14:30">14:30</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="15:30">15:30</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="16:30">16:30</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="17:30">17:30</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="18:30">18:30</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="19:30">19:30</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="20:30">20:30</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="21:30">21:30</option>
+                                    <option value="22:00">22:00</option>
+                                    <option value="22:30">22:30</option>
+                                    <option value="23:00">23:00</option>
+                                    <option value="23:30">23:30</option>
+                                </select>
+                                <input type="text" name="leavettime" value="23:30" id="t_timetxt" class="form-control" readonly />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">หมายเหตุ</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="remark" name="remark" placeholder="หมายเหตุ...">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success" data-action="save" role="button">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Add modal-->
+<!-- Edit modal-->
+<div class="modal fade" id="modalEditLeaveDate" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title">แก้ไขวันหยุด</h3>
+            </div>
+            @using (Html.BeginForm("editLeavedate", "Teacher", FormMethod.Post, new { @class = "editLeavedate form-horizontal bordered-row", @id = "editLeavedate", data_parsley_validate = "" }))
+            {
+            <div class="modal-body">
+                <input type="hidden" class="form-control" id="indEdit" name="ind">
+                <input type="hidden" class="form-control" id="teacherindEdit" name="teacherind">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">ครู</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="teachernameEdit" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label text-right">วันที่</label>
+                    <div class="col-md-9">
+                        <div class="input-prepend input-group">
+                            <span class="add-on input-group-addon">
+                                <i class="glyph-icon icon-calendar"></i>
+                            </span>
+                            <input type="text" class="form-control datepicker" name="leavefdate" id="fdate_alldayEdit" autocomplete="off" value="@(ViewBag.fdate!=""?ViewBag.fdate:"")" readonly />
+                            @* <input type="text" name="fdate" id="fdate" class="datepicker form-control" autocomplete="off" value="@(ViewBag.fdate!=""?ViewBag.fdate:"")" />*@
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="checkbox checkbox-primary">
+                                    <label>
+                                        <input type="checkbox" id="check_alldayEdit" class="custom-checkbox">
+                                        ทั้งวัน
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">ตั้งแต่เวลา</label>
+                    <div class="col-sm-3">
+                        <select name="leaveftime" class="form-control" id="f_timeEdit">
+                            <option value="00:00">00:00</option>
+                            <option value="00:30">00:30</option>
+                            <option value="01:00">01:00</option>
+                            <option value="01:30">01:30</option>
+                            <option value="02:00">02:00</option>
+                            <option value="02:30">02:30</option>
+                            <option value="03:00">03:00</option>
+                            <option value="03:30">03:30</option>
+                            <option value="04:00">04:00</option>
+                            <option value="04:30">04:30</option>
+                            <option value="05:00">05:00</option>
+                            <option value="05:30">05:30</option>
+                            <option value="06:00">06:00</option>
+                            <option value="06:30">06:30</option>
+                            <option value="07:00">07:00</option>
+                            <option value="07:30">07:30</option>
+                            <option value="08:00">08:00</option>
+                            <option value="08:30">08:30</option>
+                            <option value="09:00">09:00</option>
+                            <option value="09:30">09:30</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11:00">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12:00">12:00</option>
+                            <option value="12:30">12:30</option>
+                            <option value="13:00">13:00</option>
+                            <option value="13:30">13:30</option>
+                            <option value="14:00">14:00</option>
+                            <option value="14:30">14:30</option>
+                            <option value="15:00">15:00</option>
+                            <option value="15:30">15:30</option>
+                            <option value="16:00">16:00</option>
+                            <option value="16:30">16:30</option>
+                            <option value="17:00">17:00</option>
+                            <option value="17:30">17:30</option>
+                            <option value="18:00">18:00</option>
+                            <option value="18:30">18:30</option>
+                            <option value="19:00">19:00</option>
+                            <option value="19:30">19:30</option>
+                            <option value="20:00">20:00</option>
+                            <option value="20:30">20:30</option>
+                            <option value="21:00">21:00</option>
+                            <option value="21:30">21:30</option>
+                            <option value="22:00">22:00</option>
+                            <option value="22:30">22:30</option>
+                            <option value="23:00">23:00</option>
+                            <option value="23:30">23:30</option>
+                        </select>
+                        <input type="text" name="leaveftime" value="00:00" id="f_timetxtEdit" class="form-control" readonly />
+                    </div>
+                    <label class="col-sm-2 control-label">ถึงเวลา</label>
+                    <div class="col-sm-3">
+                        <select name="leavettime" class="form-control" id="t_timeEdit">
+                            <option value="00:00">00:00</option>
+                            <option value="00:30">00:30</option>
+                            <option value="01:00">01:00</option>
+                            <option value="01:30">01:30</option>
+                            <option value="02:00">02:00</option>
+                            <option value="02:30">02:30</option>
+                            <option value="03:00">03:00</option>
+                            <option value="03:30">03:30</option>
+                            <option value="04:00">04:00</option>
+                            <option value="04:30">04:30</option>
+                            <option value="05:00">05:00</option>
+                            <option value="05:30">05:30</option>
+                            <option value="06:00">06:00</option>
+                            <option value="06:30">06:30</option>
+                            <option value="07:00">07:00</option>
+                            <option value="07:30">07:30</option>
+                            <option value="08:00">08:00</option>
+                            <option value="08:30">08:30</option>
+                            <option value="09:00">09:00</option>
+                            <option value="09:30">09:30</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11:00">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12:00">12:00</option>
+                            <option value="12:30">12:30</option>
+                            <option value="13:00">13:00</option>
+                            <option value="13:30">13:30</option>
+                            <option value="14:00">14:00</option>
+                            <option value="14:30">14:30</option>
+                            <option value="15:00">15:00</option>
+                            <option value="15:30">15:30</option>
+                            <option value="16:00">16:00</option>
+                            <option value="16:30">16:30</option>
+                            <option value="17:00">17:00</option>
+                            <option value="17:30">17:30</option>
+                            <option value="18:00">18:00</option>
+                            <option value="18:30">18:30</option>
+                            <option value="19:00">19:00</option>
+                            <option value="19:30">19:30</option>
+                            <option value="20:00">20:00</option>
+                            <option value="20:30">20:30</option>
+                            <option value="21:00">21:00</option>
+                            <option value="21:30">21:30</option>
+                            <option value="22:00">22:00</option>
+                            <option value="22:30">22:30</option>
+                            <option value="23:00">23:00</option>
+                            <option value="23:30">23:30</option>
+                        </select>
+                        <input type="text" name="leavettime" value="23:30" id="t_timetxtEdit" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">หมายเหตุ</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="remarkEdit" name="remark" placeholder="หมายเหตุ...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">เงื่อนไข</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="paraEdit" name="para" readonly cols="50" rows="3"></textarea>
+                    </div>
+                </div>
+                
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>
+                    <button type="submit" class="btn btn-success" data-action="save" role="button">ตกลง</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Edit modal-->
+<!-- Delete modal -->
+<div class="modal fade" id="DeleteLeaveModal" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title">ยืนยันการลบข้อมูล</h3>
+            </div>
+                <div class="modal-body">
+                    <!-- content goes here -->
+                    <span>คุณต้องการลบข้อมูล </span><span id="delTagProCo" style="color:red;font-weight:bold"></span><span>ที่เลือก หรือไม่ !!!</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" role="button">ยกเลิก</button>
+                    <button type="button" class="btn btn-success btnconfirm" data-action="save" role="button">ตกลง</button>
+                </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+@section scripts{
+
+    <!-- Bootstrap Datepicker -->
+    @*<link rel="stylesheet" type="text/css" href="~/assets/widgets/datepicker/bootstrap-datepicker.css">
+        <script type="text/javascript" src="~/assets/widgets/datepicker/bootstrap-datepicker-custom.js"></script>
+        <script type="text/javascript" src="~/assets/widgets/datepicker/locales/bootstrap-datepicker.th.min.js"></script>*@
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-bootstrap.js"></script>
+    <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
+    <script src="~/Content/plugins/datepicker_buddhist_year/js/jquery-ui-1.8.10.offset.datepicker.min.js"></script>
+    <script src="~/Content/Jquery/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#f_timetxt').hide();
+            $('#t_timetxt').hide();
+            $('#f_timetxtEdit').hide();
+            $('#t_timetxtEdit').hide();
+            $('#form_allday').hide();
+            $('#f_time').hide();
+            $('#t_time').hide();
+
+            $("#checkAll").click(function () {
+                $('input:checkbox').not(this).prop('checked', this.checked);
+            });
+            $("#check_allday").click(function () {
+                if ($(this).prop("checked") == true) {
+                    $('#f_time').hide();
+                    $('#t_time').hide();
+                    $('#f_timetxt').show();
+                    $('#t_timetxt').show();
+                    $('#f_time').attr("disabled", true);
+                    $('#t_time').attr("disabled", true);
+                }
+                else {
+                    $('#f_time').show();
+                    $('#t_time').show();
+                    $('#f_timetxt').hide();
+                    $('#t_timetxt').hide();
+                    $('#f_time').attr("disabled", false);
+                    $('#t_time').attr("disabled", false);
+                }
+            });
+            $("#check_alldayEdit").click(function () {
+                if ($(this).prop("checked") == true) {
+                    $('#f_timeEdit').hide();
+                    $('#t_timeEdit').hide();
+                    $('#f_timetxtEdit').show();
+                    $('#t_timetxtEdit').show();
+                }
+                else {
+                    $('#f_timeEdit').show();
+                    $('#t_timeEdit').show();
+                    $('#f_timetxtEdit').hide();
+                    $('#t_timetxtEdit').hide();
+                }
+            });
+
+            $('.typedate').on('change', function () {
+                var type = this.value;
+                /*ระบุวัน*/
+                if (type == 1) {
+                    $('#form_day').show();
+                    $('#form_allday').hide();
+                    $('.form_time').hide();
+                    $('#f_time').hide();
+                    $('#t_time').hide();
+                }
+                else {
+                    $('#form_day').hide();
+                    $('#form_allday').show();
+                    $('#f_time').show();
+                    $('#t_time').show();
+                }
+            });
+            $(document).on("click", ".AddLeaveDate_btn", function () {
+                $('#modalAddLeaveDate').modal({ backdrop: 'static', keyboard: false });
+                $('#modalAddLeaveDate').appendTo('body');
+            });
+            $("[data-dismiss=modal]").click(function () {
+                $('.chosen-select').val("");
+                $('.chosen-select').trigger('chosen:updated');
+
+                $('#check_allday').prop('checked', false);
+                $('#uniform-check_allday span').removeClass('checked');
+
+                $('#check_alldayEdit').prop('checked', false);
+                $('#uniform-check_alldayEdit span').removeClass('checked');
+                //clear
+                $('.radio span').removeClass('checked');
+                $('.custom-radio').prop('checked', false);
+                //check
+                $('#day_1').prop('checked', true);
+                $('#uniform-day_1 span').addClass('checked');
+
+                $('#typedate').val("1");
+                $('#form_day').show();
+                $('#form_allday').hide();
+                $('.form_time').hide();
+                $('#f_time').val("00:00");
+                $('#t_time').val("00:00");
+                $('#f_timetxt').hide();
+                $('#t_timetxt').hide();
+                $('#f_timetxtEdit').hide();
+                $('#t_timetxtEdit').hide();
+                $('#f_time').attr("disabled", false);
+                $('#t_time').attr("disabled", false);
+                $('#remark').val("");
+            });
+
+            //var d = new Date();
+            $(".datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                //defaultDate: toDay,
+                autoclose: true,
+                dateFormat: 'dd/mm/yy',
+                isBuddhist: true,
+                orientation: "bottom left",
+                yearRange: "-100:+0",
+                dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+                dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                monthNamesShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+            }).keydown(function (e) {
+                return false;
+            });
+            var table = $('#datatable-responsive').DataTable({
+                "responsive": true,
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "order": [],
+                "language": {
+                    "zeroRecords": "ไม่มีข้อมูลที่ค้นหา",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                    "infoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+                    "infoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+                    "lengthMenu": "แสดง  _MENU_  รายการ",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "previous": "ก่อนหน้า",
+                        "next": "ถัดไป",
+                        "last": "หน้าสุดท้าย"
+                    }
+                },
+                //"stateSave": true,
+                //'columnDefs': [{
+                //    'targets': 0,
+                //    'searchable': false,
+                //    'orderable': false,
+                //    'className': 'dt-body-center',
+                //    'render': function (data, type, full, meta) {
+                //        return '<input type="checkbox" name="delind[]" value="' + $('<div/>').text(data).html() + '">';
+                //    }
+                //}],
+                'order': [1, 'asc']
+            });
+            //// Handle click on "Select all" control
+            //$('#example-select-all').on('click', function () {
+            //    // Get all rows with search applied
+            //    var rows = table.rows({ 'search': 'applied' }).nodes();
+            //    // Check/uncheck checkboxes for all rows in the table
+            //    $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            //});
+
+            //// Handle click on checkbox to set state of "Select all" control
+            //$('#example tbody').on('change', 'input[type="checkbox"]', function () {
+            //    // If checkbox is not checked
+            //    if (!this.checked) {
+            //        var el = $('#example-select-all').get(0);
+            //        // If "Select all" control is checked and has 'indeterminate' property
+            //        if (el && el.checked && ('indeterminate' in el)) {
+            //            // Set visual state of "Select all" control
+            //            // as 'indeterminate'
+            //            el.indeterminate = true;
+            //        }
+            //    }
+            //});
+            $(document).on('click', '.btnDelete', function () {
+                var modal = $('#DeleteLeaveModal');
+                modal.modal("show");
+            });
+            $(document).on('click', '.btnconfirm', function () {
+                $("#deleteLeaveDate").submit();
+            });
+            $("#deleteLeaveDate").submit(function (event) {
+                var form = this;
+                // Iterate over all checkboxes in the table
+                table.$('input[type="checkbox"]').each(function () {
+                    // If checkbox doesn't exist in DOM
+                    if (!$.contains(document, this)) {
+                        // If checkbox is checked
+                        if (this.checked) {
+                            // Create a hidden element
+                            $(form).append(
+                                $('<input>')
+                                    .attr('type', 'hidden')
+                                    .attr('name', this.name)
+                                    .val(this.value)
+                            );
+                        }
+                    }
+                });
+                @*var data = table.$('input, select').serialize();
+                // console.log('Submitting data', data);
+                // Submit form data via ajax
+                $.ajax({
+                    url: '@Url.Action("deleteLeaveDate", "Teacher")',
+                    data: data,
+                    dataType: "json",
+                    type: "POST",
+                    success: function (data) {
+                        console.log('Server response', data);
+                    }
+                });*@
+
+                    // Prevent form submission
+                   // return false;
+                });
+
+            var allPages = table.cells().nodes();
+            $('#checkAll').click(function () {
+                if ($(this).hasClass('allChecked')) {
+                    $(allPages).find('input[type="checkbox"]').prop('checked', false);
+                } else {
+                    $(allPages).find('input[type="checkbox"]').prop('checked', true);
+                }
+                $(this).toggleClass('allChecked');
+            })
+            table.on('order.dt search.dt', function () {
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+            $(document).on('click', '.editLeaveDate', function () {
+                var ind = $(this).val();
+                var serviceURL = "Getleavebyid";
+                $.ajax({
+                    url: serviceURL,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'Json',
+                    data: JSON.stringify({ ind: ind }),
+                    success: successFunction,
+                    error: errorFunction
+                });
+                function successFunction(result) {
+                    $('#indEdit').val(result.ind);
+                    $('#teacherindEdit').val(result.teacherind);
+                    $('#fdate_alldayEdit').val(result.leavefdate);
+                    $('#f_timeEdit').val(result.leaveftime);
+                    $('#t_timeEdit').val(result.leavettime);
+                    $('#remarkEdit').val(result.remark);
+                    $('#teachernameEdit').val(result.teachername);
+                    $('#paraEdit').val(result.para);
+                    
+                    $('#modalEditLeaveDate').modal({ backdrop: 'static', keyboard: false });
+                    $('#modalEditLeaveDate').appendTo('body');
+                }
+                function errorFunction(result) {
+                    alert("เกิดข้อผิดพลาด" + result);
+                }
+            });
+
+
+
+        });
+
+        $(document).ready(function () {
+            $('.dataTables_filter input').attr("placeholder", "ค้นหา...");
+        });
+
+        $("#success-alert").hide();
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
+        });
+    </script>
+
+
+}
