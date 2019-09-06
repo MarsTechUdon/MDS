@@ -180,7 +180,7 @@ else if (ViewBag.Result == "N")
                 </div>
                 <div class="col-md-10" style="margin-bottom:0px !important;">
                     <label class="font-size-18" style="color:black;">@bookingname</label>
-                    <button class="btn btn-sm btn-warning EditBookingBtn tooltip-button" value="@ViewBag.bookingid" data-placement="top" title="แก้ไข Booking" data-toggle="modal" data-target="#EditBookingModal">
+                    <button class="btn btn-sm btn-warning EditBookingBtn tooltip-button" value="@ViewBag.bookingid" data-placement="top" title="แก้ไข Booking" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#EditBookingModal">
                         <i class="glyph-icon icon-pencil-square-o"></i>
                     </button>
                 </div>
@@ -642,7 +642,7 @@ else if (ViewBag.Result == "N")
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title"><span id="eventTitle">เพิ่มวิชา</span></h4>
             </div>
-            @using (Html.BeginForm("InsertBookingDetail", "Learning", FormMethod.Post, new { @id = "AddEventDropfrm" }))
+            @using (Html.BeginForm("InsertBookingDetail", "Learning", FormMethod.Post, new { @id = "AddEventDropfrm", data_parsley_validate = "" }))
             {
                 <div class="modal-body">
 
@@ -661,7 +661,7 @@ else if (ViewBag.Result == "N")
                             <div class="form-group">
                                 <label>ครูผู้สอน</label>
                                 <div class="input-prepend input-group">
-                                    <select class="form-control teacher" id="teacherDrop" name="teacherind" required>
+                                    <select class="form-control teacher" id="teacherDrop" name="teacherind" required data-parsley-required-message="กรุณาเลือกครูผู้สอน">
                                         <option value="" disabled selected>--เลือกครูผู้สอน--</option>
                                         @foreach (var item in @ViewBag.teach as List<lteacherModel>)
                                         {
@@ -803,13 +803,13 @@ else if (ViewBag.Result == "N")
             </div>
             <div class="modal-body">
 
-                @using (Html.BeginForm("InsertBookingDetail", "Learning", FormMethod.Post, new { @id = "AddEventAddfrm" }))
+                @using (Html.BeginForm("InsertBookingDetail", "Learning", FormMethod.Post, new { @id = "AddEventAddfrm", data_parsley_validate = "" }))
                 {
                     <div class="form-group">
                         <label>วิชา</label>
                         <div class="input-prepend input-group">
-                            <select class="form-control" id="subjectAdd" name="subjectid" style="width:100%;" required>
-                                <option value="" disabled selected>กรุณาเลือกวิชา</option>
+                            <select class="form-control" id="subjectAdd" name="subjectid" style="width:100%;" required data-parsley-required-message="กรุณาเลือกวิชา">
+                                <option value="" disabled selected>--กรุณาเลือกวิชา--</option>
                                 @foreach (var item in subjectByBookingid as List<lsubjectModel>)
                                 {
                                     <option value="@item.subjectid-@item.subjectmin-@item.subjecttype">@item.subjectid-@item.subjectnickname  [@item.subjectdesc]</option>
@@ -826,7 +826,7 @@ else if (ViewBag.Result == "N")
                             <div class="form-group">
                                 <label>ครูผู้สอน</label>
                                 <div class="input-prepend input-group">
-                                    <select class="form-control teacher" id="teacherAdd" name="teacherind" required>
+                                    <select class="form-control teacher" id="teacherAdd" name="teacherind" required data-parsley-required-message="กรุณาเลือกครูผู้สอน">
                                         <option value="" disabled selected>--เลือกครูผู้สอน--</option>
                                         @foreach (var item in @ViewBag.teach as List<lteacherModel>)
                                         {
@@ -968,7 +968,7 @@ else if (ViewBag.Result == "N")
                 <button type="button" class="close closeEdit" id="closeModal" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title"><span id="eventEdititle">แก้ไขวิชา</span></h4>
             </div>
-            @using (Html.BeginForm("UpdateBookingDetail", "Learning", FormMethod.Post, new { @id = "EditEventfrm" }))
+            @using (Html.BeginForm("UpdateBookingDetail", "Learning", FormMethod.Post, new { @id = "EditEventfrm", data_parsley_validate = "" }))
             {
                 <div class="modal-body">
 
@@ -976,7 +976,7 @@ else if (ViewBag.Result == "N")
                         <label>วิชา</label>
                         <div class="input-prepend input-group">
                             @*<input class="form-control" name="subjectid" id="subjectEdit" type="text" readonly>*@
-                            <select class="form-control" id="subjectEdit" name="subjectid" style="width:100%;" required></select>
+                            <select class="form-control" id="subjectEdit" name="subjectid" style="width:100%;" required data-parsley-required-message="กรุณาเลือกวิชา"></select>
                             <input name="bookingid" type="hidden" id="bookingidEdit" value="@ViewBag.bookingid">
                             <input name="courseid" type="hidden" id="courseidEdit" value="@ViewBag.courseid">
                             <input name="arrteacher" type="hidden" id="arrteacherEdit" value="@ViewBag.arrteacher">
@@ -989,7 +989,7 @@ else if (ViewBag.Result == "N")
                             <div class="form-group">
                                 <label>ครูผู้สอน</label>
                                 <div class="input-prepend input-group">
-                                    <select class="form-control teacher" id="teacherEdit" name="teacherind" required>
+                                    <select class="form-control teacher" id="teacherEdit" name="teacherind" required data-parsley-required-message="กรุณาเลือกครูผู้สอน">
                                         <option value="" disabled selected>--เลือกครูผู้สอน--</option>
                                         @foreach (var item in @ViewBag.teach as List<lteacherModel>)
                                         {
@@ -1130,13 +1130,14 @@ else if (ViewBag.Result == "N")
                 <h4 class="modal-title">แก้ไข Booking</h4>
             </div>
             @using (Html.BeginForm("EditBooking", "Learning",
-                 FormMethod.Post, new { @class = "form-horizontal bordered-row", @id = "SearchCourse" }))
+                 FormMethod.Post, new { @class = "form-horizontal bordered-row", @id = "SearchCourse", data_parsley_validate = "" }))
             {
                 <div class="modal-body">
                     <div>
                         <label>ชื่อนักเรียน/ชื่อจอง</label>
                         <div class="input-prepend input-group">
-                            <input type="text" id="bookingname" name="bookingname" class="form-control" autocomplete="off" value="@bookingname" />
+                            <input type="text" id="bookingname" name="bookingname" class="form-control" autocomplete="off" value="@bookingname" required data-parsley-required-message="กรุณากรอกชื่อนักเรียน/ชื่อจอง" />
+                            <input type="hidden" id="bookingnameTemp" value="@bookingname">
                             <input type="hidden" name="arrteacher" value="@ViewBag.arrteacher">
                             <input type="hidden" name="courseid" value="@ViewBag.courseid">
                             <input type="hidden" name="bookingind" value="@ViewBag.bookingid">
@@ -1146,16 +1147,18 @@ else if (ViewBag.Result == "N")
                         <label>รายละเอียดเพิ่มเติม</label>
                         <div class="input-prepend input-group">
                             <input type="text" id="remark" name="remark" class="form-control" autocomplete="off" value="@remark" />
+                            <input type="hidden" id="remarkTemp" value="@remark">
                         </div>
                     </div>
                     <div>
                         <label>ระบุเกียร์</label>
                         <div class="input-prepend input-group">
-                            <select class="form-control" id="gear" name="gear" required>
+                            <select class="form-control" id="gear" name="gear" required data-parsley-required-message="กรุณาเลือกเกียร์">
                                 <option value="" disabled selected>--เลือกเกียร์--</option>
                                 <option value="A" @(gear == "A" ? "selected" : "")>ออโต้</option>
                                 <option value="M" @(gear == "M" ? "selected" : "")>กระปุก</option>
                             </select>
+                            <input type="hidden" id="gearTemp" value="@gear">
                         </div>
                     </div>
                 </div>
@@ -1230,7 +1233,7 @@ else if (ViewBag.Result == "N")
                 @*  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>*@
                 <h3 class="modal-title" id="lineModalLabel">ยืนยันการสร้างนักเรียน</h3>
             </div>
-            @using (Html.BeginForm("SentToCreateStudent", "Learning", FormMethod.Post, new { @id = "SentToCreateStudentfrm" }))
+            @using (Html.BeginForm("SentToCreateStudent", "Learning", FormMethod.Post, new { @id = "SentToCreateStudentfrm", data_parsley_validate = "" }))
             {
                 <div class="modal-body">
 
@@ -1252,7 +1255,7 @@ else if (ViewBag.Result == "N")
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label>เลือกบัตร</label>
-                                <select class="form-control" id="Studenttype" name="Studenttype" required>
+                                <select class="form-control" id="Studenttype" name="Studenttype" required data-parsley-required-message="กรุณาเลือกบัตร">
                                     <option value="">--เลือกบัตร--</option>
                                     <option value="1">บัตรประชาชน</option>
                                     <option value="2">พาร์สปอร์ต</option>
@@ -1589,7 +1592,8 @@ else if (ViewBag.Result == "N")
                 //}
             });
             function OpenEvent(calEvent) {
-                $('#ShowEventind').val(calEvent.eventID);
+                if (calEvent.flgcalendar!="L") {
+                     $('#ShowEventind').val(calEvent.eventID);
                 var bookingindCheck = $('#bookingind').val();
                     $.ajax({
                         data: { ind: calEvent.eventID, bookingid: calEvent.description },
@@ -1647,6 +1651,7 @@ else if (ViewBag.Result == "N")
                             alert("error" + a);
                         }
                 });
+                }
 
             }
             $(".btnShowclose").click(function () {
@@ -2390,6 +2395,12 @@ else if (ViewBag.Result == "N")
                 },
                 defaultView: dfView,
                 defaultDate: datenow,
+                views: {
+                    day: {
+                        titleFormat: "dddd DD MMMM YYYY",
+                        //columnFormat: "dddd d",
+                    }
+                },
                 //lang: 'th',
                 allDaySlot: false,
                 slotDuration: '00:30:00',
@@ -2490,14 +2501,18 @@ else if (ViewBag.Result == "N")
                     header: {
                         left: 'prev,next today',
                         center: 'title',
-                        //right: 'month,agendaWeek,agendaDay'
-                        right: 'timelineDay,timelineThreeDays,agendaWeek,month'
+                        right: 'timelineDay,timelineThreeDays'
+                        //right: 'timelineDay,timelineThreeDays,agendaWeek,month'
                     },
                     defaultView: 'timelineDay',
                     views: {
                         timelineThreeDays: {
                             type: 'timeline',
                             duration: { days: 3 }
+                        },
+                        day: {
+                            titleFormat: "dddd DD MMMM YYYY",
+                            //columnFormat: "dddd d",
                         }
                     },
                     //render:true,
@@ -2606,6 +2621,10 @@ else if (ViewBag.Result == "N")
                         timelineThreeDays: {
                             type: 'timeline',
                             duration: { days: 3 }
+                        },
+                        day: {
+                            titleFormat: "dddd DD MMMM YYYY",
+                            //columnFormat: "dddd d",
                         }
                     },
                     //render:true,
@@ -2714,6 +2733,10 @@ else if (ViewBag.Result == "N")
                 $('#remainingTempAddtxt').text("");
                 $('#remainingTimeAddtxt').text("");
                 $('#txtStartAddtext').text("");
+                //แก้ไข Booking
+                $("#bookingname").val($('#bookingnameTemp').val());
+                $("#remark").val($('#remarkTemp').val());
+                $("#gear").val($('#gearTemp').val());
 
             });
             $(".cancel").click(function () {

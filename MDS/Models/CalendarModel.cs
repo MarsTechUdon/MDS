@@ -21,7 +21,7 @@ namespace MDS.Models
         public string borderColor { get; set; }
         public string textColor { get; set; }
         public string resourceId { get; set; }
-
+        public string flgcalendar { get; set; }
 
 
     }

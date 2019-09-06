@@ -8,6 +8,7 @@
         font-size: 12px !important;
         cursor: pointer;
     }
+
     .ui-tabs-nav > li, .ui-tabs-nav > li > a {
         float: left !important;
     }
@@ -49,7 +50,7 @@ else if (ViewBag.Result == "N")
             <span style="float:right;margin:10px;"></span>
             <ul>
                 <li>
-                    <a data-toggle="tab" href="#tabs-1" id="tebclick_1" value="1" >
+                    <a data-toggle="tab" href="#tabs-1" id="tebclick_1" value="1">
                         Booking
                         <i class="glyph-icon icon-align-justify icon-size23"></i>
                     </a>
@@ -99,30 +100,30 @@ else if (ViewBag.Result == "N")
                     <tbody>
                         @foreach (var item in ViewBag.ListBooking as List<BookingModel>)
                         {
-                        <tr>
-                            <td style="text-align:center;background-color:#e6e6e6;color:black"></td>
-                            <td>
-                                @item.branchname
-                            </td>
-                            <td>
-                                <p>@item.bookingname </p>
-                                <p> @item.bookingdate</p>
-                            </td>
-                            <td>
-                                @item.coursenickname
-                            </td>
-                            <td>
-                                @item.studentname
-                            </td>
-                            <td>@item.fullname</td>
-                            <td>@item.statusdesc</td>
-                            <td class="text-center">@item.totaltime</td>
-                            <td style="text-align:center">
-                                <a href="@Url.Action("Timetable", "Learning", new {value1= @item.courseid,value2="",value3=@item.bookingid})" class="btn btn-success editBtn tooltip-button" data-placement="top" title="แก้ไข Booking">
-                                    <i class="glyph-icon icon-pencil-square-o"></i>
-                                </a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td style="text-align:center;background-color:#e6e6e6;color:black"></td>
+                                <td>
+                                    @item.branchname
+                                </td>
+                                <td>
+                                    <p>@item.bookingname </p>
+                                    <p> @item.bookingdate</p>
+                                </td>
+                                <td>
+                                    @item.coursenickname
+                                </td>
+                                <td>
+                                    @item.studentname
+                                </td>
+                                <td>@item.fullname</td>
+                                <td>@item.statusdesc</td>
+                                <td class="text-center">@item.totaltime</td>
+                                <td style="text-align:center">
+                                    <a href="@Url.Action("Timetable", "Learning", new {value1= @item.courseid,value2="",value3=@item.bookingid})" class="btn btn-success editBtn tooltip-button" data-placement="top" title="แก้ไข Booking">
+                                        <i class="glyph-icon icon-pencil-square-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -322,7 +323,7 @@ else if (ViewBag.Result == "N")
                 error: function (a, b, c) {
                     alert("error" + a);
               }
-                
+
             });
         }
         var t = $('#datatable-responsive').DataTable({
@@ -354,7 +355,7 @@ else if (ViewBag.Result == "N")
                 cell.innerHTML = i + 1;
             });
         }).draw();
-         
+
     });
     function calendarEvenTeach(item) {
         $('#calendar').fullCalendar({
@@ -371,6 +372,10 @@ else if (ViewBag.Result == "N")
                 timelineThreeDays: {
                     type: 'timeline',
                     duration: { days: 3 }
+                },
+                day: {
+                    titleFormat: "dddd DD MMMM YYYY",
+                    //columnFormat: "dddd d",
                 }
             },
             //lang: 'th',
@@ -460,6 +465,7 @@ else if (ViewBag.Result == "N")
         });
     }
       function OpenEvent(calEvent) {
+          if (calEvent.flgcalendar=="C") {
                 $('#ShowEventind').val(calEvent.eventID);
                     $.ajax({
                         data: { ind: calEvent.eventID, bookingid: calEvent.description },
@@ -486,8 +492,8 @@ else if (ViewBag.Result == "N")
                             $('#Showstudyetime').val(result.studyetime);
                             var $description = $('<div/>');
                             $description.append($('<p/>').html('<b>หลักสูตร : </b><span style="color:blue">' + result.coursenickname + '</span>'));
-                            $description.append($('<p/>').html('<b>วิชา : </b><span style="color:blue">' + result.subjectname + '</span>'));                            
-                            $description.append($('<p/>').html('<b>ภาค : </b>' + result.subjecttypedesc)); 
+                            $description.append($('<p/>').html('<b>วิชา : </b><span style="color:blue">' + result.subjectname + '</span>'));
+                            $description.append($('<p/>').html('<b>ภาค : </b>' + result.subjecttypedesc));
                             $description.append($('<p/>').html('<b>ครูผู้สอน : </b><span style="color:blue">' + result.nickname + '</span>'));
                             $description.append($('<p/>').html('<b>นักเรียน : </b><span style="color:blue">' + studentname + '</span>'));
                             $description.append($('<p/>').html('<b>วันที่ : </b>' + result.studydate));
@@ -501,6 +507,7 @@ else if (ViewBag.Result == "N")
                             alert("error" + a);
                         }
                 });
+          }
 
             }
     $(document).ready(function () {
@@ -512,6 +519,8 @@ else if (ViewBag.Result == "N")
         $(".subteach").hide();
         $("#bookingname").val("");
         $("#remark").val("");
+        $("#gear").val("");
+
     });
     $("#course").change(function () {
         var grantAppend = '';
