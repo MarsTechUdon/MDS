@@ -111,7 +111,7 @@ else if (ViewBag.Result == "N")
                             <label class="col-sm-3 control-label">เลือกครู</label>
                             <div class="col-md-7">
                                 <select name="ind" class="chosen-select" id="teachernameSearch">
-                                    <option value="" selected>เลือกครู</option>
+                                    <option value="" selected>เลือกครูทั้งหมด</option>
                                     @foreach (var item in ViewBag.ListteacherActive as List<LeaveDateModel>)
                                     {
                                         <option value="@item.ind"  @(ViewBag.ind == item.ind ? "selected" : "")>@item.teachername - @item.nickname</option>
