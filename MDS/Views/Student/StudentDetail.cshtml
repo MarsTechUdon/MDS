@@ -1020,9 +1020,6 @@ else if (ViewBag.Result == "N")
         {
             if (ViewData["ListTempbooking"] != null)
             {
-                var ListTempbookingTemp = ViewData["ListTempbooking"] as List<StudentBookingModel>;
-                var ListTempbookingCount = ListTempbookingTemp.Count;
-                <input type="hidden" value="@ListTempbookingCount" id="ListTempbookingCount">
                 <div class="row">
                     @using (Html.BeginForm("AssignBooking", "Student", FormMethod.Post, new { @id = "AssignForm" }))
                     {
@@ -1117,8 +1114,10 @@ else if (ViewBag.Result == "N")
 
                     </div>
                 </div>
-                @{ var ListOfTableStudentCount = Model.ListOfTableStudent.Count;}
-                <input type="hidden" value="@ListOfTableStudentCount" id="ListOfTableStudentCount">
+                @{
+                    var firststudydate = Model.ListOfTableStudent.FirstOrDefault().studydate;
+                }
+                <input type="hidden" value="@firststudydate" id="firststudydate">
                 <table id="datatable-TableBooking" class="table table-striped table-bordered responsive no-wrap" cellspacing="0" width="100%">
                     <thead>
                         <tr>
@@ -2273,117 +2272,13 @@ else if (ViewBag.Result == "N")
         }
 
         function checkper() {
-            var ListTempbookingCount = $('#ListTempbookingCount').val();
-            var ListOfTableStudentCount = $('#ListOfTableStudentCount').val();
+            var firststudydate = $('#firststudydate').val();
             var courseidActive = $("#courseidActive").val();
             var bookingnoActive = $("#bookingnoActive").val();
       //      alert(courseidActive);
-            if (bookingnoActive==0) {
-                if (ListTempbookingCount == 0) {
-                    var age = document.getElementById('age').value;
-                    var age2 = $('#age').val();
-                    if (age != "") {
-                        var id = document.getElementById("courseid").value;
-                        if (id == 2 || id == 7 || id == 8 || id == 4 || id == 11 || id == 12) {
-                            if (age < 18) {
-                                $("#save").attr('disabled', 'disabled');
-                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
-
-
-                            } else {
-                                $("#save").removeAttr('disabled');
-
-                            }
-
-                        } else if (id == 5 || id == 13 || id == 6) {
-                            if (age < 20) {
-                                $("#save").attr('disabled', 'disabled');
-                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
-
-
-                            } else {
-                                $("#save").removeAttr('disabled');
-                            }
-                        } else if (id == 3 || id == 9 || 10) {
-                            if (age < 15) {
-                                $("#save").attr('disabled', 'disabled');
-                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
-
-                            } else {
-                                $("#save").removeAttr('disabled');
-                            }
-                        }
-                    }
-                    $('#Listcourseid').val($("#courseid").val());
-                    $('#courseid').val($("#courseid").val());
-                    $('#courseidEdit').val($("#courseid").val());
-                }
-                else {
-                    $('#courseid').val(courseidActive);
-                    $('#courseidEdit').val(courseidActive);
-                    $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
-                    $('#Alertcourse').appendTo('body');
-                }
-            }
-            else {
-                if (ListOfTableStudentCount == 0) {
-                    var age = document.getElementById('age').value;
-                    var age2 = $('#age').val();
-                    if (age != "") {
-                        var id = document.getElementById("courseid").value;
-                        if (id == 2 || id == 7 || id == 8 || id == 4 || id == 11 || id == 12) {
-                            if (age < 18) {
-                                $("#save").attr('disabled', 'disabled');
-                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
-
-
-                            } else {
-                                $("#save").removeAttr('disabled');
-
-                            }
-
-                        } else if (id == 5 || id == 13 || id == 6) {
-                            if (age < 20) {
-                                $("#save").attr('disabled', 'disabled');
-                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
-
-
-                            } else {
-                                $("#save").removeAttr('disabled');
-                            }
-                        } else if (id == 3 || id == 9 || 10) {
-                            if (age < 15) {
-                                $("#save").attr('disabled', 'disabled');
-                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
-
-                            } else {
-                                $("#save").removeAttr('disabled');
-                            }
-                        }
-                    }
-                    $('#Listcourseid').val($("#courseid").val());
-                    $('#courseid').val($("#courseid").val());
-                    $('#courseidEdit').val($("#courseid").val());
-                }
-                else {
-                    $('#courseid').val(courseidActive);
-                    $('#courseidEdit').val(courseidActive);
-                    $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
-                    $('#Alertcourse').appendTo('body');
-                }
-            }
-        }
-        function checkperEdit() {
-            //var selected_courseid = $('#courseidEdit').find("option:selected").val();
-            var ListTempbookingCount = $('#ListTempbookingCount').val();
-            var ListOfTableStudentCount = $('#ListOfTableStudentCount').val();
-            var courseidActive = $("#courseidActive").val();
-            var bookingnoActive = $("#bookingnoActive").val();
-            if (bookingnoActive==0) {
-                if (ListTempbookingCount == 0) {
+            if (firststudydate == "") {
                 var age = document.getElementById('age').value;
                 var age2 = $('#age').val();
-
                 if (age != "") {
                     var id = document.getElementById("courseid").value;
                     if (id == 2 || id == 7 || id == 8 || id == 4 || id == 11 || id == 12) {
@@ -2416,21 +2311,23 @@ else if (ViewBag.Result == "N")
                         }
                     }
                 }
-                $('#Listcourseid').val($("#courseidEdit").val());
-                    $('#courseid').val($("#courseidEdit").val());
-                    $('#courseidEdit').val($("#courseid").val());
+                $('#Listcourseid').val($("#courseid").val());
+                $('#courseid').val($("#courseid").val());
+                $('#courseidEdit').val($("#courseid").val());
             }
             else {
-              //  alert("หลักสูตร " + @Model.Header2 +" มีการจัดตารางเรียนแล้วไม่สามารถเปลี่ยนหลักสูตรได้ ต้องลบข้อมูลการจองตารางก่อน");
                 $('#courseid').val(courseidActive);
                 $('#courseidEdit').val(courseidActive);
                 $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
                 $('#Alertcourse').appendTo('body');
-
             }
-            }
-            else {
-                   if (ListOfTableStudentCount == 0) {
+        }
+        function checkperEdit() {
+            //var selected_courseid = $('#courseidEdit').find("option:selected").val();
+            var firststudydate = $('#firststudydate').val();
+            var courseidActive = $("#courseidActive").val();
+            var bookingnoActive = $("#bookingnoActive").val();
+           if (firststudydate == "") {
                 var age = document.getElementById('age').value;
                 var age2 = $('#age').val();
 
@@ -2477,7 +2374,6 @@ else if (ViewBag.Result == "N")
                 $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
                 $('#Alertcourse').appendTo('body');
 
-            }
             }
 
         }
