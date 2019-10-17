@@ -59,11 +59,20 @@ namespace MDS.Controllers
         }
 
         [NeedLogin]
-        public ActionResult Createstudent(string Studenttype, string bid = null)
+        public ActionResult Createstudent(string Studenttype, string bid = null, string examdate = null)
         {
             var model = new StudentModel();
             model.studenttype = Studenttype;
             model.bookingno = bid;
+
+            if (string.IsNullOrEmpty(examdate))
+            {
+                model.examdate = "";
+            }
+            else
+            {
+                model.examdate = Convert.ToDateTime(examdate).ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            }
             if (bid == null) model.bookingno = "0";
             ViewData["ListCourse"] = StudentManagement.GetCourseList();
             ViewData["ListTitleTH"] = StudentManagement.GetTitleTHList();
@@ -72,11 +81,20 @@ namespace MDS.Controllers
             return View(model);
         }
         [NeedLogin]
-        public ActionResult CreateForeignStudent(string Studenttype, string bid = null)
+        public ActionResult CreateForeignStudent(string Studenttype, string bid = null, string examdate = null)
         {
             var model = new StudentModel();
             model.studenttype = Studenttype;
             model.bookingno = bid;
+
+            if (string.IsNullOrEmpty(examdate))
+            {
+                model.examdate = "";
+            }
+            else
+            {
+                model.examdate = Convert.ToDateTime(examdate).ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB"));
+            }
             if (bid == null) model.bookingno = "0";
             ViewData["ListCourse"] = StudentManagement.GetCourseList();
             ViewData["ListTitleEN"] = StudentManagement.GetTitleENList();

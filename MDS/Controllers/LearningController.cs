@@ -581,12 +581,13 @@ namespace MDS.Controllers
         #endregion
         #region "SentToCreateStudent"
         [NeedLogin]
-        public ActionResult SentToCreateStudent(string Studenttype, string bookingind)
+        public ActionResult SentToCreateStudent(string Studenttype, string bookingind, string bookingexamdate)
         {
 
             //var model = new ResultBookingModel();
             //TempData["Result"] = model.result;
             //TempData["Message"] = model.msg;
+            var examdate = bookingexamdate;
             //var Studenttype = (sentStudenttype != "") ? ENDEtxtManagement.Encrypt(sentStudenttype) : "";//Studenttype
             var bid = (bookingind != "") ? ENDEtxtManagement.Encrypt(bookingind) : "";//bookingind  
             if (Studenttype != "2")
@@ -595,7 +596,7 @@ namespace MDS.Controllers
             }
             else
             {
-                return RedirectToAction("CreateForeignStudent", "Student", new { Studenttype, bid });
+                return RedirectToAction("CreateForeignStudent", "Student", new { Studenttype, bid, examdate });
             }
 
         }
