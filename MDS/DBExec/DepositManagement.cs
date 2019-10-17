@@ -33,7 +33,7 @@ namespace MDS.DBExec
                     {
                         Batchno = dr["Batchno"].ToString(),
                         //BatchDate = dr["BatchDate"].ToString(),
-                        BatchDate = Convert.ToDateTime(dr["BatchDate"].ToString()).ToString("dd/MM/yyyy HH:MM", new System.Globalization.CultureInfo("en-GB")),
+                        BatchDate = Convert.ToDateTime(dr["BatchDate"].ToString()).ToString("dd/MM/yyyy HH:mm", new System.Globalization.CultureInfo("en-GB")),
                         depositdate = Convert.ToDateTime(dr["depositdate"].ToString()).ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")),
                         branchid = dr["branchid"].ToString(),
                         item = dr["item"].ToString(),

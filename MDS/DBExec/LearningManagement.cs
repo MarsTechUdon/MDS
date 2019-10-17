@@ -594,26 +594,28 @@ namespace MDS.DBExec
                         var model = new CalendarModel();
                         if (dr["ind"].ToString() != "")
                         {
-                            DateTime stDate = DateTime.Parse(dr["studydate"].ToString());
-                            model.eventID = dr["ind"].ToString();
-                            model.resourceId = dr["teacherind"].ToString();
-                            model.title = dr["title"].ToString() + "-" + dr["description"].ToString();                            
-                            //model.description = dr["subjectid"].ToString() + "-" + dr["title"].ToString() + "-" + dr["description"].ToString() + "-" + dr["bookingid"].ToString() + "-" + dr["teacherind"].ToString() + "-" + dr["studytime"].ToString();
-                            model.description = dr["bookingid"].ToString();
-                            model.start = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studystime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
-                            model.end = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studyetime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
-                            model.backgroundColor = "";
-                            //model.color = "#FEFCAD";
-                            //model.borderColor = "#cac702";
-                            //model.textColor = "#0000FF";
-                            model.color = dr["color"].ToString();
-                            model.borderColor = dr["borderColor"].ToString();
-                            model.textColor = dr["textColor"].ToString();
-                            model.allDay = "";
-                            model.rendering = "";
-                            model.overlap = "true";
-                            model.flgcalendar = dr["flgcalendar"].ToString(); ;
-                            list.Add(model);
+                            if (dr["flgcalendar"].ToString()=="Z") {
+                                DateTime stDate = DateTime.Parse(dr["studydate"].ToString());
+                                model.eventID = dr["ind"].ToString();
+                                model.resourceId = dr["teacherind"].ToString();
+                                model.title = dr["title"].ToString() + "-" + dr["description"].ToString();
+                                //model.description = dr["subjectid"].ToString() + "-" + dr["title"].ToString() + "-" + dr["description"].ToString() + "-" + dr["bookingid"].ToString() + "-" + dr["teacherind"].ToString() + "-" + dr["studytime"].ToString();
+                                model.description = dr["bookingid"].ToString();
+                                model.start = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studystime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
+                                model.end = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studyetime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
+                                model.backgroundColor = "";
+                                //model.color = "#FEFCAD";
+                                //model.borderColor = "#cac702";
+                                //model.textColor = "#0000FF";
+                                model.color = dr["color"].ToString();
+                                model.borderColor = dr["borderColor"].ToString();
+                                model.textColor = dr["textColor"].ToString();
+                                model.allDay = "";
+                                model.rendering = "";
+                                model.overlap = "true";
+                                model.flgcalendar = dr["flgcalendar"].ToString(); 
+                                list.Add(model);
+                            }
                         }
 
 
