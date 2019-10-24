@@ -19,7 +19,9 @@ namespace MDS.Controllers
         {
             ViewBag.Result = TempData["Result"];
             ViewBag.Message = TempData["Message"];
-
+            var workhours = LearningManagement.workhours();
+            ViewBag.startTime = workhours.stime;
+            ViewBag.endTime = workhours.etime;
             ViewBag.course = LearningManagement.Getlcourse();
             ViewBag.ListBooking = LearningManagement.GetListBooking();
             return View();
@@ -181,6 +183,27 @@ namespace MDS.Controllers
             ViewBag.bookingid = bookingid;
             ViewBag.ActiveDate = (TempData["ActiveDate"] != null ? TempData["ActiveDate"].ToString() : "");
             ViewBag.ActiveView = (TempData["ActiveView"] != null ? TempData["ActiveView"].ToString() : "");
+
+
+            List<string> TimeList = new List<string>();
+            var workhours = LearningManagement.workhours();
+            TimeList.Add(workhours.stime);
+            bool TimeBreak = true;
+            string Sumtime = workhours.stime;
+            while (TimeBreak)
+            {
+                var temp = DateTime.Parse(Sumtime).AddMinutes(30).ToString("HH:mm", new System.Globalization.CultureInfo("en-GB"));
+                Sumtime = temp;
+                TimeList.Add(temp);
+                if (Sumtime == workhours.etime)
+                {
+                    TimeBreak = false;
+                }
+            }
+
+            ViewBag.TimeList = TimeList;
+            ViewBag.startTime = workhours.stime;
+            ViewBag.endTime = workhours.etime;
             //TempData["ActiveView"] = value.ViewCalendar;
             return View();
         }
@@ -433,24 +456,37 @@ namespace MDS.Controllers
                 int remainingTemp = Convert.ToInt32(subjectmin) - Convert.ToInt32(sumsubjecttime);
                 if (subjecttype == "T")
                 {
-                    TotalMinutes = remainingTemp.ToString();
-                }
-                else
-                {
-                    if (!end.Equals(""))
-                    {
-                        DateTime startTime = DateTime.ParseExact(start, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
-                        DateTime endTime = DateTime.ParseExact(end, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
-                        TimeSpan span = endTime.Subtract(startTime);
-                        string resultMin = span.TotalMinutes.ToString();
-                        TotalMinutes = (resultMin == "0") ? "-1" : resultMin;
+                    if (!string.IsNullOrEmpty(start)) {
+                        TotalMinutes = remainingTemp.ToString();
                     }
                     else
                     {
-                        TotalMinutes = remainingTemp.ToString();
-
+                        TotalMinutes = "-1";
                     }
                 }
+                else {
+                    if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                    {
+                        if (!end.Equals(""))
+                        {
+                            DateTime startTime = DateTime.ParseExact(start, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
+                            DateTime endTime = DateTime.ParseExact(end, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
+                            TimeSpan span = endTime.Subtract(startTime);
+                            string resultMin = span.TotalMinutes.ToString();
+                            TotalMinutes = (resultMin == "0") ? "-1" : resultMin;
+                        }
+                        else
+                        {
+                            TotalMinutes = remainingTemp.ToString();
+
+                        }
+                    }
+                    else
+                    {
+                        TotalMinutes = "-1";
+                    }
+                }
+               
 
                 int remainingTime = remainingTemp - Convert.ToInt32(TotalMinutes);
                 model.TotalMinutes = TotalMinutes;
@@ -500,22 +536,36 @@ namespace MDS.Controllers
                 int remainingTempCurrent = (Convert.ToInt32(subjectmin) - Convert.ToInt32(sumsubjecttime));
                 if (subjecttype == "T")
                 {
-                    TotalMinutes = remainingTemp.ToString();
-                }
-                else
-                {
-                    if (!end.Equals(""))
+                    if (!string.IsNullOrEmpty(start))
                     {
-                        DateTime startTime = DateTime.ParseExact(start, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
-                        DateTime endTime = DateTime.ParseExact(end, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
-                        TimeSpan span = endTime.Subtract(startTime);
-                        string resultMin = span.TotalMinutes.ToString();
-                        TotalMinutes = (resultMin == "0") ? "-1" : resultMin;
+                        TotalMinutes = remainingTemp.ToString();
                     }
                     else
                     {
-                        TotalMinutes = remainingTemp.ToString();
+                        TotalMinutes = "-1";
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                    {
+                        if (!end.Equals(""))
+                        {
+                            DateTime startTime = DateTime.ParseExact(start, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
+                            DateTime endTime = DateTime.ParseExact(end, "HH:mm", new System.Globalization.CultureInfo("en-GB"));
+                            TimeSpan span = endTime.Subtract(startTime);
+                            string resultMin = span.TotalMinutes.ToString();
+                            TotalMinutes = (resultMin == "0") ? "-1" : resultMin;
+                        }
+                        else
+                        {
+                            TotalMinutes = remainingTemp.ToString();
 
+                        }
+                    }
+                    else
+                    {
+                        TotalMinutes = "-1";
                     }
                 }
                 int remainingTime = remainingTemp - Convert.ToInt32(TotalMinutes);

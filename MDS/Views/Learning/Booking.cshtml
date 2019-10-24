@@ -20,6 +20,8 @@
 <link rel="stylesheet" type="text/css" href="~/assets/widgets/datatable/datatable.css">
 <link rel="stylesheet" type="text/css" href="~/Content/Other/fullcalendar-3.9.0/fullcalendar.css">
 <link rel="stylesheet" type="text/css" href="~/Content/Other/scheduler.css">
+<input type="hidden" id="startTime" value="@ViewBag.startTime">
+<input type="hidden" id="endTime" value="@ViewBag.endTime">
 @if (ViewBag.Result == "Y" && ViewBag.Message != null)
 {
     <div class="alert alert-success" id="success-alert">
@@ -309,6 +311,7 @@ else if (ViewBag.Result == "N")
 <script type="text/javascript" src="~/assets/widgets/datatable/datatable-responsive.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+      
         $(document).on("click", "#tebclick_2", function () {
             CalendarTeacher();
         });
@@ -358,6 +361,8 @@ else if (ViewBag.Result == "N")
 
     });
     function calendarEvenTeach(item) {
+        var startTime = $('#startTime').val();
+        var endTime = $('#endTime').val();
         $('#calendar').fullCalendar({
             schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
             //now: '2016-12-07',
@@ -388,8 +393,8 @@ else if (ViewBag.Result == "N")
             titleFormat: 'DD MMMM YYYY',
             columnFormat: 'dddd',
             slotDuration: '00:30:00',
-            minTime: '06:00:00',
-            maxTime: '22:00:00',
+            minTime: startTime,
+            maxTime: endTime,
             dragOpacity: {
                 agenda: .5
             },

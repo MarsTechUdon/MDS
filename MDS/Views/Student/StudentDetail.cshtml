@@ -525,7 +525,7 @@ else if (ViewBag.Result == "N")
                                                     <div class="form-group">
                                                         <label>ระบุวันสอบ :</label>
                                                         <div class="input-group custom-search-form">
-                                                            <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdate" disabled>
+                                                            <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdate" disabled  autocomplete="off">
                                                             <input type="hidden" name="examdateTemp" value="@Model.examdate" id="examdateTemp">
                                                             <span class="input-group-btn">
                                                                 <a class="btn btn-yellow tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="แก้ไขวันสอบ" id="clickEdit">
@@ -812,7 +812,7 @@ else if (ViewBag.Result == "N")
                                                     <div class="form-group">
                                                         <label>ระบุวันสอบ :</label>
                                                         <div class="input-group custom-search-form">
-                                                            <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdateEdit" disabled>
+                                                            <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdateEdit" disabled  autocomplete="off">
                                                             <input type="hidden" name="examdateEditTemp" value="@Model.examdate" id="examdateEditTemp">
                                                             <span class="input-group-btn">
                                                                 <a class="btn btn-yellow tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="แก้ไขวันสอบ" id="btnclickEdit">

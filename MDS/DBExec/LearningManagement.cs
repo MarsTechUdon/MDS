@@ -594,28 +594,26 @@ namespace MDS.DBExec
                         var model = new CalendarModel();
                         if (dr["ind"].ToString() != "")
                         {
-                            if (dr["flgcalendar"].ToString()=="Z") {
-                                DateTime stDate = DateTime.Parse(dr["studydate"].ToString());
-                                model.eventID = dr["ind"].ToString();
-                                model.resourceId = dr["teacherind"].ToString();
-                                model.title = dr["title"].ToString() + "-" + dr["description"].ToString();
-                                //model.description = dr["subjectid"].ToString() + "-" + dr["title"].ToString() + "-" + dr["description"].ToString() + "-" + dr["bookingid"].ToString() + "-" + dr["teacherind"].ToString() + "-" + dr["studytime"].ToString();
-                                model.description = dr["bookingid"].ToString();
-                                model.start = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studystime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
-                                model.end = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studyetime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
-                                model.backgroundColor = "";
-                                //model.color = "#FEFCAD";
-                                //model.borderColor = "#cac702";
-                                //model.textColor = "#0000FF";
-                                model.color = dr["color"].ToString();
-                                model.borderColor = dr["borderColor"].ToString();
-                                model.textColor = dr["textColor"].ToString();
-                                model.allDay = "";
-                                model.rendering = "";
-                                model.overlap = "true";
-                                model.flgcalendar = dr["flgcalendar"].ToString(); 
-                                list.Add(model);
-                            }
+                            DateTime stDate = DateTime.Parse(dr["studydate"].ToString());
+                            model.eventID = dr["ind"].ToString();
+                            model.resourceId = dr["teacherind"].ToString();
+                            model.title = dr["title"].ToString() + "-" + dr["description"].ToString();
+                            //model.description = dr["subjectid"].ToString() + "-" + dr["title"].ToString() + "-" + dr["description"].ToString() + "-" + dr["bookingid"].ToString() + "-" + dr["teacherind"].ToString() + "-" + dr["studytime"].ToString();
+                            model.description = dr["bookingid"].ToString();
+                            model.start = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studystime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
+                            model.end = stDate.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-GB")) + "T" + Convert.ToDateTime(dr["studyetime"].ToString()).ToString("HH:mm:ss", new System.Globalization.CultureInfo("en-GB"));
+                            model.backgroundColor = "";
+                            //model.color = "#FEFCAD";
+                            //model.borderColor = "#cac702";
+                            //model.textColor = "#0000FF";
+                            model.color = dr["color"].ToString();
+                            model.borderColor = dr["borderColor"].ToString();
+                            model.textColor = dr["textColor"].ToString();
+                            model.allDay = "";
+                            model.rendering = "";
+                            model.overlap = "true";
+                            model.flgcalendar = dr["flgcalendar"].ToString(); ;
+                            list.Add(model);
                         }
 
 
@@ -1105,6 +1103,33 @@ namespace MDS.DBExec
 
             }
             return list;
+        }
+        #endregion
+        #region "ดึงข้อมูล workhours"
+        public static WorkhoursModel workhours()
+        {
+            var model = new WorkhoursModel();
+            using (SqlConnection db = new SqlConnection(_CON_STR))
+            {
+                if (db.State == ConnectionState.Closed) db.Open();
+                SqlCommand cm = new SqlCommand("[sp_SCLookup]", db);
+                cm.CommandType = CommandType.StoredProcedure;
+                cm.Parameters.AddWithValue("@flag", "workhours");
+                SqlDataReader dr = cm.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+
+                        model.day = dr["day"].ToString();
+                        model.stime = DateTime.Parse(dr["stime"].ToString()).ToString("HH:mm", new System.Globalization.CultureInfo("en-GB"));
+                        model.etime = DateTime.Parse(dr["etime"].ToString()).ToString("HH:mm", new System.Globalization.CultureInfo("en-GB"));
+                    };
+                }
+                dr.Close();
+
+            }
+            return model;
         }
         #endregion
     }

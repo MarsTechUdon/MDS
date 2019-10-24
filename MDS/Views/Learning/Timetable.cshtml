@@ -141,6 +141,8 @@ else if (ViewBag.Result == "N")
 <input type="hidden" id="BookingConfirm" value="@ViewBag.BookingConfirm">
 <input type="hidden" id="ActiveDate" value="@ViewBag.ActiveDate">
 <input type="hidden" id="ActiveView" value="@ViewBag.ActiveView">
+<input type="hidden" id="startTime" value="@ViewBag.startTime">
+<input type="hidden" id="endTime" value="@ViewBag.endTime">
 <div class="panel">
     <div class="panel-body">
         <h3 class="title-hero">
@@ -180,7 +182,7 @@ else if (ViewBag.Result == "N")
                 </div>
                 <div class="col-md-10" style="margin-bottom:0px !important;">
                     <label class="font-size-18" style="color:black;">@bookingname</label>
-                    <button class="btn btn-sm btn-warning EditBookingBtn tooltip-button" value="@ViewBag.bookingid" data-placement="top" title="แก้ไข Booking" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#EditBookingModal">
+                    <button class="btn btn-sm btn-warning EditBookingBtn" value="@ViewBag.bookingid" data-placement="top" title="แก้ไข Booking" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#EditBookingModal">
                         <i class="glyph-icon icon-pencil-square-o"></i>
                     </button>
                 </div>
@@ -271,7 +273,7 @@ else if (ViewBag.Result == "N")
                             </div>
                             <div class="row">
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-default tooltip-button" data-placement="top" title="เลือกครูผู้สอน">
+                                    <button type="submit" class="btn btn-default" data-placement="top" title="เลือกครูผู้สอน">
                                         เลือก
                                     </button>
                                 </div>
@@ -349,7 +351,7 @@ else if (ViewBag.Result == "N")
                                                 var remaining = Convert.ToInt32(subjectmin) - Convert.ToInt32(item.sumsubjecttime);
                                                 <tr class="@(item.sumsubjecttime == subjectmin ? "rowgreen" : "rowred")">
                                                     <td>
-                                                        <button class="btnEditbkdt btn btn-default btn-sm pull-left tooltip-button" data-placement="top" title="แสดงข้อมูล" value="@item.ind">
+                                                        <button class="btnEditbkdt btn btn-default btn-sm pull-left" data-placement="top" title="แสดงข้อมูล" value="@item.ind">
                                                             <span class="glyphicon glyphicon-search"></span>
                                                         </button>
                                                     </td>
@@ -370,7 +372,7 @@ else if (ViewBag.Result == "N")
                                             {
                                                 <tr class="rowgreenEx">
                                                     <td>
-                                                        <button class="btnEditbkdt btn btn-default btn-sm pull-left tooltip-button" data-placement="top" title="แสดงข้อมูล" value="@item.ind">
+                                                        <button class="btnEditbkdt btn btn-default btn-sm pull-left" data-placement="top" title="แสดงข้อมูล" value="@item.ind">
                                                             <span class="glyphicon glyphicon-search"></span>
                                                         </button>
                                                     </td>
@@ -432,7 +434,7 @@ else if (ViewBag.Result == "N")
                                                 var reult = dataSubject.FirstOrDefault(i => i.subjectid == item.subjectid);
                                                 if (reult == null)
                                                 {
-                                                    <div class="btn display-block mrg5B bg-orange external-event text-left tooltip-button" data-class="bg-orange" data-placement="top" title="@item.subjectname">
+                                                    <div class="btn display-block mrg5B bg-orange external-event text-left" data-class="bg-orange" data-placement="top" title="@item.subjectname">
                                                         <div class="button-content">@item.subjectid-@item.subjectnickname</div>
                                                         <input type="hidden" id="dropVal_@item.subjectid" value="@item.subjecttype">
                                                     </div>
@@ -444,7 +446,7 @@ else if (ViewBag.Result == "N")
                                                     {
                                                         if (item.subjectmin != item2.sumsubjecttime)
                                                         {
-                                                            <div class="btn display-block mrg5B bg-orange external-event text-left tooltip-button" data-class="bg-orange" data-placement="top" title="@item.subjectname">
+                                                            <div class="btn display-block mrg5B bg-orange external-event text-left" data-class="bg-orange" data-placement="top" title="@item.subjectname">
                                                                 <div class="button-content">@item.subjectid-@item.subjectnickname</div>
                                                                 <input type="hidden" id="dropVal_@item.subjectid" value="@item.subjecttype">
                                                             </div>
@@ -477,7 +479,7 @@ else if (ViewBag.Result == "N")
                                                 var reult = dataSubject.FirstOrDefault(i => i.subjectid == item.subjectid);
                                                 if (reult == null)
                                                 {
-                                                    <div class="btn display-block mrg5B bg-orange external-event text-left tooltip-button" data-class="bg-orange" data-placement="top" title="@item.subjectname">
+                                                    <div class="btn display-block mrg5B bg-orange external-event text-left" data-class="bg-orange" data-placement="top" title="@item.subjectname">
                                                         <div class="button-content">@item.subjectid-@item.subjectnickname</div>
                                                         <input type="hidden" id="dropVal_@item.subjectid" value="@item.subjecttype">
                                                     </div>
@@ -489,7 +491,7 @@ else if (ViewBag.Result == "N")
                                                     {
                                                         if (item.subjectmin != item2.sumsubjecttime)
                                                         {
-                                                            <div class="btn display-block mrg5B bg-orange external-event text-left tooltip-button" data-class="bg-orange" data-placement="top" title="@item.subjectname">
+                                                            <div class="btn display-block mrg5B bg-orange external-event text-left" data-class="bg-orange" data-placement="top" title="@item.subjectname">
                                                                 <div class="button-content">@item.subjectid-@item.subjectnickname</div>
                                                                 <input type="hidden" id="dropVal_@item.subjectid" value="@item.subjecttype">
                                                             </div>
@@ -691,29 +693,10 @@ else if (ViewBag.Result == "N")
                                 <div class="form-group">
                                     <label>เวลาเริ่มต้น</label>
                                     <select class="form-control" id="divStarttimeDrop" name="studystime">
-                                        <option value="08:00">08:00</option>
-                                        <option value="08:30">08:30</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="09:30">09:30</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="10:30">10:30</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="11:30">11:30</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="12:30">12:30</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="13:30">13:30</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="14:30">14:30</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="15:30">15:30</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="16:30">16:30</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="17:30">17:30</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="18:30">18:30</option>
-                                        <option value="19:00">19:00</option>
+                                        @foreach (var item in ViewBag.TimeList as List<string>)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
                                     </select>
 
                                 </div>
@@ -722,33 +705,10 @@ else if (ViewBag.Result == "N")
                                 <div class="form-group">
                                     <label>เวลาสิ้นสุด</label>
                                     <select class="form-control" id="divEndtimeDrop" name="studyetime">
-                                        <option value="08:00">08:00</option>
-                                        <option value="08:30">08:30</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="09:30">09:30</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="10:30">10:30</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="11:30">11:30</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="12:30">12:30</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="13:30">13:30</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="14:30">14:30</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="15:30">15:30</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="16:30">16:30</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="17:30">17:30</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="18:30">18:30</option>
-                                        <option value="19:00">19:00</option>
-                                        <option value="19:30">19:30</option>
-                                        <option value="20:00">20:00</option>
-                                        <option value="20:30">20:30</option>
-                                        <option value="21:00">21:00</option>
+                                        @foreach (var item in ViewBag.TimeList as List<string>)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
                                     </select>
                                     <input type="text" name="" id="divEndtimeDroptxt" class="form-control" readonly />
                                     <span name="remainingTimeDroptxt" id="remainingTimeDroptxt" style="float:right"></span>
@@ -858,29 +818,10 @@ else if (ViewBag.Result == "N")
                                 <div class="form-group">
                                     <label>เวลาเริ่มต้น</label>
                                     <select class="form-control" id="divStarttimeAdd" name="studystime">
-                                        <option value="08:00">08:00</option>
-                                        <option value="08:30">08:30</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="09:30">09:30</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="10:30">10:30</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="11:30">11:30</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="12:30">12:30</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="13:30">13:30</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="14:30">14:30</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="15:30">15:30</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="16:30">16:30</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="17:30">17:30</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="18:30">18:30</option>
-                                        <option value="19:00">19:00</option>
+                                        @foreach (var item in ViewBag.TimeList as List<string>)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
                                     </select>
 
                                 </div>
@@ -889,33 +830,10 @@ else if (ViewBag.Result == "N")
                                 <div class="form-group">
                                     <label>เวลาสิ้นสุด</label>
                                     <select class="form-control" id="divEndtimeAdd" name="studyetime">
-                                        <option value="08:00">08:00</option>
-                                        <option value="08:30">08:30</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="09:30">09:30</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="10:30">10:30</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="11:30">11:30</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="12:30">12:30</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="13:30">13:30</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="14:30">14:30</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="15:30">15:30</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="16:30">16:30</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="17:30">17:30</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="18:30">18:30</option>
-                                        <option value="19:00">19:00</option>
-                                        <option value="19:30">19:30</option>
-                                        <option value="20:00">20:00</option>
-                                        <option value="20:30">20:30</option>
-                                        <option value="21:00">21:00</option>
+                                        @foreach (var item in ViewBag.TimeList as List<string>)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
                                     </select>
                                     <input type="text" name="" id="divEndtimeAddtxt" class="form-control" readonly />
                                     <span name="remainingTimeAddtxt" id="remainingTimeAddtxt" style="float:right"></span>
@@ -1021,29 +939,10 @@ else if (ViewBag.Result == "N")
                                 <div class="form-group">
                                     <label>เวลาเริ่มต้น</label>
                                     <select class="form-control" id="divStarttimeEdit" name="studystime">
-                                        <option value="08:00">08:00</option>
-                                        <option value="08:30">08:30</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="09:30">09:30</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="10:30">10:30</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="11:30">11:30</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="12:30">12:30</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="13:30">13:30</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="14:30">14:30</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="15:30">15:30</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="16:30">16:30</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="17:30">17:30</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="18:30">18:30</option>
-                                        <option value="19:00">19:00</option>
+                                        @foreach (var item in ViewBag.TimeList as List<string>)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
                                     </select>
 
                                 </div>
@@ -1052,33 +951,10 @@ else if (ViewBag.Result == "N")
                                 <div class="form-group">
                                     <label>เวลาสิ้นสุด</label>
                                     <select class="form-control" id="divEndtimeEdit" name="studyetime">
-                                        <option value="08:00">08:00</option>
-                                        <option value="08:30">08:30</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="09:30">09:30</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="10:30">10:30</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="11:30">11:30</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="12:30">12:30</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="13:30">13:30</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="14:30">14:30</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="15:30">15:30</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="16:30">16:30</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="17:30">17:30</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="18:30">18:30</option>
-                                        <option value="19:00">19:00</option>
-                                        <option value="19:30">19:30</option>
-                                        <option value="20:00">20:00</option>
-                                        <option value="20:30">20:30</option>
-                                        <option value="21:00">21:00</option>
+                                        @foreach (var item in ViewBag.TimeList as List<string>)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
                                     </select>
                                     <input type="text" name="" id="divEndtimeEdittxt" class="form-control" readonly />
                                     <span name="remainingTimeEdittxt" id="remainingTimeEdittxt" style="float:right"></span>
@@ -1378,6 +1254,8 @@ else if (ViewBag.Result == "N")
         //$('#dtp1,#dtp2').bsdatepicker();
         //แสดงข้อมูลวิชา ทฤษฎี และ ปฏิบัติ
         $(document).ready(function () {
+            var startTime = $('#startTime').val();
+            var endTime = $('#endTime').val();
             //$("#PosReaload").focus();
 
             $(".datepicker").datepicker({
@@ -2410,8 +2288,8 @@ else if (ViewBag.Result == "N")
                 titleFormat: 'DD MMMM YYYY',
                 columnFormat: 'dddd',
                 slotDuration: '00:30:00',
-                minTime: '06:00:00',
-                maxTime: '22:00:00',
+                minTime: startTime,
+                maxTime: endTime,
                 dragOpacity: {
                     agenda: .5
                 },
@@ -2526,8 +2404,8 @@ else if (ViewBag.Result == "N")
                     titleFormat: 'DD MMMM YYYY',
                     columnFormat: 'dddd',
                     slotDuration: '00:30:00',
-                    minTime: '06:00:00',
-                    maxTime: '22:00:00',
+                    minTime: startTime,
+                    maxTime: endTime,
                     dragOpacity: {
                         agenda: .5
                     },
@@ -2638,8 +2516,8 @@ else if (ViewBag.Result == "N")
                     titleFormat: 'DD MMMM YYYY',
                     columnFormat: 'dddd',
                     slotDuration: '00:30:00',
-                    minTime: '06:00:00',
-                    maxTime: '22:00:00',
+                    minTime: startTime,
+                    maxTime: endTime,
                     dragOpacity: {
                         agenda: .5
                     },
