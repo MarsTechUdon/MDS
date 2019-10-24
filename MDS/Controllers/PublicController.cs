@@ -143,7 +143,7 @@ namespace MDS.Controllers
         #region GetHoursTeacherPublic 
         public ActionResult GetHoursTeacherPublic(string teacherind, string fdate, string tdate)
         {
-            string dateCurrent = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-EN"));
+            string dateCurrent = DateTime.Now.ToString("yyyy-MM-dd");
             int teacherId = (teacherind == null ? 0 : Int32.Parse(teacherind));
             string fd = (fdate == null ? dateCurrent : fdate);
             string td = (tdate == null ? dateCurrent : tdate);
