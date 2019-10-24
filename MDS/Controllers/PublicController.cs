@@ -1,17 +1,22 @@
 ﻿using MDS.DBExec;
 using MDS.Fillter;
 using MDS.Models;
+using MDS.Reports.TeacherHours.TeacherHoursXSDTableAdapters;
+using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace MDS.Controllers
 {
     public class PublicController : Controller
     {
         PublicManagement PublicManagement = new PublicManagement();
+        SchoolManagement school = new SchoolManagement();
         // GET: Public
         public ActionResult Index()
         {
@@ -135,5 +140,68 @@ namespace MDS.Controllers
             return Json(imgBase64);
         }
 
+        #region GetHoursTeacherPublic 
+        public ActionResult GetHoursTeacherPublic(string teacherind, string fdate, string tdate)
+        {
+            string dateCurrent = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-EN"));
+            int teacherId = (teacherind == null ? 0 : Int32.Parse(teacherind));
+            string fd = (fdate == null ? dateCurrent : fdate);
+            string td = (tdate == null ? dateCurrent : tdate);
+
+            string subjecttype = "A";
+            ViewBag.SubType = subjecttype;
+
+            SessionCompanyModel SessionCompany = new SessionCompanyModel();
+            SessionCompany.ind = "1";
+            SessionCompany.langid = "TH";
+            SessionCompany = PublicManagement.GetCompany(SessionCompany);
+            Session["SessionCompany"] = SessionCompany;
+
+            ReportViewer reportViewer = new ReportViewer();
+            reportViewer.ProcessingMode = ProcessingMode.Local;
+            reportViewer.ShowPrintButton = true;
+            reportViewer.ShowExportControls = true;
+            reportViewer.ShowFindControls = false;
+            reportViewer.AsyncRendering = false;
+            reportViewer.SizeToReportContent = true;
+            reportViewer.ZoomMode = ZoomMode.Percent;
+            reportViewer.Width = Unit.Percentage(100);
+            reportViewer.Height = Unit.Percentage(100);
+
+            reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TeacherHours\TeacherHoursPublic.rdlc";
+            sp_reportTeacherHoursTableAdapter TeacherHours = new sp_reportTeacherHoursTableAdapter();
+
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursPublicDataset", (object)TeacherHours.GetData(fd, td, subjecttype, teacherId)));
+
+            reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานรายงานจำนวน_ชม_ครู";
+            ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
+            reportViewer.LocalReport.EnableExternalImages = true;
+            var company = school.GetCompanyView();
+            ReportParameter SchoolLogo = new ReportParameter("SchoolLogo", new Uri(Server.MapPath("~/" + company.SchoolLogo)).AbsoluteUri);
+            ReportParameter SchoolName = new ReportParameter("SchoolName", company.SchoolName);
+            ReportParameter SchoolAdd1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
+            ReportParameter SchoolAdd2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
+            ReportParameter SchoolAdd3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
+            ReportParameter Fdate = new ReportParameter("Fdate", fd);
+            ReportParameter Tdate = new ReportParameter("Tdate", td);
+            string type = string.Empty;
+            if (subjecttype == "A")
+            {
+                type = "ทั้งหมด";
+            }
+            else if (subjecttype == "T")
+            {
+                type = "ทฤษฎี";
+            }
+            else if (subjecttype == "P")
+            {
+                type = "ปฏิบัติ";
+            }
+            ReportParameter SubjectType = new ReportParameter("SubjectType", type);
+            reportViewer.LocalReport.SetParameters(new ReportParameter[] { Datecurrent, SchoolLogo, SchoolName, SchoolAdd1, SchoolAdd2, SchoolAdd3, Fdate, Tdate, SubjectType });
+            ViewBag.ReportViewer = reportViewer;
+            return View();
+        }
+        #endregion
     }
 }

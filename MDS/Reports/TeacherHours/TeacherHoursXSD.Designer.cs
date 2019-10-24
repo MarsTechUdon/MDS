@@ -1100,13 +1100,14 @@ namespace MDS.Reports.TeacherHours.TeacherHoursXSDTableAdapters {
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@fdate", global::System.Data.SqlDbType.VarChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@tdate", global::System.Data.SqlDbType.VarChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@subjecttype", global::System.Data.SqlDbType.VarChar, 20, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@teacherind", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(TeacherHoursXSD.sp_reportTeacherHoursDataTable dataTable, string fdate, string tdate, string subjecttype) {
+        public virtual int Fill(TeacherHoursXSD.sp_reportTeacherHoursDataTable dataTable, string fdate, string tdate, string subjecttype, global::System.Nullable<int> teacherind) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((fdate == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -1125,6 +1126,12 @@ namespace MDS.Reports.TeacherHours.TeacherHoursXSDTableAdapters {
             }
             else {
                 this.Adapter.SelectCommand.Parameters[3].Value = ((string)(subjecttype));
+            }
+            if ((teacherind.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[4].Value = ((int)(teacherind.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[4].Value = global::System.DBNull.Value;
             }
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -1137,7 +1144,7 @@ namespace MDS.Reports.TeacherHours.TeacherHoursXSDTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual TeacherHoursXSD.sp_reportTeacherHoursDataTable GetData(string fdate, string tdate, string subjecttype) {
+        public virtual TeacherHoursXSD.sp_reportTeacherHoursDataTable GetData(string fdate, string tdate, string subjecttype, global::System.Nullable<int> teacherind) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((fdate == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -1156,6 +1163,12 @@ namespace MDS.Reports.TeacherHours.TeacherHoursXSDTableAdapters {
             }
             else {
                 this.Adapter.SelectCommand.Parameters[3].Value = ((string)(subjecttype));
+            }
+            if ((teacherind.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[4].Value = ((int)(teacherind.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[4].Value = global::System.DBNull.Value;
             }
             TeacherHoursXSD.sp_reportTeacherHoursDataTable dataTable = new TeacherHoursXSD.sp_reportTeacherHoursDataTable();
             this.Adapter.Fill(dataTable);

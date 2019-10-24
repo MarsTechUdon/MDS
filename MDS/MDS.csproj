@@ -2911,19 +2911,19 @@
     <Content Include="Reports\Student\StudentXSD.xss">
       <DependentUpon>StudentXSD.xsd</DependentUpon>
     </Content>
+    <Content Include="Reports\TestTakersName\TestTakersNameXSD.xsc">
+      <DependentUpon>TestTakersNameXSD.xsd</DependentUpon>
+    </Content>
     <Content Include="Reports\TeacherHours\TeacherHoursXSD.xsc">
       <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\TeacherHours\TeacherHoursXSD.xsd">
+      <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>TeacherHoursXSD.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </None>
     <Content Include="Reports\TeacherHours\TeacherHoursXSD.xss">
       <DependentUpon>TeacherHoursXSD.xsd</DependentUpon>
-    </Content>
-    <Content Include="Reports\TestTakersName\TestTakersNameXSD.xsc">
-      <DependentUpon>TestTakersNameXSD.xsd</DependentUpon>
     </Content>
     <None Include="Reports\TestTakersName\TestTakersNameXSD.xsd">
       <SubType>Designer</SubType>
@@ -3051,6 +3051,7 @@
     <Content Include="Views\Report\TestTakersCar.cshtml" />
     <Content Include="Views\Report\TestTakersMotorcycle.cshtml" />
     <Content Include="Views\Report\TestTakersTransportation.cshtml" />
+    <Content Include="Views\Public\GetHoursTeacherPublic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3098,6 +3099,7 @@
     <EmbeddedResource Include="Reports\ReportStudent\ReportStudentRDLC.rdlc" />
     <EmbeddedResource Include="Reports\Revenue\RevenueRDLC.rdlc" />
     <EmbeddedResource Include="Reports\Student\StudentRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TeacherHours\TeacherHoursPublic.rdlc" />
     <EmbeddedResource Include="Reports\TeacherHours\TeacherHoursReport.rdlc" />
     <EmbeddedResource Include="Reports\TestTakersName\TestTakersCarRDLC.rdlc" />
     <EmbeddedResource Include="Reports\TestTakersName\TestTakersMotorcycleRDLC.rdlc" />

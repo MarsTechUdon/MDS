@@ -551,7 +551,7 @@ namespace MDS.Controllers
             reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TeacherHours\TeacherHoursReport.rdlc";
             sp_reportTeacherHoursTableAdapter TeacherHours = new sp_reportTeacherHoursTableAdapter();
 
-            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursDataset", (object)TeacherHours.GetData(model.fdate, model.tdate, subjecttype)));
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursDataset", (object)TeacherHours.GetData(model.fdate, model.tdate, subjecttype, null)));
 
             reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานรายงานจำนวน_ชม_ครู";
             var UserData = Session["UserProfile"] as UserSessionModel;
@@ -604,7 +604,7 @@ namespace MDS.Controllers
             reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TeacherHours\TeacherHoursReport.rdlc";
             sp_reportTeacherHoursTableAdapter TeacherHours = new sp_reportTeacherHoursTableAdapter();
 
-            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursDataset", (object)TeacherHours.GetData(fdate, tdate, subjecttype)));
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursDataset", (object)TeacherHours.GetData(fdate, tdate, subjecttype, null)));
 
             reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานรายงานจำนวน_ชม_ครู";
             var UserData = Session["UserProfile"] as UserSessionModel;
