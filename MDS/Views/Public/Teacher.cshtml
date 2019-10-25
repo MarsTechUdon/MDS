@@ -456,9 +456,10 @@
                             <button type="submit" class="btn btn-success"> <i class="glyphicon glyphicon-search"></i>ค้นหา</button>
                         </div>
                         <div class="col-md-1">
-                            <a href="@Url.Action("GetHoursTeacherPublic","Public", new { teacherind = ViewBag.tid, fdate = ViewBag.fdate, tdate = ViewBag.tdate })" class="btn btn-primary">รายงานจำนวนชม. ครู</a>
+                            <a href="@Url.Action("GetHoursTeacherPublic","Public", new { teacherind = ViewBag.id, fdate = ViewBag.fdate, tdate = ViewBag.tdate })" class="btn btn-primary">รายงานจำนวนชม. ครู</a>
                         </div>
                         <input type="hidden" name="teacherind" id="teacherind" value="@ViewBag.tid" />
+                        <input type="hidden" name="id" id="id" value="@ViewBag.id" />
                     }
                 </div>
                 <div class="table-responsive">
