@@ -60,21 +60,27 @@ namespace MDS.Controllers
             value.ind = teacherid;
             value = new TeacherManagement().GetTeacherById(value);
             var list = new TeacherModel();
-         
+
             SessionCompanyModel SessionCompany = new SessionCompanyModel();
             SessionCompany.ind = "1";
             SessionCompany.langid = "TH";
             SessionCompany = PublicManagement.GetCompany(SessionCompany);
             Session["SessionCompany"] = SessionCompany;
-        
+
             TeacherModel model = new TeacherModel();
             ViewBag.tid = teacherid;
             list = new PublicManagement().GetTeacherById(model, teacherid);
             //modelteach = list.ListOfTableTeacher.FirstOrDefault(x => x.teacherind.Equals(teacherid));
             ViewBag.cardimg = value.cardimg;
-            ViewBag.Fulltname = value.titleT + " " + value.nameT +" "+ value.surnameT;
+            ViewBag.Fulltname = value.titleT + " " + value.nameT + " " + value.surnameT;
             ViewBag.nickname = value.nickname;
             ViewBag.TableOfTeacher = list.ListOfTableTeacher;
+
+            ViewBag.id = id;
+            string dateCurrent = DateTime.Now.ToString("yyyy-MM-dd");
+            ViewBag.fdate = (ViewBag.fdate == null ? dateCurrent : ViewBag.fdate);
+            ViewBag.tdate = (ViewBag.tdate == null ? dateCurrent : ViewBag.tdate);
+
             return View("Teacher", list);
         }
 
@@ -98,6 +104,7 @@ namespace MDS.Controllers
             var ugmData2 = Value["ugmData2"];
             model.ind = Value["teacherind"];
             ViewBag.tid = teacherind;
+            ViewBag.id = Value["id"]; ;
             ViewBag.fdate = ugmData;
             ViewBag.tdate = ugmData2;
             ViewBag.cardimg = value.cardimg;
@@ -109,8 +116,8 @@ namespace MDS.Controllers
             ViewBag.TableOfTeacher = new PublicManagement().GetTeacherByDate(model, teacherind, ugmData, ugmData2);
             //var TableOfTeacher = new PublicManagement().GetTeacherByDate(model, teacherind, ugmData, ugmData2);
             ViewBag.TableOfTeacher = list.ListOfTableTeacher;
-            
-            return View("Teacher",list);
+
+            return View("Teacher", list);
         }
         public ActionResult GetExam(string studentind,string LangValue)
         {
@@ -144,9 +151,10 @@ namespace MDS.Controllers
         public ActionResult GetHoursTeacherPublic(string teacherind, string fdate, string tdate)
         {
             string dateCurrent = DateTime.Now.ToString("yyyy-MM-dd");
-            int teacherId = (teacherind == null ? 0 : Int32.Parse(teacherind));
-            string fd = (fdate == null ? dateCurrent : fdate);
-            string td = (tdate == null ? dateCurrent : tdate);
+            ViewBag.tid = (teacherind == null ? 0 : Int32.Parse(ENDEtxtManagement.Decrypt(teacherind)));
+            ViewBag.fdate = (fdate == null ? dateCurrent : fdate);
+            ViewBag.tdate = (tdate == null ? dateCurrent : tdate);
+            ViewBag.id = teacherind;
 
             string subjecttype = "A";
             ViewBag.SubType = subjecttype;
@@ -171,7 +179,7 @@ namespace MDS.Controllers
             reportViewer.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"\Reports\TeacherHours\TeacherHoursPublic.rdlc";
             sp_reportTeacherHoursTableAdapter TeacherHours = new sp_reportTeacherHoursTableAdapter();
 
-            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursPublicDataset", (object)TeacherHours.GetData(fd, td, subjecttype, teacherId)));
+            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TeacherHoursPublicDataset", (object)TeacherHours.GetData(ViewBag.fdate, ViewBag.tdate, subjecttype, ViewBag.tid)));
 
             reportViewer.LocalReport.DisplayName = DateTime.Now.ToShortDateString() + "_รายงานรายงานจำนวน_ชม_ครู";
             ReportParameter Datecurrent = new ReportParameter("Datecurrent", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("th-TH")));
@@ -182,8 +190,8 @@ namespace MDS.Controllers
             ReportParameter SchoolAdd1 = new ReportParameter("SchoolAddr1", company.schoolAddr1);
             ReportParameter SchoolAdd2 = new ReportParameter("SchoolAddr2", company.schoolAddr2);
             ReportParameter SchoolAdd3 = new ReportParameter("SchoolAddr3", company.schoolAddr3);
-            ReportParameter Fdate = new ReportParameter("Fdate", fd);
-            ReportParameter Tdate = new ReportParameter("Tdate", td);
+            ReportParameter Fdate = new ReportParameter("Fdate", ViewBag.fdate);
+            ReportParameter Tdate = new ReportParameter("Tdate", ViewBag.tdate);
             string type = string.Empty;
             if (subjecttype == "A")
             {
@@ -201,6 +209,24 @@ namespace MDS.Controllers
             reportViewer.LocalReport.SetParameters(new ReportParameter[] { Datecurrent, SchoolLogo, SchoolName, SchoolAdd1, SchoolAdd2, SchoolAdd3, Fdate, Tdate, SubjectType });
             ViewBag.ReportViewer = reportViewer;
             return View();
+        }
+        #endregion
+        #region GetHoursTeacherPublicSearch 
+        [HttpPost]
+        public ActionResult GetHoursTeacherPublicSearch(FormCollection value)
+        {
+            string teacherind = value["teacherind"];
+            string fdate = value["fdate"];
+            string tdate = value["tdate"];
+            return RedirectToAction("GetHoursTeacherPublic", "Public", new { teacherind, fdate, tdate });
+        }
+        #endregion
+        #region BackToTeacher 
+        [HttpPost]
+        public ActionResult BackToTeacher(FormCollection value)
+        {
+            string id = value["teacherind"];
+            return RedirectToAction("Teacher", "Public", new { id });
         }
         #endregion
     }
