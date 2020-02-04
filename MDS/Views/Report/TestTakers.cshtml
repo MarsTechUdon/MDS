@@ -117,26 +117,29 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td></td>
-                                <td style="text-align:center;width: 100px">@item.examdate</td>
-                                <td>@item.coursegroupname</td>
-                                <td>@item.coursenickname</td>
-                                <td style="text-align:center;">@item.studentcount</td>
-                                <td style="text-align:center;">
-                                    @using (Html.BeginForm("TestTakersName", "Report", FormMethod.Post))
+                        <tr>
+                            <td></td>
+                            <td style="text-align:center;width: 100px">@item.examdate</td>
+                            <td>@item.coursegroupname</td>
+                            <td>@item.coursenickname</td>
+                            <td style="text-align:center;">@item.studentcount</td>
+                            <td style="text-align:center;">
+                                @using (Html.BeginForm("TestTakersName", "Report", FormMethod.Post))
+                                {
+                                    <input type="hidden" name="examdate" value="@item.examdate" />
+                                    <input type="hidden" name="courseid" value="@item.courseid" />
+                                    <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
+                                    <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
+                                    <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
+                                    <button type="submit" class="btn btn-success"><i class="glyph-icon icon-print"></i></button>
+                                }
+                            </td>
+                            <td style="text-align:center;">
+                                @if (item.coursegroupid == "1")
+                                {
+                                    using (Html.BeginForm("TestTakersTheoryMotorcycle", "Report", FormMethod.Post))
                                     {
-                                        <input type="hidden" name="examdate" value="@item.examdate" />
-                                        <input type="hidden" name="courseid" value="@item.courseid" />
-                                        <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
-                                        <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
-                                        <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
-                                        <button type="submit" class="btn btn-success"><i class="glyph-icon icon-print"></i></button>
-                                    }
-                                </td>
-                                <td style="text-align:center;">
-                                    @using (Html.BeginForm("TestTakersTheory", "Report", FormMethod.Post))
-                                    {
+                                        <input type="hidden" name="studentcount" value="@item.studentcount" />
                                         <input type="hidden" name="examdate" value="@item.examdate" />
                                         <input type="hidden" name="courseid" value="@item.courseid" />
                                         <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
@@ -145,49 +148,81 @@
                                         <input type="hidden" name="cflg" value="T" />
                                         <button type="submit" class="btn btn-primary"><i class="glyph-icon icon-print"></i></button>
                                     }
-                                </td>
-                                <td style="text-align:center;">
-                                    @if (item.coursegroupid == "1")
+                                }
+                                else if (item.coursegroupid == "2")
+                                {
+                                    using (Html.BeginForm("TestTakersTheoryCar", "Report", FormMethod.Post))
                                     {
-                                        using (Html.BeginForm("TestTakersMotorcycle", "Report", FormMethod.Post))
-                                        {
-                                            <input type="hidden" name="examdate" value="@item.examdate" />
-                                            <input type="hidden" name="courseid" value="@item.courseid" />
-                                            <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
-                                            <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
-                                            <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
-                                            <input type="hidden" name="cflg" value="P" />
-                                            <button type="submit" class="btn btn-info"><i class="glyph-icon icon-print"></i></button>
-                                        }
+                                        <input type="hidden" name="studentcount" value="@item.studentcount" />
+                                        <input type="hidden" name="examdate" value="@item.examdate" />
+                                        <input type="hidden" name="courseid" value="@item.courseid" />
+                                        <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
+                                        <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
+                                        <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
+                                        <input type="hidden" name="cflg" value="T" />
+                                        <button type="submit" class="btn btn-primary"><i class="glyph-icon icon-print"></i></button>
                                     }
-                                    else if (item.coursegroupid == "2")
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("TestTakersTheoryTransportation", "Report", FormMethod.Post))
                                     {
-                                        using (Html.BeginForm("TestTakersCar", "Report", FormMethod.Post))
-                                        {
-                                            <input type="hidden" name="examdate" value="@item.examdate" />
-                                            <input type="hidden" name="courseid" value="@item.courseid" />
-                                            <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
-                                            <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
-                                            <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
-                                            <input type="hidden" name="cflg" value="P" />
-                                            <button type="submit" class="btn btn-info"><i class="glyph-icon icon-print"></i></button>
-                                        }
+                                        <input type="hidden" name="studentcount" value="@item.studentcount" />
+                                        <input type="hidden" name="examdate" value="@item.examdate" />
+                                        <input type="hidden" name="courseid" value="@item.courseid" />
+                                        <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
+                                        <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
+                                        <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
+                                        <input type="hidden" name="cflg" value="T" />
+                                        <button type="submit" class="btn btn-primary"><i class="glyph-icon icon-print"></i></button>
                                     }
-                                    else
+                                }
+                            </td>
+                            <td style="text-align:center;">
+                                @if (item.coursegroupid == "1")
+                                {
+                                    using (Html.BeginForm("TestTakersMotorcycle", "Report", FormMethod.Post))
                                     {
-                                        using (Html.BeginForm("TestTakersTransportation", "Report", FormMethod.Post))
-                                        {
-                                            <input type="hidden" name="examdate" value="@item.examdate" />
-                                            <input type="hidden" name="courseid" value="@item.courseid" />
-                                            <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
-                                            <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
-                                            <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
-                                            <input type="hidden" name="cflg" value="P" />
-                                            <button type="submit" class="btn btn-info"><i class="glyph-icon icon-print"></i></button>
-                                        }
+                                        <input type="hidden" name="studentcount" value="@item.studentcount" />
+                                        <input type="hidden" name="examdate" value="@item.examdate" />
+                                        <input type="hidden" name="courseid" value="@item.courseid" />
+                                        <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
+                                        <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
+                                        <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
+                                        <input type="hidden" name="cflg" value="P" />
+                                        <button type="submit" class="btn btn-info"><i class="glyph-icon icon-print"></i></button>
                                     }
-                                </td>
-                            </tr>
+                                }
+                                else if (item.coursegroupid == "2")
+                                {
+                                    using (Html.BeginForm("TestTakersCar", "Report", FormMethod.Post))
+                                    {
+                                        <input type="hidden" name="studentcount" value="@item.studentcount" />
+                                        <input type="hidden" name="examdate" value="@item.examdate" />
+                                        <input type="hidden" name="courseid" value="@item.courseid" />
+                                        <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
+                                        <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
+                                        <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
+                                        <input type="hidden" name="cflg" value="P" />
+                                        <button type="submit" class="btn btn-info"><i class="glyph-icon icon-print"></i></button>
+                                    }
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("TestTakersTransportation", "Report", FormMethod.Post))
+                                    {
+                                        <input type="hidden" name="studentcount" value="@item.studentcount" />
+                                        <input type="hidden" name="examdate" value="@item.examdate" />
+                                        <input type="hidden" name="courseid" value="@item.courseid" />
+                                        <input type="hidden" name="coursegroupname" value="@item.coursegroupname" />
+                                        <input type="hidden" name="fdate" value="@ViewBag.Fdate" />
+                                        <input type="hidden" name="tdate" value="@ViewBag.Tdate" />
+                                        <input type="hidden" name="cflg" value="P" />
+                                        <button type="submit" class="btn btn-info"><i class="glyph-icon icon-print"></i></button>
+                                    }
+                                }
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>

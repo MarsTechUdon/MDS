@@ -3048,11 +3048,13 @@
     <Content Include="Views\Teacher\ListLeaveDate.cshtml" />
     <Content Include="Views\Report\TestTakers.cshtml" />
     <Content Include="Views\Report\TestTakersName.cshtml" />
-    <Content Include="Views\Report\TestTakersTheory.cshtml" />
     <Content Include="Views\Report\TestTakersCar.cshtml" />
     <Content Include="Views\Report\TestTakersMotorcycle.cshtml" />
     <Content Include="Views\Report\TestTakersTransportation.cshtml" />
     <Content Include="Views\Public\GetHoursTeacherPublic.cshtml" />
+    <Content Include="Views\Report\TestTakersTheoryCar.cshtml" />
+    <Content Include="Views\Report\TestTakersTheoryMotorcycle.cshtml" />
+    <Content Include="Views\Report\TestTakersTheoryTransportation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3105,7 +3107,9 @@
     <EmbeddedResource Include="Reports\TestTakersName\TestTakersCarRDLC.rdlc" />
     <EmbeddedResource Include="Reports\TestTakersName\TestTakersMotorcycleRDLC.rdlc" />
     <EmbeddedResource Include="Reports\TestTakersName\TestTakersNameRDLC.rdlc" />
-    <EmbeddedResource Include="Reports\TestTakersName\TestTakersTheoryRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TestTakersName\TestTakersTheoryCarRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TestTakersName\TestTakersTheoryMotorcycleRDLC.rdlc" />
+    <EmbeddedResource Include="Reports\TestTakersName\TestTakersTheoryTransportationRDLC.rdlc" />
     <EmbeddedResource Include="Reports\TestTakersName\TestTakersTransportationRDLC.rdlc" />
   </ItemGroup>
   <PropertyGroup>
