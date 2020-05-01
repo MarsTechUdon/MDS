@@ -144,7 +144,6 @@
                             <PaddingTop>5pt</PaddingTop>
                           </Style>
                         </Image>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2220,6 +2219,143 @@
                 <Height>0.67639cm</Height>
                 <Width>3.04965cm</Width>
                 <ZIndex>48</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox70">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>ลงชื่อ  ...............................................  ผู้ส่งมอบ</Value>
+                        <Style>
+                          <FontFamily>th sarabunPSK</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox66</rd:DefaultName>
+                <Top>18.71479cm</Top>
+                <Left>1.968cm</Left>
+                <Height>0.64361cm</Height>
+                <Width>5.61777cm</Width>
+                <ZIndex>49</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox74">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value />
+                        <Style>
+                          <FontFamily>th sarabunPSK</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox66</rd:DefaultName>
+                <Top>19.39368cm</Top>
+                <Left>2.86401cm</Left>
+                <Height>0.6cm</Height>
+                <Width>3.42517cm</Width>
+                <ZIndex>50</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <BottomBorder>
+                    <Style>Dotted</Style>
+                  </BottomBorder>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox75">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>(</Value>
+                        <Style>
+                          <FontFamily>th sarabunPSK</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox66</rd:DefaultName>
+                <Top>19.42896cm</Top>
+                <Left>1.968cm</Left>
+                <Height>0.57305cm</Height>
+                <Width>0.89601cm</Width>
+                <ZIndex>51</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox76">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>)</Value>
+                        <Style>
+                          <FontFamily>th sarabunPSK</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox66</rd:DefaultName>
+                <Top>19.42896cm</Top>
+                <Left>6.28919cm</Left>
+                <Height>0.57305cm</Height>
+                <Width>0.89601cm</Width>
+                <ZIndex>52</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
