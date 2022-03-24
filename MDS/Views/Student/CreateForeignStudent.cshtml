@@ -407,8 +407,33 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>หลักสูตร <label style="color:red;">*</label></label>
-                                                @Html.DropDownList("courseid", new SelectList(ViewData["ListCourse"] as List<CourseSelectModel>, "Value", "Text", "Group", 0), "-- กรุณาระบุหลักสูตรนักเรียน --",
-                                               new { @class = "form-control", style = "font-size: 1.2em;height: 50px;", @id = "courseid", onchange = @"checkper();" })
+                                                @*@Html.DropDownList("courseid", new SelectList(ViewData["ListCourse"] as List<CourseSelectModel>, "Value", "Text", "Group", 0), "-- กรุณาระบุหลักสูตรนักเรียน --",
+                                                    new { @class = "form-control", style = "font-size: 1.2em;height: 50px;", @id = "courseid", onchange = @"checkper();" })*@
+
+                                                <select class="form-control" id="courseid" name="courseid" style="font-size: 1.2em; height: 50px;" required>
+                                                    <option value="" selected disabled>-- กรุณาระบุหลักสูตรนักเรียน --</option>
+
+                                                    @{
+                                                        var ListCourse = ViewData["ListCourse"] as List<CourseSelectModel>;
+                                                        var ListCourseGroup = ListCourse.GroupBy(x => new { x.GroupKey }).Select(s => s.FirstOrDefault()).ToList();
+                                                    }
+
+                                                    @foreach (var item in ListCourseGroup)
+                                                    {
+
+                                                        <optgroup label="@item.Group"></optgroup>
+                                                        foreach (var item2 in ListCourse as List<CourseSelectModel>)
+                                                        {
+                                                            if (item.GroupKey == item2.GroupKey)
+                                                            {
+                                                                <option value="@item2.Value" data-coursegroupid="@item2.GroupKey">@item2.Text</option>
+                                                            }
+                                                        }
+
+
+                                                    }
+
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -634,7 +659,7 @@
                 $("#ForeignStudentForm").validate({
                     rules: {
                         channelid: {
-                            valueNotEquals:""
+                            valueNotEquals: ""
                         },
                         courseid: {
                             valueNotEquals: ""
@@ -650,10 +675,10 @@
                         },
                         idpassport: {
                             required: true
-                        }, 
+                        },
                         countrycode: {
                             valueNotEquals: ""
-                        }, 
+                        },
                         attachment: {
                             required: true
                         },
@@ -672,15 +697,15 @@
                         tel: {
                             required: true
                         },
-                        
-                       
+
+
                         //district: {
                         //    required: true
                         //},
                         //province: {
                         //    required: true
                         //},
-                        
+
                     },
                     messages: {
                         channelid: {
@@ -703,10 +728,10 @@
                         },
                         countrycode: {
                             valueNotEquals: "กรุณาเลือกประเทศผู้ออก Passport"
-                        }, 
+                        },
                         attachment: {
                             required: 'กรุณาใส่ สำเนา Passport'
-                        }, 
+                        },
                         dateofbirth: {
                             required: 'กรุณาระบุวันเกิด'
                         },
@@ -722,14 +747,14 @@
                         tel: {
                             required: 'กรุณาระบุเบอร์โทรศัพท์'
                         },
-                      
+
                         //district: {
                         //    required: 'กรุณาระบุตำบล'
                         //},
                         //province: {
                         //    required: 'กรุณาระบุจังหวัด'
                         //},
-                       
+
                     }
                 });
             });
@@ -754,7 +779,7 @@
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-2:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -764,10 +789,10 @@
                 }
             }).keydown(function (e) {
                 return false;
-                });
-            
+            });
+
         });
-        
+
         function showimagepreview(input) {
             var typ = document.getElementById("file").value
             var jpgS = typ.match(".jpg");
@@ -827,7 +852,7 @@
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-100:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -929,13 +954,16 @@
 
 
         }
-
-        function checkper() {
+        $(document).on('change', '#courseid', function () {
+            var selected = $(this).find('option:selected');
+            var courseid = $(this).val();
+            var coursegroupid = selected.data('coursegroupid');
+            console.log("courseid : " + courseid);
+            console.log("coursegroupid : " + coursegroupid);
             var age = document.getElementById('age').value;
-            var age2 = $('#age').val();
+            console.log("age : " + age);
             if (age != "") {
-                var id = document.getElementById("courseid").value;
-                if (id == 4 || id == 5 || id == 11) {
+                if (coursegroupid == 1) {
                     if (age < 15) {
                         $("#save").attr('disabled', 'disabled');
                         return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
@@ -943,7 +971,17 @@
                     } else {
                         $("#save").removeAttr('disabled');
                     }
-                } else if (id == 6 || id == 7 || id == 28 || id == 23) {
+                }
+                else if (coursegroupid == 2) {
+                    if (age < 18) {
+                        $("#save").attr('disabled', 'disabled');
+                        return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+                    } else {
+                        $("#save").removeAttr('disabled');
+                    }
+                }
+                else if (coursegroupid == 3) {
                     if (age < 20) {
                         $("#save").attr('disabled', 'disabled');
                         return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
@@ -951,9 +989,10 @@
 
                     } else {
                         $("#save").removeAttr('disabled');
-                    }
 
-                } else {
+                    }
+                }
+                else {
                     if (age < 18) {
                         $("#save").attr('disabled', 'disabled');
                         return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
@@ -963,9 +1002,47 @@
                         $("#save").removeAttr('disabled');
 
                     }
+
                 }
             }
-        }
+
+        });
+            //function checkper() {
+            //    var age = document.getElementById('age').value;
+            //    var age2 = $('#age').val();
+            //    if (age != "") {
+            //        var id = document.getElementById("courseid").value;
+            //        if (id == 4 || id == 5 || id == 11) {
+            //            if (age < 15) {
+            //                $("#save").attr('disabled', 'disabled');
+            //                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+
+            //            } else {
+            //                $("#save").removeAttr('disabled');
+            //            }
+            //        } else if (id == 6 || id == 7 || id == 28 || id == 23) {
+            //            if (age < 20) {
+            //                $("#save").attr('disabled', 'disabled');
+            //                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+            //            } else {
+            //                $("#save").removeAttr('disabled');
+            //            }
+
+            //        } else {
+            //            if (age < 18) {
+            //                $("#save").attr('disabled', 'disabled');
+            //                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+
+            //            } else {
+            //                $("#save").removeAttr('disabled');
+
+            //            }
+            //        }
+            //    }
+            //}
 
     </script>
 }

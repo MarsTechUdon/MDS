@@ -32,7 +32,8 @@ namespace MDS.DBExec
                     {
                         Text = dr["coursename"].ToString(),
                         Value = dr["courseid"].ToString(),
-                        Group = dr["coursegroup"].ToString()
+                        Group = dr["coursegroup"].ToString(),
+                        GroupKey = dr["coursegroupid"].ToString()
                     });
                 }
             }

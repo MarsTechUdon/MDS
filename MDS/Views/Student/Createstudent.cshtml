@@ -365,7 +365,7 @@
                         <label for="SelectionScan font-size-12">ติดตั้ง Driver : <a href="~/Content/Downloads/Driver/DLTNatID.0.8.zip">ดาวน์โหลด</a></label>
                     </h3>
                     <div class="content-box-wrapper">
-                        @using (Html.BeginForm("StudentRegister", "Student", FormMethod.Post, new { enctype = "multipart/form-data", id = "CreateStudentForm" }))
+                        @using (Html.BeginForm("StudentRegister", "Student", FormMethod.Post, new { enctype = "multipart/form-data", id = "CreateStudentForm", data_parsley_validate = "" }))
                         {
                             <div class="row">
                                 <div class="col-xs-10 col-sm-2 col-md-2 pic-hov" style="margin-top: 25px;">
@@ -374,7 +374,7 @@
                                         <i class="glyph-icon icon-camera pic-btn"></i>
                                     </label>
                                     <input id="file" type="file" onchange="showimagepreview(this)" name="file" style="display:none !important;" accept="image/x-png,image/jpg,image/jpeg" />
-                                    <input type="hidden" name="photo_temp" id="photo_temp" value="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" />
+                                    <input type="hidden" name="photo_temp" id="photo_temp" value="@(string.IsNullOrEmpty(Model.cardimg)?"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":Model.cardimg)" />
                                 </div>
 
                                 <div class="col-sm-10 col-md-10">
@@ -384,8 +384,9 @@
                                                 <div class="form-group">
                                                     <label>ระบุวันสอบ :</label>
                                                     <div class="input-group custom-search-form">
-                                                        <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdate" disabled autocomplete="off">
+                                                        <input type="text" class="form-control" placeholder="ระบุวันสอบ" value="@Model.examdate" id="examdate" disabled autocomplete="off">
                                                         <input type="hidden" name="examdate" value="" id="examdateTemp">
+                                                        @*name="examdateTemp"*@
                                                         <span class="input-group-btn">
                                                             <a class="btn btn-yellow tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="แก้ไขวันสอบ" id="clickEdit">
                                                                 <i class="glyph-icon icon-table icon-size20"></i>
@@ -410,7 +411,33 @@
                                                 <label>หลักสูตร <label style="color:red;">*</label></label>
                                                 @*<select class="form-control" id="permitid" name="id" style="width:100%;"></select>*@
                                                 @*<select class="form-control chosen-select" name="studenttype" id="permitid" required style="font-size: 1.2em;height: 50px;" onchange="checkper();">*@
-                                                @Html.DropDownList("courseid", new SelectList(ViewData["ListCourse"] as List<CourseSelectModel>, "Value", "Text", "Group", 0), "-- กรุณาระบุหลักสูตรนักเรียน --", new { @class = "form-control", style = "font-size: 1.2em;height: 50px;", @id = "courseid", onchange = @"checkper();" })
+                                                @*@Html.DropDownList("courseid", new SelectList(ViewData["ListCourse"] as List<CourseSelectModel>, "Value", "Text", "Group", 0), "-- กรุณาระบุหลักสูตรนักเรียน --", new { @class = "form-control", style = "font-size: 1.2em;height: 50px;", @id = "courseid", onchange = @"checkper();"})*@
+
+
+                                                <select class="form-control" id="courseid" name="courseid" style="font-size: 1.2em; height: 50px;" required>
+                                                    <option value="" selected disabled>-- กรุณาระบุหลักสูตรนักเรียน --</option>
+
+                                                    @{
+                                                        var ListCourse = ViewData["ListCourse"] as List<CourseSelectModel>;
+                                                        var ListCourseGroup = ListCourse.GroupBy(x => new { x.GroupKey }).Select(s => s.FirstOrDefault()).ToList();
+                                                    }
+
+                                                    @foreach (var item in ListCourseGroup)
+                                                    {
+
+                                                        <optgroup label="@item.Group"></optgroup>
+                                                        foreach (var item2 in ListCourse as List<CourseSelectModel>)
+                                                        {
+                                                            if (item.GroupKey == item2.GroupKey)
+                                                            {
+                                                                <option value="@item2.Value" data-coursegroupid="@item2.GroupKey">@item2.Text</option>
+                                                            }
+                                                        }
+
+
+                                                    }
+
+                                                </select>
 
                                             </div>
                                         </div>
@@ -425,13 +452,13 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>ชื่อ <label style="color:red;">*</label></label>
-                                                <input type="text" class="form-control" placeholder="ชื่อ" name="name" value="" id="fname" required>
+                                                <input type="text" class="form-control" placeholder="ชื่อ" name="name" value="@Model.nameT" id="fname" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>นามสกุล <label style="color:red;">*</label></label>
-                                                <input type="text" class="form-control" placeholder="นามสกุล" name="lname" value="" id="lname">
+                                                <input type="text" class="form-control" placeholder="นามสกุล" name="lname" value="@Model.surnameT" id="lname">
                                             </div>
                                         </div>
                                     </div>
@@ -446,13 +473,13 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>First name <label style="color:red;">*</label></label>
-                                                <input type="text" class="form-control" placeholder="First name" name="name_en" value="" id="fname_en" required>
+                                                <input type="text" class="form-control" placeholder="First name" name="name_en" value="@Model.nameE" id="fname_en" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Last name <label style="color:red;">*</label></label>
-                                                <input type="text" class="form-control" placeholder="Last name" name="lname_en" value="" id="lname_en" required>
+                                                <input type="text" class="form-control" placeholder="Last name" name="lname_en" value="@Model.surnameE" id="lname_en" required>
                                             </div>
                                         </div>
                                     </div>
@@ -475,7 +502,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label><b>เลขบัตรประชาชน หรือเลขบัตรประจำตัวคนซึ่งไม่มีสัญชาติไทย <label style="color:red;">*</label></b></label>
-                                        <input type="text" class="form-control" placeholder="เลขบัตรประชาชน" name="idcard" value="" id="idno" maxlength="13" onkeypress='return validateQty(event);'>
+                                        <input type="text" class="form-control" placeholder="เลขบัตรประชาชน" name="idcard" value="@Model.idcard" id="idno" maxlength="13" onkeypress='return validateQty(event);'>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -489,19 +516,19 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>วันเกิด<label style="color:red;">*</label></label>
-                                        <input type="text" class="form-control bootstrap-datepicker" placeholder="วันเกิด" name="dateofbirth" value="" id="dateofbirth" onchange="calAge();" readonly>
+                                        <input type="text" class="form-control bootstrap-datepicker" placeholder="วันเกิด" name="dateofbirth" value="@(string.IsNullOrEmpty(Model.birthdate)?"":Model.birthdate)" id="dateofbirth" onchange="calAge();" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>อายุ <label style="color:red;">*</label></label>
-                                        <input type="text" class="form-control" placeholder="อายุ" name="age" value="" id="age">
+                                        <input type="text" class="form-control" placeholder="อายุ" name="age" value="@Model.age" id="age">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>email</label>
-                                        <input type="email" class="form-control" placeholder="อีเมล" name="email" value="">
+                                        <input type="email" class="form-control" placeholder="อีเมล" name="email" value="@Model.email">
                                     </div>
                                 </div>
                             </div>
@@ -510,7 +537,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>สัญชาติ <label style="color:red;">*</label></label>
-                                        <input type="text" class="form-control" placeholder="สัญชาติ" name="nationality" value="" id="national">
+                                        <input type="text" class="form-control" placeholder="สัญชาติ" name="nationality" value="@Model.nation" id="national">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -522,8 +549,8 @@
                                                 <label>เพศ <label style="color:red;">*</label></label>
                                                 <select class="form-control" id="gender" name="gender">
                                                     <option value="">-- กรุณาเลือก --</option>
-                                                    <option value="ชาย">ชาย</option>
-                                                    <option value="หญิง">หญิง</option>
+                                                    <option value="ชาย" @(Model.gentle == "ชาย" ? "selected" : "")>ชาย</option>
+                                                    <option value="หญิง" @(Model.gentle == "หญิง" ? "selected" : "")>หญิง</option>
 
                                                 </select>
                                             </div>
@@ -534,7 +561,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>ความพิการ</label>
-                                        <input type="text" class="form-control" name="disabled" placeholder="ความพิการ" value="">
+                                        <input type="text" class="form-control" name="disabled" placeholder="ความพิการ" value="@Model.Disability">
                                     </div>
                                 </div>
 
@@ -544,7 +571,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>ที่ตั้ง <label style="color:red;">*</label></label>
-                                        <textarea rows="5" class="form-control" name="address" placeholder="ที่ตั้ง" value="" id="address"></textarea>
+                                        <textarea rows="5" class="form-control" name="address" placeholder="ที่ตั้ง" value="" id="address">@Model.addresstemp</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -556,7 +583,7 @@
                                         <div class="form-group">
                                             <div class="ui-widget">
                                                 <label>ตำบล <label style="color:red;">*</label></label>
-                                                <input type="text" id="district" name="district" class="form-control" placeholder="แขวง/ตำบล">
+                                                <input type="text" id="district" name="district" class="form-control" placeholder="แขวง/ตำบล" value="@Model.tumbol">
                                             </div>
                                         </div>
                                     </div>
@@ -564,14 +591,14 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>อำเภอ </label>
-                                            <input type="text" id="amphoe" name="amphoe" class="form-control" placeholder="เขต/อำเภอ">
+                                            <input type="text" id="amphoe" name="amphoe" class="form-control" placeholder="เขต/อำเภอ" value="@Model.amphur">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <div class="ui-widget">
                                                 <label for="tags">จังหวัด <label style="color:red;">*</label></label>
-                                                <input id="province" name="province" class="form-control" placeholder="กรุณาพิมพ์ชื่อจังหวัด">
+                                                <input id="province" name="province" class="form-control" placeholder="กรุณาพิมพ์ชื่อจังหวัด" value="@Model.changwat">
                                             </div>
                                         </div>
                                     </div>
@@ -580,13 +607,13 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>รหัสไปรษณีย์ </label>
-                                            <input type="text" name="zipcode" class="form-control" placeholder="รหัสไปรษณีย์">
+                                            <input type="text" name="zipcode" class="form-control" placeholder="รหัสไปรษณีย์" value="@Model.zipcode">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>เบอร์โทรศัพท์ <label style="color:red;">*</label></label>
-                                            <input type="text" name="tel" id="telephone" class="form-control" placeholder="เบอร์โทรศัพท์" required maxlength="10">
+                                            <input type="text" name="tel" id="telephone" class="form-control" placeholder="เบอร์โทรศัพท์" required maxlength="10" value="@Model.mobileno">
                                         </div>
                                     </div>
                                 </div>
@@ -596,7 +623,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>โรคประจำตัว </label>
-                                        <textarea rows="3" class="form-control" name="medical_prob" placeholder="โรคประจำตัว" value=""></textarea>
+                                        <textarea rows="3" class="form-control" name="medical_prob" placeholder="โรคประจำตัว" value="">@Model.disease</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -618,8 +645,24 @@
         </div>
     </div>
 </div>
+<input id="dateofbirthCheck" value="@ViewBag.dateofbirthCheck" type="hidden" />
+<div id="AlertBirthdate" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h1 class="text-center font-red" style="font-size:120px"> <i class="fa fa-exclamation-circle" aria-hidden="true"></i></h1>
+
+                <h1 class="text-center">ผิดพลาด</h1>
+                <div class="mrg15A">
+                    <h3 class="text-center"><i class="fa fa-calendar" aria-hidden="true"></i> &nbsp; วันเกิดไม่ถูกต้อง</h3>
+                </div>
+                <button type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal">ตกลง</button>
+            </div>
 
 
+        </div>
+    </div>
+</div>
 
 @section scripts{
 
@@ -689,6 +732,22 @@
     <script src="~/assets/jQuery/jquery.validate.min.js"></script>
     <script>
         $(document).ready(function () {
+            var check = $("#dateofbirthCheck").val();
+            var dateofbirthparsley = $('#dateofbirth').parsley();
+            if (check) {
+                $('#AlertBirthdate').modal({ backdrop: 'static', keyboard: false });
+                $('#AlertBirthdate').appendTo('body');
+
+                window.ParsleyUI.removeError(dateofbirthparsley, "dateofbirth", { updateClass: true });
+                window.ParsleyUI.addError(dateofbirthparsley, "dateofbirth", "กรุณาระบุวันเกิดให้ถูกต้อง");
+                $('.parsley-dateofbirth').css({ "color": "#ff5757" });
+                $('#dateofbirth').removeClass('pas-Error');
+                $('#dateofbirth').addClass('pas-success');
+            }
+            $('#dateofbirth').on('change', function () {
+                window.ParsleyUI.removeError(dateofbirthparsley, "dateofbirth", { updateClass: true });
+                $('#dateofbirth').removeClass('pas-Error');
+            });
             $(function () {
                 $.validator.setDefaults({
                     errorClass: 'help-block',
@@ -838,7 +897,7 @@
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-2:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -911,7 +970,7 @@
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-100:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -1014,14 +1073,16 @@
 
 
         }
-
-        function checkper() {
+        $(document).on('change', '#courseid', function () {
+            var selected = $(this).find('option:selected');
+            var courseid = $(this).val();
+            var coursegroupid = selected.data('coursegroupid');
+            console.log("courseid : " + courseid);
+            console.log("coursegroupid : " + coursegroupid);
             var age = document.getElementById('age').value;
-            var age2 = $('#age').val();
-
+            console.log("age : " + age);
             if (age != "") {
-                var id = document.getElementById("courseid").value;
-                if (id == 4 || id == 5 || id == 11) {
+                if (coursegroupid == 1) {
                     if (age < 15) {
                         $("#save").attr('disabled', 'disabled');
                         return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
@@ -1029,7 +1090,17 @@
                     } else {
                         $("#save").removeAttr('disabled');
                     }
-                } else if (id == 6 || id == 7 || id == 28 || id == 23) {
+                }
+                else if (coursegroupid == 2) {
+                    if (age < 18) {
+                        $("#save").attr('disabled', 'disabled');
+                        return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+                    } else {
+                        $("#save").removeAttr('disabled');
+                    }
+                }
+                else if (coursegroupid == 3) {
                     if (age < 20) {
                         $("#save").attr('disabled', 'disabled');
                         return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
@@ -1037,9 +1108,10 @@
 
                     } else {
                         $("#save").removeAttr('disabled');
-                    }
 
-                } else {
+                    }
+                }
+                else {
                     if (age < 18) {
                         $("#save").attr('disabled', 'disabled');
                         return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
@@ -1049,9 +1121,50 @@
                         $("#save").removeAttr('disabled');
 
                     }
-                } 
+
+                }
             }
-        }
+
+        });
+
+
+            //function checkper(selectObject) {
+            //    var age = document.getElementById('age').value;
+            //    var age2 = $('#age').val();
+
+            //    if (age != "") {
+            //        var id = document.getElementById("courseid").value;
+            //        if (id == 4 || id == 5 || id == 11) {
+            //            if (age < 15) {
+            //                $("#save").attr('disabled', 'disabled');
+            //                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+
+            //            } else {
+            //                $("#save").removeAttr('disabled');
+            //            }
+            //        } else if (id == 6 || id == 7 || id == 28 || id == 23) {
+            //            if (age < 20) {
+            //                $("#save").attr('disabled', 'disabled');
+            //                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+            //            } else {
+            //                $("#save").removeAttr('disabled');
+            //            }
+
+            //        } else {
+            //            if (age < 18) {
+            //                $("#save").attr('disabled', 'disabled');
+            //                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+
+            //            } else {
+            //                $("#save").removeAttr('disabled');
+
+            //            }
+            //        }
+            //    }
+            //}
 
     </script>
 }

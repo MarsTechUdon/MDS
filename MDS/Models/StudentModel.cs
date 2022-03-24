@@ -27,6 +27,7 @@ namespace MDS.Models
         public string gentle { get; set; }
         public string mobileno { get; set; }
         public string address { get; set; }
+        public string addresstemp { get; set; }
         public string tumbol { get; set; }
         public string amphur { get; set; }
         public string changwat { get; set; }
@@ -67,6 +68,7 @@ namespace MDS.Models
         public PaymentModel ListOfReceipt { get; set; }
         public List<TableStudentModel> ListOfTableStudent { get; set; }
         public List<PretestModel> ListOfPretest { get; set; }
+
 
     }
 }

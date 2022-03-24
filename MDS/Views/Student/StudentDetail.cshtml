@@ -525,7 +525,7 @@ else if (ViewBag.Result == "N")
                                                     <div class="form-group">
                                                         <label>ระบุวันสอบ :</label>
                                                         <div class="input-group custom-search-form">
-                                                            <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdate" disabled  autocomplete="off">
+                                                            <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdate" disabled autocomplete="off">
                                                             <input type="hidden" name="examdateTemp" value="@Model.examdate" id="examdateTemp">
                                                             <span class="input-group-btn">
                                                                 <a class="btn btn-yellow tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="แก้ไขวันสอบ" id="clickEdit">
@@ -555,7 +555,32 @@ else if (ViewBag.Result == "N")
                                                     <label>หลักสูตร <label style="color:red;">*</label></label>
                                                     @*<select class="form-control" id="permitid" name="id" style="width:100%;"></select>*@
                                                     @*<select class="form-control chosen-select" name="studenttype" id="permitid" required style="font-size: 1.2em;height: 50px;" onchange="checkper();">*@
-                                                    @Html.DropDownListFor(x => x.courseid, new SelectList(ViewData["ListCourse"] as List<CourseSelectModel>, "Value", "Text", "Group", 0), new { @class = "form-control", style = "font-size: 1.2em;height: 50px;", required = "required", onchange = @"checkper();" })
+                                                    @*@Html.DropDownListFor(x => x.courseid, new SelectList(ViewData["ListCourse"] as List<CourseSelectModel>, "Value", "Text", "Group", 0), new { @class = "form-control", style = "font-size: 1.2em;height: 50px;", required = "required", onchange = @"checkper();" })*@
+
+                                                    <select class="form-control" id="courseid" name="courseid" style="font-size: 1.2em; height: 50px;" required>
+                                                        <option value="" selected disabled>-- กรุณาระบุหลักสูตรนักเรียน --</option>
+
+                                                        @{
+                                                            var ListCourse = ViewData["ListCourse"] as List<CourseSelectModel>;
+                                                            var ListCourseGroup = ListCourse.GroupBy(x => new { x.GroupKey }).Select(s => s.FirstOrDefault()).ToList();
+                                                        }
+
+                                                        @foreach (var item in ListCourseGroup)
+                                                        {
+
+                                                            <optgroup label="@item.Group"></optgroup>
+                                                            foreach (var item2 in ListCourse as List<CourseSelectModel>)
+                                                            {
+                                                                if (item.GroupKey == item2.GroupKey)
+                                                                {
+                                                                    <option value="@item2.Value" data-coursegroupid="@item2.GroupKey" @(Model.courseid == item2.Value ? "selected" : "")>@item2.Text</option>
+                                                                }
+                                                            }
+
+
+                                                        }
+
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -812,7 +837,7 @@ else if (ViewBag.Result == "N")
                                                     <div class="form-group">
                                                         <label>ระบุวันสอบ :</label>
                                                         <div class="input-group custom-search-form">
-                                                            <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdateEdit" disabled  autocomplete="off">
+                                                            <input type="text" class="form-control" placeholder="ระบุวันสอบ" name="examdate" value="@Model.examdate" id="examdateEdit" disabled autocomplete="off">
                                                             <input type="hidden" name="examdateEditTemp" value="@Model.examdate" id="examdateEditTemp">
                                                             <span class="input-group-btn">
                                                                 <a class="btn btn-yellow tooltip-button" data-toggle="tooltip" data-placement="top" tooltip-title="แก้ไขวันสอบ" id="btnclickEdit">
@@ -841,8 +866,31 @@ else if (ViewBag.Result == "N")
                                                 <div class="form-group">
                                                     <input type="hidden" class="form-control setstudentType" name="studenttype" id="studenttype" value="@Model.studenttype" />
                                                     <label>หลักสูตร <label style="color:red;">*</label></label>
-                                                    @Html.DropDownListFor(x => x.courseid, new SelectList(ViewData["ListCourse"] as List<CourseSelectModel>, "Value", "Text", "Group", 0), new { @class = "form-control", style = "font-size: 1.2em;height: 50px;", required = "required", onchange = @"checkperEdit();", @id = "courseidEdit" })
+                                                    @*@Html.DropDownListFor(x => x.courseid, new SelectList(ViewData["ListCourse"] as List<CourseSelectModel>, "Value", "Text", "Group", 0), new { @class = "form-control", style = "font-size: 1.2em;height: 50px;", required = "required", onchange = @"checkperEdit();", @id = "courseidEdit" })*@
+                                                    <select class="form-control" id="courseidEdit" name="courseid" style="font-size: 1.2em; height: 50px;" required>
+                                                        <option value="" selected disabled>-- กรุณาระบุหลักสูตรนักเรียน --</option>
 
+                                                        @{
+                                                            var ListCourse = ViewData["ListCourse"] as List<CourseSelectModel>;
+                                                            var ListCourseGroup = ListCourse.GroupBy(x => new { x.GroupKey }).Select(s => s.FirstOrDefault()).ToList();
+                                                        }
+
+                                                        @foreach (var item in ListCourseGroup)
+                                                        {
+
+                                                            <optgroup label="@item.Group"></optgroup>
+                                                            foreach (var item2 in ListCourse as List<CourseSelectModel>)
+                                                            {
+                                                                if (item.GroupKey == item2.GroupKey)
+                                                                {
+                                                                    <option value="@item2.Value" data-coursegroupid="@item2.GroupKey" @(Model.courseid == item2.Value ? "selected" : "")>@item2.Text</option>
+                                                                }
+                                                            }
+
+
+                                                        }
+
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -1066,18 +1114,18 @@ else if (ViewBag.Result == "N")
                     }
                     <div class="col-xs-6 col-sm-6">
                         @*<a href="@Url.Action("", "")" class="btn btn-lg btn-blue-alt float-right" id="btnNewTable">สร้างตาราง</a>*@
-                        <input type="submit" form="BookingNew" class="btn btn-lg btn-blue-alt float-right" value="สร้างตาราง" id="btnSubmit" />
+                        <input type="submit" form="BookingNew" class="btn btn-lg btn-blue-alt float-right btnCreateTable" value="สร้างตาราง" id="btnSubmit" />
                     </div>
                     @if ((ViewData["ListTempbooking"] as List<StudentBookingModel>).Count > 0)
                     {
                         <div class="col-xs-6 col-sm-6">
-                            <input type="submit" form="AssignForm" class="btn btn-lg btn-success" value="เลือกตาราง" id="btnSubmit" />
+                            <input type="submit" form="AssignForm" class="btn btn-lg btn-success btnSelectTable" value="เลือกตาราง" id="btnSubmit" />
                         </div>
                     }
                     else
                     {
                         <div class="col-xs-6 col-sm-6">
-                            <input type="submit" class="btn btn-lg btn-default" value="เลือกตาราง" disabled />
+                            <input type="submit" class="btn btn-lg btn-default btnSelectTable" value="เลือกตาราง" disabled />
                         </div>
                     }
 
@@ -1158,12 +1206,12 @@ else if (ViewBag.Result == "N")
                 @* จ่ายเงินยังไม่หมด *@
                 @if (Convert.ToInt32(Convert.ToDecimal(receiptData.remain)) > 0)
                 {
-                    <button class="btn btn-lg btn-hover btn-success addMoneyBtn">
+                    <button class="btn btn-lg btn-hover btn-success addMoneyBtn btnAddMoney">
                         <span>เพิ่ม</span>
                         <i class="glyph-icon icon-plus"></i>
                     </button>
                     <div class="float-right">
-                        <button class="btn btn-lg btn-gray float-right" disabled>
+                        <button class="btn btn-lg btn-gray float-right btnReceiptPrint" disabled>
                             <i class="glyph-icon icon-print"></i>
                             <span>พิมพ์ใบเสร็จ</span>
                         </button>
@@ -1172,14 +1220,14 @@ else if (ViewBag.Result == "N")
                 } @* จ่ายเงินหมดยังไม่มีเลขที่ใบเสร็จ*@
                 else if (receiptData.receiptno == "")
                 {
-                    <button class="btn btn-lg btn-hover btn-success addMoneyBtn">
+                    <button class="btn btn-lg btn-hover btn-success addMoneyBtn btnAddMoney">
                         <span>เพิ่ม</span>
                         <i class="glyph-icon icon-plus"></i>
                     </button>
                     <div class="float-right">
                         @using (Html.BeginForm("Receipt", "Report", FormMethod.Post))
                         {
-                            <button class="btn btn-lg btn-purple float-right tooltip-button" data-original-title="พิมพ์ใบเสร็จ" name="studentind" value="@Model.studentind">
+                            <button class="btn btn-lg btn-purple float-right tooltip-button btnReceiptPrint" data-original-title="พิมพ์ใบเสร็จ" name="studentind" value="@Model.studentind">
                                 <i class="glyph-icon icon-print icon-size20"></i>
                                 <span>พิมพ์ใบเสร็จ</span>
                             </button>
@@ -1192,13 +1240,13 @@ else if (ViewBag.Result == "N")
                 }@* จ่ายเงินหมดแล้ว มีเลขที่ใบเสร็จแล้ว *@
                 else
                 {
-                    <button class="btn btn-lg btn-hover btn-gray addMoneyBtn" disabled>
+                    <button class="btn btn-lg btn-hover btn-gray addMoneyBtn btnAddMoney" disabled>
                         <span>เพิ่ม</span>
                         <i class="glyph-icon icon-plus"></i>
                     </button>
                     <div class="float-right">
                         <span style="font-size:1.8em; margin-right:15px; color:red;">@receiptData.receiptno</span>
-                        <a href="@Url.Action("ReceiptSingle","Report",new { flag="2", receiptno= receiptData.receiptno, payid=0, Studentind = Model.studentind, voucherid=Model.voucherid})" class="btn btn-lg btn-purple float-right">
+                        <a href="@Url.Action("ReceiptSingle","Report",new { flag="2", receiptno= receiptData.receiptno, payid=0, Studentind = Model.studentind, voucherid=Model.voucherid})" class="btn btn-lg btn-purple float-right btnReceiptPrint">
                             <i class="glyph-icon icon-print"></i>
                             <span>พิมพ์ใบเสร็จ</span>
                         </a>
@@ -1231,8 +1279,12 @@ else if (ViewBag.Result == "N")
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>ค่า <label style="color:red;">*</label></label>
-                                            @Html.DropDownList("rcid", new SelectList(ViewData["ListReceive"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกค่า --", new {
-                                                                @class="form-control", style="font-size: 1em;", @id = "rcid"})
+                                            @Html.DropDownList("rcid", new SelectList(ViewData["ListReceive"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกค่า --", new
+                                            {
+                                                                @class = "form-control",
+                                                style = "font-size: 1em;",
+                                                @id = "rcid"
+                                            })
                                         </div>
                                     </div>
                                 </div>
@@ -1267,8 +1319,13 @@ else if (ViewBag.Result == "N")
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label">เข้าบัญชี<label style="color:red;">*</label></label>
                                                     <div class="col-sm-6">
-                                                        @Html.DropDownList("accountno", new SelectList(ViewData["ListBankaccount"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกบัญชี --", new {
-                                                                @class="form-control", style="font-size: 1em;" ,required = "required", @id = "accountno"})
+                                                        @Html.DropDownList("accountno", new SelectList(ViewData["ListBankaccount"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกบัญชี --", new
+                                                        {
+                                                                @class = "form-control",
+                                                            style = "font-size: 1em;",
+                                                            required = "required",
+                                                            @id = "accountno"
+                                                        })
                                                     </div>
                                                 </div>
                                             </div>
@@ -1280,8 +1337,13 @@ else if (ViewBag.Result == "N")
                                                 <div class="form-group">
                                                     <label class="col-sm-10 control-label">ประเภทบัตร<label style="color:red;">*</label></label>
                                                     <div class="col-sm-offset-2 col-sm-4">
-                                                        @Html.DropDownList("cid", new SelectList(ViewData["ListReceiveCard"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกประเภทบัตร --", new {
-                                                                @class="form-control", style="font-size: 1em;" ,required = "required", @id = "cid"})
+                                                        @Html.DropDownList("cid", new SelectList(ViewData["ListReceiveCard"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกประเภทบัตร --", new
+                                                        {
+                                                                @class = "form-control",
+                                                            style = "font-size: 1em;",
+                                                            required = "required",
+                                                            @id = "cid"
+                                                        })
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <input type="text" class="form-control" placeholder="xxxx-xxxx-xxxx-xxxx" name="CrCardNo" value="" id="CrCardNo" onkeypress="return checkDigit(event)">
@@ -1297,8 +1359,13 @@ else if (ViewBag.Result == "N")
                                                     <input type="text" class="form-control" placeholder="เลขที่" name="chequeno" value="" id="chequeno" onkeypress="return checkDigit(event)">
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    @Html.DropDownList("bankabbr", new SelectList(ViewData["ListBank"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกธนาคาร --", new {
-                                                             @class="form-control", style="font-size: 1em;" ,required = "required", @id = "bankabbr"})
+                                                    @Html.DropDownList("bankabbr", new SelectList(ViewData["ListBank"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกธนาคาร --", new
+                                                    {
+                                                             @class = "form-control",
+                                                        style = "font-size: 1em;",
+                                                        required = "required",
+                                                        @id = "bankabbr"
+                                                    })
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" placeholder="สาขา" name="bankbranch" value="" id="bankbranch">
@@ -1515,8 +1582,13 @@ else if (ViewBag.Result == "N")
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>ค่า <label style="color:red;">*</label></label>
-                                        @Html.DropDownList("rcid", new SelectList(ViewData["ListReceive"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกค่า --", new {
-                                       @class= "form-control selectType", style="font-size: 1em;", @id = "Editrcid" , onchange = @"changeRcid(this);"})
+                                        @Html.DropDownList("rcid", new SelectList(ViewData["ListReceive"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกค่า --", new
+                                        {
+                                       @class = "form-control selectType",
+                                            style = "font-size: 1em;",
+                                            @id = "Editrcid",
+                                            onchange = @"changeRcid(this);"
+                                        })
                                         <input type="hidden" name="hideRcid" value="" id="hideRcid" />
                                     </div>
                                 </div>
@@ -1553,8 +1625,12 @@ else if (ViewBag.Result == "N")
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">เข้าบัญชี<label style="color:red;">*</label></label>
                                                 <div class="col-sm-6">
-                                                    @Html.DropDownList("accountno", new SelectList(ViewData["ListBankaccount"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกบัญชี --", new {
-                                                   @class= "form-control Editmoneyaccount", style="font-size: 1em;", @id = "Editaccountno"})
+                                                    @Html.DropDownList("accountno", new SelectList(ViewData["ListBankaccount"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกบัญชี --", new
+                                                    {
+                                                   @class = "form-control Editmoneyaccount",
+                                                        style = "font-size: 1em;",
+                                                        @id = "Editaccountno"
+                                                    })
                                                 </div>
                                             </div>
                                         </div>
@@ -1566,8 +1642,12 @@ else if (ViewBag.Result == "N")
                                             <div class="form-group">
                                                 <label class="col-sm-10 control-label">ประเภทบัตร<label style="color:red;">*</label></label>
                                                 <div class="col-sm-offset-2 col-sm-4">
-                                                    @Html.DropDownList("cid", new SelectList(ViewData["ListReceiveCard"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกประเภทบัตร --", new {
-                                                    @class="form-control", style="font-size: 1em;", @id = "Editcid"})
+                                                    @Html.DropDownList("cid", new SelectList(ViewData["ListReceiveCard"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกประเภทบัตร --", new
+                                                    {
+                                                        @class = "form-control",
+                                                        style = "font-size: 1em;",
+                                                        @id = "Editcid"
+                                                    })
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <input type="text" class="form-control" placeholder="xxxx-xxxx-xxxx-xxxx" name="CrCardNo" value="" id="EditCrCardNo" onkeypress="return checkDigit(event)">
@@ -1583,8 +1663,12 @@ else if (ViewBag.Result == "N")
                                                 <input type="text" class="form-control" placeholder="เลขที่" name="chequeno" value="" id="Editchequeno" onkeypress="return checkDigit(event)">
                                             </div>
                                             <div class="col-sm-3">
-                                                @Html.DropDownList("bankabbr", new SelectList(ViewData["ListBank"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกธนาคาร --", new {
-                                               @class= "form-control Editbankabbr", style="font-size: 1em;", @id = "Editbankabbr"})
+                                                @Html.DropDownList("bankabbr", new SelectList(ViewData["ListBank"] as IList<SelectListItem>, "Value", "Text"), "-- เลือกธนาคาร --", new
+                                                {
+                                               @class = "form-control Editbankabbr",
+                                                    style = "font-size: 1em;",
+                                                    @id = "Editbankabbr"
+                                                })
                                             </div>
                                             <div class="col-sm-3">
                                                 <input type="text" class="form-control" placeholder="สาขา" name="bankbranch" value="" id="Editbankbranch">
@@ -2006,7 +2090,7 @@ else if (ViewBag.Result == "N")
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-2:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -2034,7 +2118,7 @@ else if (ViewBag.Result == "N")
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-2:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -2138,7 +2222,7 @@ else if (ViewBag.Result == "N")
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-100:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -2154,7 +2238,7 @@ else if (ViewBag.Result == "N")
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-100:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -2270,18 +2354,106 @@ else if (ViewBag.Result == "N")
 
 
         }
+        $(document).on('change', '#courseid', function () {
+            var selected = $(this).find('option:selected');
+            var courseid = $(this).val();
+            var coursegroupid = selected.data('coursegroupid');
+            console.log("courseid : " + courseid);
+            console.log("coursegroupid : " + coursegroupid);
+            var age = document.getElementById('age').value;
+            console.log("age : " + age);
 
-        function checkper() {
             var firststudydate = $('#firststudydate').val();
             var courseidActive = $("#courseidActive").val();
             var bookingnoActive = $("#bookingnoActive").val();
-      //      alert(courseidActive);
-            if (firststudydate == "") {
-                var age = document.getElementById('age').value;
-                var age2 = $('#age').val();
+            if (bookingnoActive != 0) {
+                if (firststudydate == "") {
+                    if (age != "") {
+                        if (coursegroupid == 1) {
+                            if (age < 15) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+                            }
+                        }
+                        else if (coursegroupid == 2) {
+                            if (age < 18) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+                            }
+                        }
+                        else if (coursegroupid == 3) {
+                            if (age < 20) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+
+                            }
+                        }
+                        else {
+                            if (age < 18) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+
+                            }
+
+                        }
+                    }
+                    $('#Listcourseid').val($("#courseid").val());
+                    $('#courseid').val($("#courseid").val());
+                    $('#courseidEdit').val($("#courseid").val());
+                }
+                else {
+                    $('#courseid').val(courseidActive);
+                    $('#courseidEdit').val(courseidActive);
+                    $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
+                    $('#Alertcourse').appendTo('body');
+                }
+            }
+            else {
                 if (age != "") {
-                    var id = document.getElementById("courseid").value;
-                    if (id == 2 || id == 7 || id == 8 || id == 4 || id == 11 || id == 12) {
+                    if (coursegroupid == 1) {
+                        if (age < 15) {
+                            $("#save").attr('disabled', 'disabled');
+                            return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+
+                        } else {
+                            $("#save").removeAttr('disabled');
+                        }
+                    }
+                    else if (coursegroupid == 2) {
+                        if (age < 18) {
+                            $("#save").attr('disabled', 'disabled');
+                            return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+                        } else {
+                            $("#save").removeAttr('disabled');
+                        }
+                    }
+                    else if (coursegroupid == 3) {
+                        if (age < 20) {
+                            $("#save").attr('disabled', 'disabled');
+                            return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+                        } else {
+                            $("#save").removeAttr('disabled');
+
+                        }
+                    }
+                    else {
                         if (age < 18) {
                             $("#save").attr('disabled', 'disabled');
                             return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
@@ -2292,16 +2464,183 @@ else if (ViewBag.Result == "N")
 
                         }
 
-                    } else if (id == 5 || id == 13 || id == 6) {
-                        if (age < 20) {
-                            $("#save").attr('disabled', 'disabled');
-                            return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+                    }
+                }
+
+                $('#Listcourseid').val($("#courseid").val());
+                $('#courseid').val($("#courseid").val());
+                $('#courseidEdit').val($("#courseid").val());
+            }
 
 
-                        } else {
-                            $("#save").removeAttr('disabled');
+
+        });
+
+      //  function checkper() {
+      //      var firststudydate = $('#firststudydate').val();
+      //      var courseidActive = $("#courseidActive").val();
+      //      var bookingnoActive = $("#bookingnoActive").val();
+      ////      alert(courseidActive);
+      //      if (bookingnoActive != 0) {
+      //          if (firststudydate == "") {
+      //              var age = document.getElementById('age').value;
+      //              var age2 = $('#age').val();
+      //              if (age != "") {
+      //                  var id = document.getElementById("courseid").value;
+      //                  if (id == 2 || id == 7 || id == 8 || id == 4 || id == 11 || id == 12) {
+      //                      if (age < 18) {
+      //                          $("#save").attr('disabled', 'disabled');
+      //                          return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+
+      //                      } else {
+      //                          $("#save").removeAttr('disabled');
+
+      //                      }
+
+      //                  } else if (id == 5 || id == 13 || id == 6) {
+      //                      if (age < 20) {
+      //                          $("#save").attr('disabled', 'disabled');
+      //                          return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+      //                      } else {
+      //                          $("#save").removeAttr('disabled');
+      //                      }
+      //                  } else if (id == 3 || id == 9 || 10) {
+      //                      if (age < 15) {
+      //                          $("#save").attr('disabled', 'disabled');
+      //                          return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+
+      //                      } else {
+      //                          $("#save").removeAttr('disabled');
+      //                      }
+      //                  }
+      //              }
+      //              $('#Listcourseid').val($("#courseid").val());
+      //              $('#courseid').val($("#courseid").val());
+      //              $('#courseidEdit').val($("#courseid").val());
+      //          }
+      //          else {
+      //              $('#courseid').val(courseidActive);
+      //              $('#courseidEdit').val(courseidActive);
+      //              $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
+      //              $('#Alertcourse').appendTo('body');
+      //          }
+      //      }
+      //      else {
+      //          var age = document.getElementById('age').value;
+      //          var age2 = $('#age').val();
+      //          if (age != "") {
+      //              var id = document.getElementById("courseid").value;
+      //              if (id == 2 || id == 7 || id == 8 || id == 4 || id == 11 || id == 12) {
+      //                  if (age < 18) {
+      //                      $("#save").attr('disabled', 'disabled');
+      //                      return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+
+      //                  } else {
+      //                      $("#save").removeAttr('disabled');
+
+      //                  }
+
+      //              } else if (id == 5 || id == 13 || id == 6) {
+      //                  if (age < 20) {
+      //                      $("#save").attr('disabled', 'disabled');
+      //                      return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+      //                  } else {
+      //                      $("#save").removeAttr('disabled');
+      //                  }
+      //              } else if (id == 3 || id == 9 || 10) {
+      //                  if (age < 15) {
+      //                      $("#save").attr('disabled', 'disabled');
+      //                      return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+
+      //                  } else {
+      //                      $("#save").removeAttr('disabled');
+      //                  }
+      //              }
+      //          }
+      //          $('#Listcourseid').val($("#courseid").val());
+      //          $('#courseid').val($("#courseid").val());
+      //          $('#courseidEdit').val($("#courseid").val());
+      //      }
+
+      //  }
+        $(document).on('change', '#courseidEdit', function () {
+            var selected = $(this).find('option:selected');
+            var courseid = $(this).val();
+            var coursegroupid = selected.data('coursegroupid');
+            console.log("courseid : " + courseid);
+            console.log("coursegroupid : " + coursegroupid);
+            var age = document.getElementById('age').value;
+            console.log("age : " + age);
+
+            var firststudydate = $('#firststudydate').val();
+            var courseidActive = $("#courseidActive").val();
+            var bookingnoActive = $("#bookingnoActive").val();
+            if (bookingnoActive != 0) {
+                if (firststudydate == "") {
+                    if (age != "") {
+                        if (coursegroupid == 1) {
+                            if (age < 15) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+                            }
                         }
-                    } else if (id == 3 || id == 9 || 10) {
+                        else if (coursegroupid == 2) {
+                            if (age < 18) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+                            }
+                        }
+                        else if (coursegroupid == 3) {
+                            if (age < 20) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+
+                            }
+                        }
+                        else {
+                            if (age < 18) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+
+                            }
+
+                        }
+                    }
+                    $('#Listcourseid').val($("#courseidEdit").val());
+                    $('#courseid').val($("#courseidEdit").val());
+                    $('#courseidEdit').val($("#courseid").val());
+                }
+                else {
+                    //  alert("หลักสูตร " + @Model.Header2 +" มีการจัดตารางเรียนแล้วไม่สามารถเปลี่ยนหลักสูตรได้ ต้องลบข้อมูลการจองตารางก่อน");
+                    $('#courseid').val(courseidActive);
+                    $('#courseidEdit').val(courseidActive);
+                    $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
+                    $('#Alertcourse').appendTo('body');
+                }
+            }
+            else {
+                if (age != "") {
+                    if (coursegroupid == 1) {
                         if (age < 15) {
                             $("#save").attr('disabled', 'disabled');
                             return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
@@ -2310,24 +2649,103 @@ else if (ViewBag.Result == "N")
                             $("#save").removeAttr('disabled');
                         }
                     }
+                    else if (coursegroupid == 2) {
+                        if (age < 18) {
+                            $("#save").attr('disabled', 'disabled');
+                            return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+                        } else {
+                            $("#save").removeAttr('disabled');
+                        }
+                    }
+                    else if (coursegroupid == 3) {
+                        if (age < 20) {
+                            $("#save").attr('disabled', 'disabled');
+                            return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+                        } else {
+                            $("#save").removeAttr('disabled');
+
+                        }
+                    }
+                    else {
+                        if (age < 18) {
+                            $("#save").attr('disabled', 'disabled');
+                            return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+
+                        } else {
+                            $("#save").removeAttr('disabled');
+
+                        }
+
+                    }
                 }
-                $('#Listcourseid').val($("#courseid").val());
-                $('#courseid').val($("#courseid").val());
+                $('#Listcourseid').val($("#courseidEdit").val());
+                $('#courseid').val($("#courseidEdit").val());
                 $('#courseidEdit').val($("#courseid").val());
             }
-            else {
-                $('#courseid').val(courseidActive);
-                $('#courseidEdit').val(courseidActive);
-                $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
-                $('#Alertcourse').appendTo('body');
-            }
-        }
-        function checkperEdit() {
+
+
+
+        });
+        @*function checkperEdit() {
             //var selected_courseid = $('#courseidEdit').find("option:selected").val();
             var firststudydate = $('#firststudydate').val();
             var courseidActive = $("#courseidActive").val();
             var bookingnoActive = $("#bookingnoActive").val();
-           if (firststudydate == "") {
+            if (bookingnoActive != 0) {
+                if (firststudydate == "") {
+                    var age = document.getElementById('age').value;
+                    var age2 = $('#age').val();
+
+                    if (age != "") {
+                        var id = document.getElementById("courseid").value;
+                        if (id == 2 || id == 7 || id == 8 || id == 4 || id == 11 || id == 12) {
+                            if (age < 18) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 18 ปีบริบูรณ์");
+
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+
+                            }
+
+                        } else if (id == 5 || id == 13 || id == 6) {
+                            if (age < 20) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 20 ปีบริบูรณ์");
+
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+                            }
+                        } else if (id == 3 || id == 9 || 10) {
+                            if (age < 15) {
+                                $("#save").attr('disabled', 'disabled');
+                                return confirm("อายุผู้สมัครต้องไม่น้อยกว่า 15 ปีบริบูรณ์");
+
+                            } else {
+                                $("#save").removeAttr('disabled');
+                            }
+                        }
+                    }
+                    $('#Listcourseid').val($("#courseidEdit").val());
+                    $('#courseid').val($("#courseidEdit").val());
+                    $('#courseidEdit').val($("#courseid").val());
+                }
+                else {
+                    //  alert("หลักสูตร " + @Model.Header2 +" มีการจัดตารางเรียนแล้วไม่สามารถเปลี่ยนหลักสูตรได้ ต้องลบข้อมูลการจองตารางก่อน");
+                    $('#courseid').val(courseidActive);
+                    $('#courseidEdit').val(courseidActive);
+                    $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
+                    $('#Alertcourse').appendTo('body');
+
+                }
+            }
+            else {
                 var age = document.getElementById('age').value;
                 var age2 = $('#age').val();
 
@@ -2364,19 +2782,11 @@ else if (ViewBag.Result == "N")
                     }
                 }
                 $('#Listcourseid').val($("#courseidEdit").val());
-                       $('#courseid').val($("#courseidEdit").val());
-                       $('#courseidEdit').val($("#courseid").val());
-            }
-            else {
-              //  alert("หลักสูตร " + @Model.Header2 +" มีการจัดตารางเรียนแล้วไม่สามารถเปลี่ยนหลักสูตรได้ ต้องลบข้อมูลการจองตารางก่อน");
-                $('#courseid').val(courseidActive);
-                $('#courseidEdit').val(courseidActive);
-                $('#Alertcourse').modal({ backdrop: 'static', keyboard: false });
-                $('#Alertcourse').appendTo('body');
-
+                $('#courseid').val($("#courseidEdit").val());
+                $('#courseidEdit').val($("#courseid").val());
             }
 
-        }
+        }*@
 
     </script>
     <script>
@@ -2395,6 +2805,7 @@ else if (ViewBag.Result == "N")
     <script src="~/assets/jQuery/jquery.validate.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
             $(".addMoneyBtn").click(function () {
                 var modal = $('#addMoneyModal');
                 //$('#delTag').text($('#deleteId_' + $(this).val()).text());
@@ -3066,7 +3477,7 @@ else if (ViewBag.Result == "N")
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-2:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -3083,7 +3494,7 @@ else if (ViewBag.Result == "N")
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-2:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -3100,7 +3511,7 @@ else if (ViewBag.Result == "N")
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-2:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -3116,7 +3527,7 @@ else if (ViewBag.Result == "N")
                 dateFormat: 'yy-mm-dd',
                 isBuddhist: true,
                 orientation: "bottom left",
-                yearRange: "-100:+0",
+                yearRange: "-2:+1",
                 dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
                 dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
                 monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
@@ -3244,9 +3655,7 @@ else if (ViewBag.Result == "N")
             });
             //string selectedType = Request.Form["group1"].ToString();
             $("#btnSubmitisSelect").click(function () {
-
                 alert($('input:radio[name=TempBooking_variation]:checked').val());
-
             });
         });
     </script>
